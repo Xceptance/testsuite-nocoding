@@ -1,0 +1,122 @@
+package com.xceptance.xlt.common.actions;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import org.junit.Assert;
+
+import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.xceptance.common.util.RegExUtils;
+import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
+import com.xceptance.xlt.common.util.CSVBasedURLAction;
+
+/**
+ * This is a simple test class for pulling URLs. It is fully configurable using properties.
+ */
+public class SimpleURL extends AbstractHtmlPageAction
+{
+    private final CSVBasedURLAction action;
+
+    /**
+     * The constructor when a new web session should be started.
+     * 
+     * @param previousAction
+     * @param timerName
+     */
+    public SimpleURL(final CSVBasedURLAction action, final String login, final String password)
+    {
+        super(action.getName());
+        this.action = action;
+        
+        // add credentials, if any
+        if (login != null && password != null)
+        {
+            final DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials(login, password);
+
+            this.getWebClient().setCredentialsProvider(credentialsProvider);
+        }
+
+    }
+
+    /**
+     * @param previousAction
+     * @param timerName
+     */
+    public SimpleURL(final AbstractHtmlPageAction prevAction, final CSVBasedURLAction action)
+    {
+        super(prevAction, action.getName());
+        this.action = action;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.xceptance.xlt.api.actions.AbstractAction#preValidate()
+     */
+    @Override
+    public void preValidate() throws Exception
+    {
+        // do not prevalidate anything here, we assume a correct URL
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.xceptance.xlt.api.actions.AbstractAction#execute()
+     */
+    @Override
+    protected void execute() throws Exception
+    {
+        loadPage(action.getURL(), action.getMethod(), action.getParameters());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.xceptance.xlt.api.actions.AbstractAction#postValidate()
+     */
+    @Override
+    protected void postValidate() throws Exception
+    {
+        final HtmlPage page = getHtmlPage();
+
+        // response code correct?
+        action.getHttpResponseCodeValidator().validate(page);
+
+        final String xpath = action.getXPath();
+        final String text  = action.getText();
+        
+        // check anything else?
+        if (xpath != null)
+        {
+            // get the elements from the page
+            @SuppressWarnings("unchecked")
+            final List<HtmlElement> elements = (List<HtmlElement>) page.getByXPath(xpath);
+
+            // verify existence
+            Assert.assertFalse("Xpath not found: <" + xpath + ">", elements.isEmpty());
+
+            // shall we check the text as well?
+            if (text != null)
+            {
+                final String actual = elements.get(0).asText().trim();
+                Assert.assertNotNull(MessageFormat.format("Text does not match. Expected:<{0}> but was:<{1}>", text,
+                                                          actual), RegExUtils.getFirstMatch(actual, text));
+            }
+        }
+        else if (text != null)
+        {
+            // ok, xpath was null, so we go for the text on the page only
+            final String responseString = page.getWebResponse().getContentAsString();
+            Assert.assertNotNull("Page was totally empty", responseString);
+
+            Assert.assertNotNull(MessageFormat.format("Text is not on the page. Expected:<{0}>", text),
+                                 RegExUtils.getFirstMatch(responseString, text));
+        }
+
+        // nothing to do besides the response code
+    }
+}

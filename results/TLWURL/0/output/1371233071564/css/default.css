@@ -1,0 +1,313 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+html { /* get rid of the default vertical scroll bar in IE */
+    overflow: auto;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    background-color: White;
+    font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+}
+
+/*
+ * The header
+ */
+#header {
+    width: 100%;
+    background-color: #EDEDED;
+}
+
+#header h1 {
+    font-size: 16px;
+    padding: 5px;
+    color: Black;
+}
+
+/*
+ * The progress meter look and feel
+ */
+#progressmeter {
+    display: none;
+    background-image: url(../images/progress.gif);
+    width: 24px;
+    height: 24px;
+    float: right;
+    margin: 2px;
+}
+
+#progressmeter p {
+    display: none;
+}
+
+/**
+ * The navigation with actions and requests
+ */
+#navigation {
+    font-size: 12px;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: #EDEDED;
+    position: absolute;
+}
+
+#navigation #actionlist {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    overflow: auto;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 8px;
+    right: 8px;
+}
+
+#navigation ul {
+    margin: 0px;
+    padding: 0px 0px 0px 0px;
+    list-style: none;
+    border: 2px groove white;
+}
+
+#navigation ul li {
+    margin: 0px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 2px;
+    color: Black;
+    background-color: #e8e8e8;
+    border-top: 1px dashed #ddd;
+    overflow: hidden;
+}
+
+#navigation .expander {
+    padding-left: 15px;
+    background: url(../images/arrow-right.gif) left center no-repeat;
+}
+
+#navigation .expander.expanded {
+    background-image: url(../images/arrow-bottom-right.gif)
+}
+
+#navigation ul li:hover {
+    background-color: White;
+}
+
+#navigation li.active {
+    font-weight: bold;
+    background-color: White;
+}
+
+#navigation ul li ul {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+#navigation ul li ul li {
+    font-size: 11px;
+    padding: 1px 1px 1px 2px;
+    margin: 1px 0px;
+    border-left: 25px solid #e8e8e8;
+    font-weight: normal;
+}
+
+#content {
+    position: fixed;
+    top: 0px;
+    left: 250px;
+}
+
+#actioncontent {
+    display: none;
+}
+
+#requestcontent { /* take the whole space of parent */
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#requestcontent h2 {
+    font-size: 12px;
+    margin: 4px 2px;
+}
+
+#requestcontent table {
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-bottom: 10px;
+    width: 100%;
+    /*border: 1px solid gray;*/
+}
+
+#requestcontent table td {
+    padding: 2px 4px;
+    vertical-align: top;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+#requestcontent table td.key {
+    background-color: #e8e8e8;
+    font-weight: bold;
+    width: 15em;
+    text-align: right;
+}
+
+#requestcontent table td.value {
+    
+}
+
+#requestcontent table td.empty {
+    border: none;
+    color: gray;
+}
+
+#requestimage {
+    
+}
+
+#requesttext {
+    
+}
+
+.contentTypeImage {
+    color: green;
+}
+
+.contentTypeCSS {
+    color: blue;
+}
+
+.contentTypeJS {
+    color: maroon;
+}
+
+.httpError {
+    color: red;
+}
+
+.httpRedirect {
+    color: gray;
+}
+
+.tabs {
+    height: 100%;
+}
+
+.tabs .tabs-nav {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: auto;
+    overflow: visible;
+    background-color: gray;
+}
+
+.tabs .tabs-nav li {
+    float: left;
+    margin: 2px 0px 0px 2px;
+    padding: 4px 8px 4px 8px;
+    list-style: none;
+    cursor: pointer;
+    background-color: #ddd;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tabs .tabs-nav li.selected {
+    background-color: white;
+}
+
+.tabs .tabs-panel {
+    display: block;
+    background: white;
+    position: absolute;
+    top: 30px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: auto;
+    padding: 10px;
+}
+
+#errorMessage {
+    width: 700px;
+    position: absolute;
+    background-color: #dfdfdf;
+    padding: 5px;
+    display: none;
+    border: 1px inset #a0a0a0;
+}
+
+#errorMessage p {
+    margin-top: 10px;
+}
+
+#errorMessage > p:first-child {
+    color:red;
+    margin-top: 0px;
+}
+
+#errorMessage .filename{
+    font-weight: bold;
+}
+
+#errorMessage ul {
+    padding: 5px 0px 5px 20px;
+    list-style-type: circle;
+}
+
+/********************************************************************************************
+*
+* Style for vertical split bar design
+*
+*********************************************************************************************/
+
+html, body{
+	width: 100%;
+	height: 100%;
+}
+
+#container {
+	height: 100%;
+	width: 100%;	
+}
+
+.vsplitbar {
+	width: 4px;
+	height: 100%;
+	background: #5A6673;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	opacity: 0.6;
+	cursor: ew-resize;
+}
+
+.vsplitbar:active{
+	opacity: 1;
+}
+
+/*
+* Invisible mask overlays whole page during moving of split bar. Prevents IFrame errors.
+*/
+.splitterMask
+{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+   background-color: black;
+   opacity: 0;
+   z-index: 20000;
+}
