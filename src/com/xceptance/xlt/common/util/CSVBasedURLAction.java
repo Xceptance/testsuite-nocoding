@@ -36,26 +36,8 @@ public class CSVBasedURLAction
     /**
      * Permitted header fields, checked to avoid accidental incorrect spelling
      */
-    public final static Set<String> PERMITTEDHEADERFIELDS = new HashSet<String>();
-    {
-        PERMITTEDHEADERFIELDS.add(TYPE);
-        PERMITTEDHEADERFIELDS.add(NAME);
-        PERMITTEDHEADERFIELDS.add(URL);
-        PERMITTEDHEADERFIELDS.add(METHOD);
-        PERMITTEDHEADERFIELDS.add(PARAMETERS);
-        PERMITTEDHEADERFIELDS.add(RESPONSECODE);
-        PERMITTEDHEADERFIELDS.add(XPATH);
-        PERMITTEDHEADERFIELDS.add(REGEXP);
-        PERMITTEDHEADERFIELDS.add(TEXT);
-        PERMITTEDHEADERFIELDS.add(ENCODED);
-        
-        for (int i = 1; i <= DYNAMIC_GETTER_COUNT; i++)
-        {
-            PERMITTEDHEADERFIELDS.add(XPATH_GETTER_PREFIX + i);
-            PERMITTEDHEADERFIELDS.add(REGEXP_GETTER_PREFIX + i);
-        }
-    }       
-    
+    private final static Set<String> PERMITTEDHEADERFIELDS = new HashSet<String>();
+
     public static final String GET = "GET";
     public static final String POST = "POST";
     
@@ -81,6 +63,26 @@ public class CSVBasedURLAction
 
     public static final String ENCODED = "Encoded";
 
+    static
+    {
+        PERMITTEDHEADERFIELDS.add(TYPE);
+        PERMITTEDHEADERFIELDS.add(NAME);
+        PERMITTEDHEADERFIELDS.add(URL);
+        PERMITTEDHEADERFIELDS.add(METHOD);
+        PERMITTEDHEADERFIELDS.add(PARAMETERS);
+        PERMITTEDHEADERFIELDS.add(RESPONSECODE);
+        PERMITTEDHEADERFIELDS.add(XPATH);
+        PERMITTEDHEADERFIELDS.add(REGEXP);
+        PERMITTEDHEADERFIELDS.add(TEXT);
+        PERMITTEDHEADERFIELDS.add(ENCODED);
+        
+        for (int i = 1; i <= DYNAMIC_GETTER_COUNT; i++)
+        {
+            PERMITTEDHEADERFIELDS.add(XPATH_GETTER_PREFIX + i);
+            PERMITTEDHEADERFIELDS.add(REGEXP_GETTER_PREFIX + i);
+        }
+    }       
+    
     private final String type;
     private final String name;
 
@@ -507,5 +509,16 @@ public class CSVBasedURLAction
                 }
             }
         }
+    }
+    
+    /**
+     * Returns true of header field is value, false otherwise.
+     * @param fieldName header field to check
+     * @return true if valid field, false otherwise
+     * TODO test it
+     */
+    public static boolean isPermittedHeaderField(final String fieldName)
+    {
+        return PERMITTEDHEADERFIELDS.contains(fieldName);
     }
 }

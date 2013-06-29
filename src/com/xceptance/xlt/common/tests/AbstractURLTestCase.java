@@ -83,12 +83,12 @@ public class AbstractURLTestCase extends AbstractTestCase
 
             // verify header fields to avoid problems with incorrect spelling or spaces
             final Map<String, Integer> headerMap = parser.getHeaderMap();
-
-            for (final String headerField:headerMap.keySet())
+            
+            for (final String headerField : headerMap.keySet())
             {
-                if (!CSVBasedURLAction.PERMITTEDHEADERFIELDS.contains(headerField))
+                if (!CSVBasedURLAction.isPermittedHeaderField(headerField))
                 {
-                    Assert.fail(MessageFormat.format("Unsupported or misspelled header field: '{0}'", headerField));
+                    Assert.fail(MessageFormat.format("Unsupported or misspelled header field: {0}", headerField));
                 }
             }
 
