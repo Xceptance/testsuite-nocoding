@@ -71,7 +71,8 @@ public class AbstractURLTestCase extends AbstractTestCase
         final File file = new File(dataDirectory, getProperty("filename", Session.getCurrent().getUserName() + ".csv"));
 
         BufferedReader br = null;
-
+        boolean incorrectLines = false;
+        
         try
         {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -126,7 +127,7 @@ public class AbstractURLTestCase extends AbstractTestCase
                         }
                         else
                         {
-                            XltLogger.runTimeLogger.warn(MessageFormat.format("Line at {0} does not contain any URL. Line is ignored: {1}",
+                            XltLogger.runTimeLogger.error(MessageFormat.format("Line at {0} does not contain any URL. Line is ignored: {1}",
                                                                               parser.getLineNumber(), csvRecord));
                         }
                     }
@@ -138,14 +139,21 @@ public class AbstractURLTestCase extends AbstractTestCase
                 }
                 else
                 {
-                    XltLogger.runTimeLogger.warn(MessageFormat.format("Line at {0} has not been correctly formatted. Line is ignored: {1}",
+                    XltLogger.runTimeLogger.error(MessageFormat.format("Line at {0} has not been correctly formatted. Line is ignored: {1}",
                                                                       parser.getLineNumber(), csvRecord));
+                    incorrectLines = true;
                 }
             }
         }
         finally
         {
             IOUtils.closeQuietly(br);
+        }
+        
+        // stop if we have anything the is incorrect, avoid half running test cases
+        if (incorrectLines)
+        {
+            throw new RuntimeException("Found incorrectly formatted lines. Stopping here.");
         }
     }
     
