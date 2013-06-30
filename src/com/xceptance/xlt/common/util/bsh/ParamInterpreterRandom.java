@@ -3,7 +3,7 @@
  */
 package com.xceptance.xlt.common.util.bsh;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang.RandomStringUtils;
 
 import com.xceptance.xlt.api.util.XltRandom;
 
