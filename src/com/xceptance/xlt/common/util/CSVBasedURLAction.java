@@ -476,7 +476,7 @@ public class CSVBasedURLAction
             {
                 try
                 {
-                    interpreter.set(XPATH_GETTER_PREFIX + i, results.get(i));
+                    interpreter.set(XPATH_GETTER_PREFIX + i, results.get(i - 1));
                 }
                 catch (final EvalError e)
                 {
@@ -501,7 +501,7 @@ public class CSVBasedURLAction
             {
                 try
                 {
-                    interpreter.set(REGEXP_GETTER_PREFIX + i, results.get(i));
+                    interpreter.set(REGEXP_GETTER_PREFIX + i, results.get(i - 1));
                 }
                 catch (final EvalError e)
                 {
