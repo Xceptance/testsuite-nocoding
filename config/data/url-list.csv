@@ -50,22 +50,22 @@
 Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded,xpath1,xpath2
 
 # Just load the homepage
-Homepage,"http://localhost:8080/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
+Homepage,"http://localhost:8080/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false,,
 
 # Just log on
-Login,"http://localhost:8080/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"id('sidebar')/div[@class='sidebarItem']/div[@class='sidebarItemTitle']/span","Logged in as username",true
+Login,"http://localhost:8080/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"id('sidebar')/div[@class='sidebarItem']/div[@class='sidebarItemTitle']/span","Logged in as username",true,,
 
 # Goto to new article creation, verify existence of xpath only
-NewArticle,"http://localhost:8080/pebble/addBlogEntry.secureaction#form",GET,,200,"id('content')/div[@class='contentItem unpublished']",,false
+NewArticle,"http://localhost:8080/pebble/addBlogEntry.secureaction#form",GET,,200,"id('content')/div[@class='contentItem unpublished']",,false,//input[@name='entry']/@value,//input[@name='date']/@value
 
-# Save article, It will use NOW as data and store it in entry.
-SaveArticle,"http://localhost:8080/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=%3Cp%3E%0D%0A${DATA.getText(3,6,false)}%0D%0A%3C%2Fp%3E&commentsEnabled=true&date=21-Apr-2013%2011%3A57&entry=${entry = NOW}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=Title ${RANDOM.String(25)}&trackBacksEnabled=true",200,//input[@value='Publish'],,true
+# Save article.
+SaveArticle,"http://localhost:8080/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=<p>${DATA.getText(3,6,false)}</p>&commentsEnabled=true&date=${date = xpath2.getTextContent()}&entry=${entry = xpath1.getTextContent()}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=Title ${RANDOM.String(25)}&trackBacksEnabled=true",200,//input[@value='Publish'],,false,//form[@name='blogEntryForm']/input[@name='entry']/@value,
 
 # Publish, does not work yet, because dynamic data, so we are verifying a dead page here instead :)
-#Publish,"http://localhost:8080/pebble/manageBlogEntry.secureaction",POST,"entry=${entry}&submit=Publish",404,,,false
+Publish,"http://localhost:8080/pebble/manageBlogEntry.secureaction",POST,"entry=${entry = xpath1.getTextContent()}&submit=Publish",200,,,false,//input[@name='entry']/@value,
 
 # DOES NOT WORK, because application does not accept article IDs provided. We will use the previously stored data for that submit.
-# ConfirmPublish,"http://localhost:8080/pebble/publishBlogEntry.secureaction",POST,"date=21-Apr-2013%2013%3A06&entry=${entry}&publishDate=as-is&submit=Publish",200,,,true
+ConfirmPublish,"http://localhost:8080/pebble/publishBlogEntry.secureaction",POST,"date=${date}&entry=${xpath1.getTextContent()}&publishDate=as-is&submit=Publish",200,,,false,,
 
 # Logout, GET does not need the parameters, it can be part of the url already
-Logout,"http://localhost:8080/pebble/logout.action?redirectUrl=http://localhost:8080/pebble/",GET,,200,id('loginForm'),,false
+Logout,"http://localhost:8080/pebble/logout.action?redirectUrl=http://localhost:8080/pebble/",GET,,200,id('loginForm'),,false,,
