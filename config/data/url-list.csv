@@ -61,7 +61,7 @@ NewArticle,"http://localhost:8080/pebble/addBlogEntry.secureaction#form",GET,,20
 # Save article.
 SaveArticle,"http://localhost:8080/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=<p>${DATA.getText(3,6,false)}</p>&commentsEnabled=true&date=${date = xpath2.getTextContent()}&entry=${entry = xpath1.getTextContent()}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=Title ${RANDOM.String(25)}&trackBacksEnabled=true",200,//input[@value='Publish'],,false,//form[@name='blogEntryForm']/input[@name='entry']/@value,
 
-# Publish, does not work yet, because dynamic data, so we are verifying a dead page here instead :)
+# Publish
 Publish,"http://localhost:8080/pebble/manageBlogEntry.secureaction",POST,"entry=${entry = xpath1.getTextContent()}&submit=Publish",200,,,false,//input[@name='entry']/@value,
 
 # DOES NOT WORK, because application does not accept article IDs provided. We will use the previously stored data for that submit.
