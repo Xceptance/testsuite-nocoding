@@ -78,7 +78,7 @@ public class AbstractURLTestCase extends AbstractTestCase
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
             // permit # as comment, empty lines, set comma as separator, and activate the header
-            final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader().build();
+            final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader().withIgnoreSurroundingSpaces(true).build();
             final CSVParser parser = new CSVParser(br, csvFormat);
             final Iterator<CSVRecord> csvRecords = parser.iterator();
 
