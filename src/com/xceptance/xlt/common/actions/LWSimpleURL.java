@@ -140,7 +140,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
         for (int i = 0; i < regexpGetters.size(); i++)
         {
             final Pattern p = regexpGetters.get(i);
-            if (pattern == null)
+            if (p == null)
             {
                 gettersResults.add(null);
                 continue;
