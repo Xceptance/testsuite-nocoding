@@ -1,5 +1,5 @@
 # The header. This is for TLWURL, because it uses RegExp, for a full header documentation
-# see the file url-list.csv
+# see the file tauthor.csv
 Name,URL,Method,Parameters,ResponseCode,RegExp,Text,Encoded
 
 # Just load the homepage
