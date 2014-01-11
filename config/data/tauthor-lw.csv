@@ -1,24 +1,24 @@
 # The header. This is for TLWURL, because it uses RegExp, for a full header documentation
 # see the file tauthor.csv
-Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded
+Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded, regexp1, regexp2
 
 # Just load the homepage
-Homepage,"http://localhost:8080/pebble/",GET,,200,<span>Pebble Test Suite</span>,,false
+Homepage,"${host}/pebble/",GET,,200,<span>Pebble Test Suite</span>,,false,,
 
 # Just log on
-Login,"http://localhost:8080/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"Logged in as ([a-zA-Z]+)","username",true
+Login,"${host}/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"Logged in as ([a-zA-Z]+)","username",true,,
 
 # Goto to new article creation, verify existence of xpath only
-NewArticle,"http://localhost:8080/pebble/addBlogEntry.secureaction#form",GET,,200,"<div class=""contentItem unpublished"">",,false
+NewArticle,"${host}/pebble/addBlogEntry.secureaction#form",GET,,200,"<div class=""contentItem unpublished"">",,false,"<input type=""hidden"" name=""entry"" value=""([^""]+)"" />","<input type=""text"" name=""date"" size=""30"" value=""(.+?)"">"
 
-# Save article, It will use NOW as data and store it in entry.
-SaveArticle,"http://localhost:8080/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=%3Cp%3E%0D%0A${DATA.getText(3,6,false)}%0D%0A%3C%2Fp%3E&commentsEnabled=true&date=21-Apr-2013%2011%3A57&entry=${entry = NOW}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=Title ${RANDOM.String(25)}&trackBacksEnabled=true",200,"<input type=""submit"" name=""submit"" value=""Publish"" />",,true
+# Save article, take date and entry from previous page
+SaveArticle,"${host}/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=<p>${DATA.getText(3,6,false)}</p>&commentsEnabled=true&date=${regexp2[1]}&entry=${regexp1[1]}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe/London&title=${title = RANDOM.String(25)}&trackBacksEnabled=true",200,"<input type=""submit"" name=""submit"" value=""Publish"" />",,false,"<input type=""hidden"" name=""entry"" value=""(.+?)"" />",
 
-# Publish, does not work yet, because dynamic data, so we are verifying a dead page here instead :)
-Publish,"http://localhost:8080/pebble/manageBlogEntry.secureaction",POST,"entry=${entry}&submit=Publish",404,,,false
+# Publish
+Publish,"${host}/pebble/manageBlogEntry.secureaction",POST,"entry=${regexp1[1]}&submit=Publish",200,,,false,"<input type=""hidden"" name=""entry"" value=""(.+?)"" />","<input type=""text"" name=""date"" size=""30"" value=""(.+?)"" onfocus"
 
-# DOES NOT WORK, because application does not accept article IDs provided. We will use the previously stored data for that submit.
-# ConfirmPublish,"http://localhost:8080/pebble/publishBlogEntry.secureaction",POST,"date=21-Apr-2013%2013%3A06&entry=${entry}&publishDate=as-is&submit=Publish",200,,,true
+# Confirm as-is, once again we need date and entry from the current page aka previous request, no need to carry data over to the next request, so last columns stay empty
+ConfirmPublish,"${host}/pebble/publishBlogEntry.secureaction",POST,"date=${regexp2[1]}&entry=${regexp1[1]}&publishDate=as-is&submit=Publish",200,"<h1>.*?${title}.*?</h1>",,false,,
 
-# Logout, GET does not need the parameters, it can be part of the url already
-Logout,"http://localhost:8080/pebble/logout.action?redirectUrl=http://localhost:8080/pebble/",GET,,200,"<form id=""loginForm""",,false
+# Logout, GET does not need the parameters, it is part of the url already, but you can of course split it off
+Logout,"${host}/pebble/logout.action?redirectUrl=${host}/pebble/",GET,,200,"<form id=""loginForm""",,false,,
