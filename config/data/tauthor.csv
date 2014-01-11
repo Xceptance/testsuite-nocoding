@@ -35,7 +35,7 @@
 # ${DATA.getStreet(false)} or ${DATA.getTrulyUniqueEmail("xyzqtar987654.com")} will work.
 # You can basically write a lot into this command, because it is a beanshell. 
 #
-# As special perk are the columns xpath1 to xpath10. You can get any data from the page using
+# A special perk are the columns xpath1 to xpath10. You can get any data from the page using
 # these. They will end up in variables xpath1 to xpath10 and can be used in any expression later.
 #
 # When running the LW based test, you have to use regexp1 to regexp10 instead. If you specify
@@ -48,7 +48,7 @@
 #
 #################################################################################################
 # The header. This is for TURL, because it uses XPath.
-Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded,xpath1,xpath2
+Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded, xpath1, xpath2
 
 # Just load the homepage
 Homepage, "${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false,,
@@ -56,17 +56,17 @@ Homepage, "${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false,,
 # Just log on
 Login,"${host}/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"id('sidebar')/div[@class='sidebarItem']/div[@class='sidebarItemTitle']/span","Logged in as username",true,,
 
-# Goto to new article creation, verify existence of xpath only
+# Goto to new article creation, verify existence of xpath, content is not needed, fill xpath1 and xpath2 with data for later use
 NewArticle,"${host}/pebble/addBlogEntry.secureaction#form",GET,,200,"id('content')/div[@class='contentItem unpublished']",,false,//input[@name='entry']/@value,//input[@name='date']/@value
 
-# Save article.
-SaveArticle,"${host}/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=<p>${DATA.getText(3,6,false)}</p>&commentsEnabled=true&date=${date = xpath2.getTextContent()}&entry=${entry = xpath1.getTextContent()}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=Title ${RANDOM.String(25)}&trackBacksEnabled=true",200,//input[@value='Publish'],,false,//form[@name='blogEntryForm']/input[@name='entry']/@value,
+# Save article, pass the xpath1 and xpath2 into the request and at the same time, save the data as entry and date for later, just to demo it, we are not using this here.
+SaveArticle,"${host}/pebble/saveBlogEntry.secureaction#preview",POST,"attachmentSize=&attachmentType=&attachmentUrl=&body=<p>${DATA.getText(3,6,false)}</p>&commentsEnabled=true&date=${date = xpath2.getTextContent()}&entry=${entry = xpath1.getTextContent()}&excerpt=${DATA.getText(1, false)}&originalPermalink=&persistent=false&submit=Save&subtitle=Sub ${RANDOM.String(25)}&tags=&timeZone=Europe%2FLondon&title=${title = ""Title-"" + RANDOM.String(25)}&trackBacksEnabled=true",200,//input[@value='Publish'],,false,//form[@name='blogEntryForm']/input[@name='entry']/@value,
 
 # Publish
 Publish,"${host}/pebble/manageBlogEntry.secureaction",POST,"entry=${entry = xpath1.getTextContent()}&submit=Publish",200,,,false,//input[@name='entry']/@value,
 
-# DOES NOT WORK, because application does not accept article IDs provided. We will use the previously stored data for that submit.
-ConfirmPublish,"${host}/pebble/publishBlogEntry.secureaction",POST,"date=${date}&entry=${xpath1.getTextContent()}&publishDate=as-is&submit=Publish",200,,,false,,
+# Confirm with as-is option 
+ConfirmPublish,"${host}/pebble/publishBlogEntry.secureaction",POST,"date=${date}&entry=${xpath1.getTextContent()}&publishDate=as-is&submit=Publish",200,//h1,${title},false,,
 
 # Logout, GET does not need the parameters, it can be part of the url already
 Logout,"${host}/pebble/logout.action?redirectUrl=${host}/pebble/",GET,,200,id('loginForm'),,false,,
