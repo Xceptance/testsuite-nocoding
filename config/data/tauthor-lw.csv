@@ -1,6 +1,6 @@
 # The header. This is for TLWURL, because it uses RegExp, for a full header documentation
 # see the file tauthor.csv
-Name,URL,Method,Parameters,ResponseCode,RegExp,Text,Encoded
+Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded
 
 # Just load the homepage
 Homepage,"http://localhost:8080/pebble/",GET,,200,<span>Pebble Test Suite</span>,,false
