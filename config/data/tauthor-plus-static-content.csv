@@ -6,7 +6,7 @@ Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
 # Just load the homepage including static content.
 A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
-	S,,${host}/pebble/themes/default/screen.css,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/screen.css,GET,,200,,,false
 	S,,${host}/pebble/themes/_pebble/print.css,GET,,200,,,false
 	S,,${host}/pebble/themes/_pebble/handheld.css,GET,,200,,,false
 	S,,${host}/pebble/FCKeditor/fckeditor.js,GET,,200,,,false
@@ -16,20 +16,15 @@ A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
 	S,,${host}/pebble/dwr/engine.js,GET,,200,,,false
 	S,,${host}/pebble/dwr/util.js,GET,,200,,,false
 	S,,${host}/pebble/dwr/interface/Pebble.js,GET,,200,,,false
-	S,,${host}/pebble/common/images/feed-icon-16x16.png,GET,,200,,,false
-	S,,${host}/pebble/common/images/feed-icon-10x10.png,GET,,200,,,false
 	S,,${host}/pebble/scripts/builder.js,GET,,200,,,false
 	S,,${host}/pebble/scripts/effects.js,GET,,200,,,false
 	S,,${host}/pebble/scripts/dragdrop.js,GET,,200,,,false
 	S,,${host}/pebble/scripts/controls.js,GET,,200,,,false
 	S,,${host}/pebble/scripts/slider.js,GET,,200,,,false
-	S,,${host}/pebble/themes/default/images/header.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/default/images/sidebartitle.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/default/images/bullet.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/default/images/footer.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/default/images/favicon.ico,GET,,200,,,false
-
-
-
+	S,,${host}/pebble/common/images/feed-icon-16x16.png,GET,,200,,,false
+	S,,${host}/pebble/common/images/feed-icon-10x10.png,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/header.jpg,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/sidebartitle.jpg,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/bullet.jpg,GET,,200,,,false
 
 
