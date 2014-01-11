@@ -7,6 +7,7 @@
 # 
 # Format Details and defaults when not set 
 # 
+# Type:			action (A) or static content (S), optional, defaults to A
 # Name:			the name of the action (Action-<recordNumber>)
 # URL:			an url (mandatory)
 # Method:		which method of GET or POST (GET)

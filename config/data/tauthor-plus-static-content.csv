@@ -2,7 +2,7 @@
 # defining it. So it should rather not have static content loading enabled, otherwise it
 # will load a lot of things twice or once, in case the caching kicks in.
 #
-Type,Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded
+Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
 # Just load the homepage including static content.
 A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
@@ -29,9 +29,7 @@ A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
 	S,,${host}/pebble/themes/default/images/footer.jpg,GET,,200,,,false
 	S,,${host}/pebble/themes/default/images/favicon.ico,GET,,200,,,false
 
-#A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
-#${host}/pebble/scripts/pebble.js
-#${host}/pebble/dwr/engine.js
+
 
 
 
