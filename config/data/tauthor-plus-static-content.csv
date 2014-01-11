@@ -4,7 +4,7 @@
 #
 Type,Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded
 
-# Just load the homepage 3 times including static content.
+# Just load the homepage including static content.
 A,Homepage,"${host}pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
 S,,${host}pebble/themes/default/screen.css,GET,,200,,,false
 S,,${host}pebble/themes/_pebble/print.css,GET,,200,,,false
