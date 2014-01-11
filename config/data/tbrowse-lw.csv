@@ -1,0 +1,18 @@
+# The header. This is for TLWURL, because it uses RegExp, for a full header documentation
+# see the file tauthor.csv
+#
+# This user just fires a lot of urls, all get, nothing fancy, nearly minimal file format.
+# No verification, nothing. But the default verification is code 200 or anything good, so 
+# a failure case cannot be put into that minimal configuration.
+Name,URL
+
+Homepage,${host}/pebble/
+Day,${host}/pebble/2014/01/11.html
+Day,"${host}/pebble/${RANDOM.Number(2012,2018)}/01/11.html"
+Day,"${host}/pebble/2014/${RANDOM.Number(10,13)}/11.html"
+Tag,${host}/pebble/tags/andorra/
+Tag,${host}/pebble/tags/${DATA.getTown()}/
+Post,${host}/pebble/2014/01/11/1389462180010.html
+AdvancedSearch,${host}/pebble/search.action
+Categories,${host}/pebble/categories/
+Tags,${host}/pebble/tags/
