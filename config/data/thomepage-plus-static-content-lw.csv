@@ -1,0 +1,30 @@
+# The header. This is for TURL, because it uses XPath and it also loads static content be
+# defining it. So it should rather not have static content loading enabled, otherwise it
+# will load a lot of things twice or once, in case the caching kicks in.
+#
+Type, Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded
+
+# Just load the homepage including static content.
+A, Homepage, "${host}/pebble/", GET,, 200, "<div id=""blogName"" ><span>(.*?)</span></div>", "Pebble Test Suite", false
+	S,,${host}/pebble/themes/xceptance-style/screen.css,GET,,200,,,false
+	S,,${host}/pebble/themes/_pebble/print.css,GET,,200,,,false
+	S,,${host}/pebble/themes/_pebble/handheld.css,GET,,200,,,false
+	S,,${host}/pebble/FCKeditor/fckeditor.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/pebble.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/prototype.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/scriptaculous.js,GET,,200,,,false
+	S,,${host}/pebble/dwr/engine.js,GET,,200,,,false
+	S,,${host}/pebble/dwr/util.js,GET,,200,,,false
+	S,,${host}/pebble/dwr/interface/Pebble.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/builder.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/effects.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/dragdrop.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/controls.js,GET,,200,,,false
+	S,,${host}/pebble/scripts/slider.js,GET,,200,,,false
+	S,,${host}/pebble/common/images/feed-icon-16x16.png,GET,,200,,,false
+	S,,${host}/pebble/common/images/feed-icon-10x10.png,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/header.jpg,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/sidebartitle.jpg,GET,,200,,,false
+	S,,${host}/pebble/themes/xceptance-style/images/bullet.jpg,GET,,200,,,false
+
+
