@@ -367,7 +367,7 @@ public class CSVBasedURLActionTest
         action.getParameters();
     }
     
-    ADD TESTING FOR PROPERTY LOOKUP FROM PROPERTIES FILE VIA NAME
+    // ADD TESTING FOR PROPERTY LOOKUP FROM PROPERTIES FILE VIA NAME
 }
 
 
