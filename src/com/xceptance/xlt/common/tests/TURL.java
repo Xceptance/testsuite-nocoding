@@ -9,8 +9,8 @@ import com.xceptance.xlt.common.util.StaticContentDownloader;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * This is a simple single URL test case. It can be used to create considerable load for simple investigations. Cookie
- * handling, as well as content comparison is handled automatically. See the properties too.
+ * This is a simple single URL test case. It can be used to create considerable load for simple investigations. 
+ * Cookie handling, as well as content comparison is handled automatically. See the properties too.
  */
 public class TURL extends AbstractURLTestCase
 {
@@ -20,7 +20,7 @@ public class TURL extends AbstractURLTestCase
         // our action tracker to build up a correct chain of pages
         AbstractHtmlPageAction lastAction = null; 
         StaticContentDownloader downloader = null;
-         
+
         try
         {
             // let's loop about the data we have
@@ -29,12 +29,12 @@ public class TURL extends AbstractURLTestCase
                 // ok, action or static?
                 if (csvBasedAction.isAction())
                 {
-                    // download all collected static content stuff first
+                    // if anything is left from the previous action, finish that first
                     if (downloader != null)
                     {
                         downloader.waitForCompletion();
                     }
-                    
+
                     if (lastAction == null)
                     {
                         // our first action, so start the browser too
@@ -45,12 +45,12 @@ public class TURL extends AbstractURLTestCase
                         // subsequent actions
                         lastAction = new SimpleURL(this, lastAction, csvBasedAction);
                     }
-                    
+
                     // run it
                     lastAction.run();
                 }
-                
-                // this is the part that deals with the downloads
+
+                // this is the part that deals with the static downloads
                 if (csvBasedAction.isStaticContent())
                 {
                     if (downloader == null)
@@ -60,7 +60,10 @@ public class TURL extends AbstractURLTestCase
                             // we do not have any action yet, so we have to make one up
                             lastAction = new SimpleURL(this, csvBasedAction, login, password);
                         }
-                        downloader = new StaticContentDownloader(((XltWebClient)lastAction.getWebClient()), getProperty("com.xceptance.xlt.staticContent.downloadThreads", 1));
+
+                        // build a downloader only when needed
+                        downloader = new StaticContentDownloader(((XltWebClient)lastAction.getWebClient()), 
+                                                                 getProperty("com.xceptance.xlt.staticContent.downloadThreads", 1));
                     }
                     downloader.addRequest(csvBasedAction.getURL(this));
                 }
