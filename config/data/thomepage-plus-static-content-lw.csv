@@ -1,4 +1,4 @@
-# The header. This is for TURL, because it uses XPath and it also loads static content be
+# The header. This is for TLWURL, because it uses RgExp and it also loads static content be
 # defining it. So it should rather not have static content loading enabled, otherwise it
 # will load a lot of things twice or once, in case the caching kicks in.
 #
