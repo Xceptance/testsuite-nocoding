@@ -10,8 +10,8 @@
 # Name:			the name of the action (Action-<recordNumber>) (optional)
 # URL:			an url (mandatory)
 # Method:		which method of GET or POST, defaults to GET
-# Parameters:	which parameters to send (none), when GET, this can be already part of the url 
-                (optional)
+# Parameters:	which parameters to send, when GET, these can be already part of the url, 
+                no default values (optional)
 # ResponseCode:	which http response code is expected, defaults to 200 (optional)
 # XPath:		XPath for validation (none) only used when TURL (optional)
 # RegExp:		regexp for validation (none) only used when TLWURL (optional)
