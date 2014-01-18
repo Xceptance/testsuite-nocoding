@@ -2,21 +2,22 @@
 #
 # CSV-based URL Action Definition
 #
-# This is the definition of url actions as GET or POST including
-# parameters and validation.
+# This is the definition of url actions as GET or POST including parameters and validation.
 # 
 # Format Details and defaults when not set 
 # 
-# Type:			action (A) or static content (S), optional, defaults to A
-# Name:			the name of the action (Action-<recordNumber>)
+# Type:			action (A) or static content (S), defaults to A (optional)
+# Name:			the name of the action (Action-<recordNumber>) (optional)
 # URL:			an url (mandatory)
-# Method:		which method of GET or POST (GET)
-# Parameters:	which parameters to send (none), when GET, this can be already part of the url
-# ResponseCode:	which http response code is expected (200)
-# XPath:		XPath for validation (none) only used when TURL
-# RegExp:		regexp for validation (none) only used when TLWURL
-# Text:			Text for validation against the xpath/regexp result or just searched on the page (none) 
-# Encoded:		whether or not url and parameters are already encoded (false)
+# Method:		which method of GET or POST, defaults to GET
+# Parameters:	which parameters to send (none), when GET, this can be already part of the url 
+                (optional)
+# ResponseCode:	which http response code is expected, defaults to 200 (optional)
+# XPath:		XPath for validation (none) only used when TURL (optional)
+# RegExp:		regexp for validation (none) only used when TLWURL (optional)
+# Text:			Text for validation against the xpath/regexp result or just searched on the page,
+                no default text (optional) 
+# Encoded:		whether or not url and parameters are already encoded, defaults to false (optional) 
 #
 # Comments and empty lines are permitted. Header lines have to be valid. Additional header lines
 # are not permitted as well as the spelling has to match including upper/lower-casing.
@@ -35,7 +36,7 @@
 # ${DATA.getStreet(false)} or ${DATA.getTrulyUniqueEmail("xyzqtar987654.com")} will work.
 # You can basically write a lot into this command, because it is a beanshell. 
 #
-# A special perk are the columns xpath1 to xpath10. You can get any data from the page using
+# A special feature are the columns xpath1 to xpath10. You can get any data from the page using
 # these. They will end up in variables xpath1 to xpath10 and can be used in any expression later.
 #
 # When running the LW based test, you have to use regexp1 to regexp10 instead. If you specify
