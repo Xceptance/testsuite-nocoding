@@ -64,26 +64,26 @@ http://justhost.org/aksdfsa?jhsadjfha
 </pre>
 
 ### A More Sophisticated Example
-<pre>
-# The header. This is for TURL, because it uses XPath.
-Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded, xpath1, xpath2
+<pre><code>
+ # The header. This is for TURL, because it uses XPath.
+ Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded, xpath1, xpath2
 
-# Just load the homepage
-Homepage, "${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false,,
+ # Just load the homepage
+ Homepage, "${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false,,
 
-# Just log on
-Login,"${host}/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"id('sidebar')/div[@class='sidebarItem']/div[@class='sidebarItemTitle']/span","Logged in as username",true,,
+ # Just log on
+ Login,"${host}/pebble/j_acegi_security_check",POST,"redirectUrl=%2F&j_username=username&j_password=password",200,"id('sidebar')/div[@class='sidebarItem']/div[@class='sidebarItemTitle']/span","Logged in as username",true,,
 
-# Goto to new article creation, verify existence of xpath, content is not needed, fill xpath1 and xpath2 with data for later use
-NewArticle,"${host}/pebble/addBlogEntry.secureaction#form",GET,,200,"id('content')/div[@class='contentItem unpublished']",,false,//input[@name='entry']/@value,//input[@name='date']/@value
-</pre>
+ # Goto to new article creation, verify existence of xpath, content is not needed, fill xpath1 and xpath2 with data for later use
+ NewArticle,"${host}/pebble/addBlogEntry.secureaction#form",GET,,200,"id('content')/div[@class='contentItem unpublished']",,false,//input[@name='entry']/@value,//input[@name='date']/@value
+</code></pre>
 
 ### An Example with Static Content
 <pre>
-Type, Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded
+ Type, Name, URL, Method, Parameters, ResponseCode, RegExp, Text, Encoded
 
-# Just load the homepage including static content
-A, Homepage, "${host}/pebble/", GET,, 200, "&l;div id=""blogName"" &gt;&lt;span>(.*?)&lt;/span>&lt;/div&gt;", "Pebble Test Suite", false
+ # Just load the homepage including static content
+ A, Homepage, "${host}/pebble/", GET,, 200, "&l;div id=""blogName"" &gt;&lt;span>(.*?)&lt;/span>&lt;/div&gt;", "Pebble Test Suite", false
 	S,,${host}/pebble/themes/xceptance-style/screen.css,GET,,200,,,false
 	S,,${host}/pebble/themes/_pebble/print.css,GET,,200,,,false
 	S,,${host}/pebble/themes/_pebble/handheld.css,GET,,200,,,false
