@@ -28,6 +28,7 @@ import com.xceptance.common.util.RegExUtils;
 import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
 import com.xceptance.xlt.common.tests.AbstractURLTestCase;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
+import com.xceptance.xlt.common.util.UserAgentUtils;
 
 
 /**
@@ -93,6 +94,9 @@ public class SimpleURL extends AbstractHtmlPageAction
     @Override
     protected void execute() throws Exception
     {
+        // set the user agent UID if required
+        UserAgentUtils.setUserAgentUID(this.getWebClient(), testCase.getProperty("userAgent.UID", false));
+        
         loadPage(action.getURL(testCase), action.getMethod(), action.getParameters(testCase));
     }
 

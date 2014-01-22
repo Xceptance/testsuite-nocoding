@@ -70,6 +70,11 @@ public class StaticContentDownloader
     private final XltWebClient webClient;
 
     /**
+     * Use dynamic UID in the user agent
+     */
+    private final boolean userAgentUID;
+    
+    /**
      * Creates a new RequestQueue object and initializes it with the given web client and the number of threads which
      * process the requests.
      * 
@@ -77,12 +82,15 @@ public class StaticContentDownloader
      *            the web client to use
      * @param threadCount
      *            the number of threads
+     * @param userAgentUID
+     *            do we need dynamic user agent identifiers          
      */
-    public StaticContentDownloader(final XltWebClient webClient, final int threadCount)
+    public StaticContentDownloader(final XltWebClient webClient, final int threadCount, final boolean userAgentUID)
     {
         this.webClient = webClient;
         this.threadCount = threadCount;
         parallelModeEnabled = true;
+        this.userAgentUID = userAgentUID;
 
         final ThreadFactory threadFactory = new DaemonThreadFactory(new Getter<String>()
         {
@@ -220,6 +228,7 @@ public class StaticContentDownloader
         {
             try
             {
+                UserAgentUtils.setUserAgentUID(webClient, userAgentUID);
                 webClient.loadWebResponse(new WebRequest(url));
             }
             catch (final Exception e)

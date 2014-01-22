@@ -82,7 +82,8 @@ public class TLWURL extends AbstractURLTestCase
                         
                         // build a downloader only when needed
                         downloader = new StaticContentDownloader(((XltWebClient)lastAction.getWebClient()), 
-                                                                 getProperty("com.xceptance.xlt.staticContent.downloadThreads", 1));
+                                                                 getProperty("com.xceptance.xlt.staticContent.downloadThreads", 1),
+                                                                 getProperty("userAgent.UID", false));
                     }
                     downloader.addRequest(csvBasedAction.getURL(this));
                 }              
