@@ -19,7 +19,6 @@ package com.xceptance.xlt.common.util;
 import java.util.UUID;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.xceptance.common.util.RegExUtils;
 
 /**
  * Helper for dynamically adjusting the user agent if needed. 
@@ -34,11 +33,6 @@ public class UserAgentUtils
     private static final String MARKER = " UID/";
     
     /**
-     * Searcher pattern
-     */
-    private static final String MARKERSEARCHER_REGEXP = MARKER + ".+";
-    
-    /**
      * Adds a random UUID to the user agent. Replaces an existing one
      * if already set.
      * 
@@ -49,19 +43,8 @@ public class UserAgentUtils
     {
         if (active)
         {
-            String userAgent = webClient.getBrowserVersion().getUserAgent();
-            if (RegExUtils.isMatching(userAgent, ".*" + MARKERSEARCHER_REGEXP))
-            {
-                // replaces anything beginning with MARKER
-                userAgent = RegExUtils.replaceAll(userAgent, MARKERSEARCHER_REGEXP, MARKER + UUID.randomUUID().toString());
-            }
-            else
-            {    
-                // appends the data
-                userAgent = userAgent.concat(MARKER + UUID.randomUUID().toString());
-            }
-        
-            webClient.getBrowserVersion().setUserAgent(userAgent);
+            final String userAgent = webClient.getBrowserVersion().getUserAgent();
+            webClient.addRequestHeader("User-Agent", userAgent.concat(MARKER).concat(UUID.randomUUID().toString()));
         }
     }
 }

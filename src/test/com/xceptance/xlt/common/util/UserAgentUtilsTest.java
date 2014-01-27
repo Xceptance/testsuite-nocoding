@@ -16,53 +16,81 @@
  */
 package test.com.xceptance.xlt.common.util;
 
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.net.URL;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.xceptance.xlt.common.util.UserAgentUtils;
 
 public class UserAgentUtilsTest
 {
+
+    // dummy page content used for test URLs
+    final String response = "<html><head><title>Test</title></head><body><h1>Test 1</h1></body></html>";
+
+    // test URLs
+    final String testUrl = "http://www.foobar.com/";
+    
     /**
      * Change the agent twice
+     * @throws IOException 
+     * @throws FailingHttpStatusCodeException 
      */
     @Test
-    public void testSetUserAgentUID_true()
+    public void testSetUserAgentUID_true() throws FailingHttpStatusCodeException, IOException
     {
+        // create mocked web connection 
         final WebClient webClient = new WebClient();
-        final String originalUserAgent = webClient.getBrowserVersion().getUserAgent();
+        final MockWebConnection conn = new MockWebConnection();
+        conn.setResponse(new URL(testUrl), response);
+        webClient.setWebConnection(conn);        
         
         // change it
         UserAgentUtils.setUserAgentUID(webClient, true);
         
-        final String newUserAgent1 = webClient.getBrowserVersion().getUserAgent();
-        Assert.assertTrue(newUserAgent1.matches("^" + Pattern.quote(originalUserAgent) + " UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
+        // request it
+        webClient.getPage(testUrl);
+        
+        final String newUserAgent1 = conn.getLastWebRequest().getAdditionalHeaders().get("User-Agent");
+        Assert.assertTrue(newUserAgent1.matches("^.* UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
 
         // change it again
         UserAgentUtils.setUserAgentUID(webClient, true);
+
+        // request it
+        webClient.getPage(testUrl);
         
-        final String newUserAgent2 = webClient.getBrowserVersion().getUserAgent();
-        Assert.assertTrue(newUserAgent2.matches("^" + Pattern.quote(originalUserAgent) + " UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
+        final String newUserAgent2 = conn.getLastWebRequest().getAdditionalHeaders().get("User-Agent");
+        Assert.assertTrue(newUserAgent2.matches("^.* UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
         Assert.assertFalse(newUserAgent2.equals(newUserAgent1));
     }
 
     /**
      * Do not change it
+     * @throws IOException 
+     * @throws FailingHttpStatusCodeException 
      */
     @Test
-    public void testSetUserAgentUID_false()
+    public void testSetUserAgentUID_false() throws FailingHttpStatusCodeException, IOException
     {
+        // create mocked web connection 
         final WebClient webClient = new WebClient();
-        final String originalUserAgent = webClient.getBrowserVersion().getUserAgent();
-        
+        final MockWebConnection conn = new MockWebConnection();
+        conn.setResponse(new URL(testUrl), response);
+        webClient.setWebConnection(conn);        
+
         // change it
         UserAgentUtils.setUserAgentUID(webClient, false);
-        
-        final String newUserAgent = webClient.getBrowserVersion().getUserAgent();
-        Assert.assertTrue(newUserAgent.equals(originalUserAgent));
+
+        webClient.getPage(testUrl);
+
+        final String newUserAgent = conn.getLastWebRequest().getAdditionalHeaders().get("User-Agent");
+        Assert.assertNull(newUserAgent);
     }
 }
