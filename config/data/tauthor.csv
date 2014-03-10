@@ -11,12 +11,12 @@
 # URL:			an url (mandatory)
 # Method:		which method of GET or POST, defaults to GET
 # Parameters:	which parameters to send, when GET, these can be already part of the url, 
-                no default values (optional)
+#               no default values (optional)
 # ResponseCode:	which http response code is expected, defaults to 200 (optional)
 # XPath:		XPath for validation (none) only used when TURL (optional)
 # RegExp:		regexp for validation (none) only used when TLWURL (optional)
 # Text:			Text for validation against the xpath/regexp result or just searched on the page,
-                no default text (optional) 
+#               no default text (optional) 
 # Encoded:		whether or not url and parameters are already encoded, defaults to false (optional) 
 #
 # Comments and empty lines are permitted. Header lines have to be valid. Additional header lines
