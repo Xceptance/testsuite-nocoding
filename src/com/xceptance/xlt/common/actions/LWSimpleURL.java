@@ -16,6 +16,7 @@
  */
 package com.xceptance.xlt.common.actions;
 
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.xceptance.xlt.api.actions.AbstractLightWeightPageAction;
 import com.xceptance.xlt.common.tests.AbstractURLTestCase;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
 import com.xceptance.xlt.common.util.UserAgentUtils;
+import com.xceptance.xlt.engine.XltWebClient;
 
 /**
  * This is a simple test class for pulling URLs. It is fully configurable using properties.
@@ -42,17 +44,22 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
     // the test case reference for property lookup in the actions
     private final AbstractURLTestCase testCase;
 
+    // Downloader for additional requests belonging to this action (i.e. static content)
+    private final Downloader downloader;
+
     /**
      * @param previousAction
      * @param timerName
      */
-    public LWSimpleURL(final AbstractURLTestCase testCase, final CSVBasedURLAction action, final String login, final String password)
+    public LWSimpleURL(final AbstractURLTestCase testCase, final CSVBasedURLAction action, final String login,
+        final String password)
     {
         super(action.getName(testCase));
 
         this.testCase = testCase;
         this.action = action;
-        
+        this.downloader = new Downloader((XltWebClient) getWebClient());
+
         // add credentials, if any
         if (login != null && password != null)
         {
@@ -67,11 +74,13 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
      * @param previousAction
      * @param timerName
      */
-    public LWSimpleURL(final AbstractURLTestCase testCase, final AbstractLightWeightPageAction prevAction, final CSVBasedURLAction action)
+    public LWSimpleURL(final AbstractURLTestCase testCase, final AbstractLightWeightPageAction prevAction,
+        final CSVBasedURLAction action)
     {
         super(prevAction, action.getName(testCase));
         this.action = action;
         this.testCase = testCase;
+        this.downloader = new Downloader((XltWebClient) getWebClient());
     }
 
     /*
@@ -95,8 +104,10 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
     {
         // set the user agent UID if required
         UserAgentUtils.setUserAgentUID(this.getWebClient(), testCase.getProperty("userAgent.UID", false));
-        
+
         loadPage(action.getURL(testCase), action.getMethod(), action.getParameters(testCase));
+
+        downloader.loadRequests();
     }
 
     /*
@@ -113,8 +124,8 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
         final String content = this.getContent();
 
         final Pattern pattern = action.getRegexp(testCase);
-        final String text  = action.getText(testCase);        
-        
+        final String text = action.getText(testCase);
+
         // check anything else?
         if (pattern != null)
         {
@@ -153,7 +164,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
             Assert.assertNotNull(MessageFormat.format("Text is not on the page. Expected:<{0}>", text),
                                  RegExUtils.getFirstMatch(content, text));
         }
-        
+
         // take care of the parameters to fill up the interpreter
         final List<Pattern> regexpGetters = action.getRegExpGetterList(testCase);
         final List<Object> gettersResults = new ArrayList<Object>(regexpGetters.size());
@@ -165,7 +176,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
                 gettersResults.add(null);
                 continue;
             }
-       
+
             // get the elements from the page
             final Matcher matcher = p.matcher(content);
 
@@ -173,7 +184,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
             {
                 final String[] matches = new String[matcher.groupCount() + 1];
                 matches[0] = matcher.group();
-                
+
                 for (int x = 1; x <= matcher.groupCount(); x++)
                 {
                     matches[x] = matcher.group(x);
@@ -187,5 +198,16 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
         }
         // send it back for spicing up the interpreter
         action.setRegExpGetterResult(gettersResults);
+    }
+
+    /**
+     * Add an additional request to the current action.
+     * 
+     * @param url
+     *            request URL
+     */
+    public void addRequest(final URL url)
+    {
+        downloader.addRequest(url);
     }
 }

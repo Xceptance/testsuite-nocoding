@@ -15,6 +15,8 @@
  *
  */
 package com.xceptance.xlt.common.actions;
+
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
 import com.xceptance.xlt.common.tests.AbstractURLTestCase;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
 import com.xceptance.xlt.common.util.UserAgentUtils;
-
+import com.xceptance.xlt.engine.XltWebClient;
 
 /**
  * This is a simple test class for pulling URLs. It is fully configurable using properties.
@@ -41,19 +43,24 @@ public class SimpleURL extends AbstractHtmlPageAction
 
     // the test case reference for property lookup in the actions
     private final AbstractURLTestCase testCase;
-    
+
+    // Downloader for additional requests belonging to this action (i.e. static content)
+    private final Downloader downloader;
+
     /**
      * The constructor when a new web session should be started.
      * 
      * @param previousAction
      * @param timerName
      */
-    public SimpleURL(final AbstractURLTestCase testCase, final CSVBasedURLAction action, final String login, final String password)
+    public SimpleURL(final AbstractURLTestCase testCase, final CSVBasedURLAction action, final String login,
+        final String password)
     {
         super(action.getName(testCase));
         this.action = action;
         this.testCase = testCase;
-        
+        this.downloader = new Downloader((XltWebClient) getWebClient());
+
         // add credentials, if any
         if (login != null && password != null)
         {
@@ -68,11 +75,13 @@ public class SimpleURL extends AbstractHtmlPageAction
      * @param previousAction
      * @param timerName
      */
-    public SimpleURL(final AbstractURLTestCase testCase, final AbstractHtmlPageAction prevAction, final CSVBasedURLAction action)
+    public SimpleURL(final AbstractURLTestCase testCase, final AbstractHtmlPageAction prevAction,
+        final CSVBasedURLAction action)
     {
         super(prevAction, action.getName(testCase));
         this.testCase = testCase;
         this.action = action;
+        this.downloader = new Downloader((XltWebClient) getWebClient());
     }
 
     /*
@@ -96,8 +105,10 @@ public class SimpleURL extends AbstractHtmlPageAction
     {
         // set the user agent UID if required
         UserAgentUtils.setUserAgentUID(this.getWebClient(), testCase.getProperty("userAgent.UID", false));
-        
+
         loadPage(action.getURL(testCase), action.getMethod(), action.getParameters(testCase));
+
+        downloader.loadRequests();
     }
 
     /*
@@ -114,8 +125,8 @@ public class SimpleURL extends AbstractHtmlPageAction
         action.getHttpResponseCodeValidator().validate(page);
 
         final String xpath = action.getXPath(testCase);
-        final String text  = action.getText(testCase);
-        
+        final String text = action.getText(testCase);
+
         // check anything else?
         if (xpath != null)
         {
@@ -150,18 +161,18 @@ public class SimpleURL extends AbstractHtmlPageAction
         for (int i = 0; i < xpathGetters.size(); i++)
         {
             final String xp = xpathGetters.get(i);
-            
+
             // nothing to do, skip and return empty result
             if (xp == null)
             {
                 xpathGettersResults.add(null);
                 continue;
             }
-            
+
             // get the elements from the page
             @SuppressWarnings("unchecked")
             final List<HtmlElement> elements = (List<HtmlElement>) page.getByXPath(xp);
-            
+
             if (!elements.isEmpty())
             {
                 if (elements.size() > 1)
@@ -179,9 +190,20 @@ public class SimpleURL extends AbstractHtmlPageAction
             {
                 xpathGettersResults.add(null);
             }
-            
+
         }
         // send it back for spicing up the interpreter
         action.setXPathGetterResult(xpathGettersResults);
+    }
+
+    /**
+     * Add an additional request to the current action.
+     * 
+     * @param url
+     *            request URL
+     */
+    public void addRequest(final URL url)
+    {
+        downloader.addRequest(url);
     }
 }
