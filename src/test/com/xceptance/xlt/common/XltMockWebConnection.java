@@ -28,8 +28,6 @@ import com.xceptance.xlt.engine.XltWebClient;
  * <p>
  * The only difference is the post-processing of responses performed by the {@link XltWebClient}.
  * </p>
- * 
- * @author Hartmut Arlt (Xceptance Software Technologies GmbH)
  */
 public class XltMockWebConnection extends MockWebConnection
 {

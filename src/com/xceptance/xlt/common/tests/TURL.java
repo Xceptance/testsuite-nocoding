@@ -16,9 +16,11 @@
  */
 package com.xceptance.xlt.common.tests;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.actions.SimpleURL;
+import com.xceptance.xlt.common.actions.SimpleURL_XHR;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
 
 /**
@@ -36,10 +38,9 @@ public class TURL extends AbstractURLTestCase
         // let's loop about the data we have
         for (final CSVBasedURLAction csvBasedAction : csvBasedActions)
         {
-            // ok, action or static?
+            // ok, usual action or static?
             if (csvBasedAction.isAction())
             {
-
                 if (lastAction == null)
                 {
                     // our first action, so start the browser too
@@ -56,7 +57,7 @@ public class TURL extends AbstractURLTestCase
             }
 
             // this is the part that deals with the static downloads
-            if (csvBasedAction.isStaticContent())
+            else if (csvBasedAction.isStaticContent())
             {
                 if (lastAction == null)
                 {
@@ -66,12 +67,22 @@ public class TURL extends AbstractURLTestCase
                 else
                 {
                     // it's content that belong to the last known action
-                    lastAction.addRequest(csvBasedAction.getURL(this));
+                    lastAction.addRequest(csvBasedAction.getUrlString());
                 }
             }
-        }
 
-        // there might be an action we have collected the requests for but not kicked it off yet
+            // handle XHR actions
+            else if (csvBasedAction.isXHRAction())
+            {
+                if (lastAction == null)
+                {
+                    Assert.fail("AJAX actions cannot be used as first action");
+                }
+
+                lastAction.run();
+                lastAction = new SimpleURL_XHR(this, lastAction, csvBasedAction);
+            }
+        }
         if (lastAction != null)
         {
             lastAction.run();

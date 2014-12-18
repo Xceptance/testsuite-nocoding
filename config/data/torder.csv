@@ -1,0 +1,82 @@
+################################################################################################
+#
+# CSV-based URL Action Definition
+#
+# This is the definition of url actions as GET or POST including parameters and validation.
+# 
+# Format Details and defaults when not set 
+# 
+# Type:			action (A), AJAX action (XA) or static content (S), defaults to A (optional)
+# Name:			the name of the action (Action-<recordNumber>) (optional)
+# URL:			an url (mandatory)
+# Method:		which method of GET or POST, defaults to GET
+# Parameters:	which parameters to send, when GET, these can be already part of the url, 
+#               no default values (optional)
+# ResponseCode:	which http response code is expected, defaults to 200 (optional)
+# XPath:		XPath for validation (none) only used when TURL (optional)
+# RegExp:		regexp for validation (none) only used when TLWURL (optional)
+# Text:			Text for validation against the xpath/regexp result or just searched on the page,
+#               no default text (optional) 
+# Encoded:		whether or not url and parameters are already encoded, defaults to false (optional) 
+#
+# Comments and empty lines are permitted. Header lines have to be valid. Additional header lines
+# are not permitted as well as the spelling has to match including upper/lower-casing.
+#
+# Additional placeholders give you the ability to insert random data into the lines. The columns
+# URL, Parameters, XPath, Text, and RegExp support it.
+#
+# ${NOW} : Current timestamp in milliseconds
+# ${RANDOM.String(x)} : a random string with length x. Contains [A-Za-z].   
+# ${RANDOM.String(x, s)} : a random string with length x. Contains characters from s.   
+# ${RANDOM.Number(max)} : returns an integer between 0 (inclusive) and max (inclusive)   
+# ${RANDOM.Number(min, max)} : returns an integer between min (inclusive) and max (inclusive)   
+# ${foobar} : Looks up the property foobar from the properties. Normal fallback mode. 
+#
+# Additionally you can use DATA which is an instance if the GeneralDataProvider. So things like
+# ${DATA.getStreet(false)} or ${DATA.getTrulyUniqueEmail("xyzqtar987654.com")} will work.
+# You can basically write a lot into this command, because it is a beanshell. 
+#
+# A special feature are the columns xpath1 to xpath10. You can get any data from the page using
+# these. They will end up in variables xpath1 to xpath10 and can be used in any expression later.
+#
+# When running the LW based test, you have to use regexp1 to regexp10 instead. If you specify
+# a capturing group, the group data will end up in regexp1[1] or higher.
+#
+# The interpretation of ${something} starts with the property lookup. Only if no property is
+# found, the beanshell interpretation will take place.
+#
+# The character $ is NOT supported within the commands right now.
+#
+#################################################################################################
+# The header. This is for TURL, because it uses XPath.
+Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
+
+# Just load the homepage
+A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+
+# Select a category
+A,SelectCategory,"${host}/posters/category/Main%20Dishes?categoryId=5",GET,,200,id('titleCategoryName'),"Main Dishes",false
+
+# View the product in detail
+A,ProductDetailView,"${host}/posters/productDetail/XXL%20Burger?productId=48",GET,,200,id('titleProductName'),"XXL Burger",false
+
+# Configure the product (select finish and size)
+XA,ConfigureProduct,"${host}/posters/updatePrice",POST,size=32 x 24 in&productId=48,200,,,false
+
+# Add the configured product to the cart
+XA,AddToCart,"${host}/posters/addToCartSlider?productId=48&finish=gloss&size=32%20x%2024%20in",GET,,200,,,false
+
+# View the cart
+A,ViewCart,"${host}/posters/cart",GET,,200,id('titleCart'),"Cart",false
+
+# Proceed to checkout
+A,Checkout,"${hostsec}/posters/checkout",GET,,200,id('titleDelAddr'),"Select or enter a shipping address",false
+
+# Fill out and submit shipping address form
+A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Select or enter a payment method",false
+
+# Fill out and submit payment form
+A,COBilling,"${hostsec}/posters/paymentMethodCompleted",POST,creditCardNumber=4111111111111111&name=Dagobert Duck&expirationDateMonth=01&expirationDateYear=2017&btnAddPayment=,200,id('titleOrderOverview'),"Order Overview",false
+
+# Finally, place the order
+A,PlaceOrder,"${hostsec}/posters/checkoutCompleted",POST,btnOrder=,200,"//script[not(@src) and contains(text(),'""Thank you for shopping with us!""')]",,false

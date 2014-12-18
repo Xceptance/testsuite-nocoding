@@ -5,26 +5,19 @@
 Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
 # Just load the homepage including static content.
-A,Homepage,"${host}/pebble/",GET,,200,id('blogName'),"Pebble Test Suite",false
-	S,,${host}/pebble/themes/xceptance-style/screen.css,GET,,200,,,false
-	S,,${host}/pebble/themes/_pebble/print.css,GET,,200,,,false
-	S,,${host}/pebble/themes/_pebble/handheld.css,GET,,200,,,false
-	S,,${host}/pebble/FCKeditor/fckeditor.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/pebble.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/prototype.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/scriptaculous.js,GET,,200,,,false
-	S,,${host}/pebble/dwr/engine.js,GET,,200,,,false
-	S,,${host}/pebble/dwr/util.js,GET,,200,,,false
-	S,,${host}/pebble/dwr/interface/Pebble.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/builder.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/effects.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/dragdrop.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/controls.js,GET,,200,,,false
-	S,,${host}/pebble/scripts/slider.js,GET,,200,,,false
-	S,,${host}/pebble/common/images/feed-icon-16x16.png,GET,,200,,,false
-	S,,${host}/pebble/common/images/feed-icon-10x10.png,GET,,200,,,false
-	S,,${host}/pebble/themes/xceptance-style/images/header.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/xceptance-style/images/sidebartitle.jpg,GET,,200,,,false
-	S,,${host}/pebble/themes/xceptance-style/images/bullet.jpg,GET,,200,,,false
-
-
+A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+	S,,${host}/posters/assets/css/bootstrap-2.3.1.min.css,GET,,200,,,false
+	S,,${host}/posters/assets/css/bootstrap-responsive-2.0.4.css,GET,,200,,,false
+	S,,${host}/posters/assets/js/jquery-1.9.1.min.js,GET,,200,,,false
+	S,,${host}/posters/assets/css/cartSlider.css,GET,,200,,,false
+	S,,${host}/posters/assets/js/bootstrap-paginator-0.5.js,GET,,200,,,false
+	S,,${host}/posters/assets/js/custom.js,GET,,200,,,false
+	S,,${host}/posters/assets/js/customCartSlider.js,GET,,200,,,false
+	S,,${host}/posters/assets/js/bootstrap-2.3.1.min.js,GET,,200,,,false
+	S,,${host}/posters/assets/img/products/XXL/XXL_1.jpg,GET,,200,,,false
+	S,,${host}/posters/assets/img/xceptanceLogo.png,GET,,200,,,false
+	S,,${host}/posters/assets/img/products/XXL/XXL_2.jpg,GET,,200,,,false
+	S,,${host}/posters/assets/img/products/XXL/XXL_3.jpg,GET,,200,,,false
+	S,,${host}/posters/assets/img/products/XXL/XXL_4.jpg,GET,,200,,,false
+	S,,${host}/posters/assets/img/cartSliderFooter.png,GET,,200,,,false
+	S,,${host}/posters/assets/img/glyphicons-halflings.png,GET,,200,,,false

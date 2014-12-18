@@ -22,7 +22,11 @@ import java.util.List;
 
 import org.junit.Assert;
 
-import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
+import com.gargoylesoftware.htmlunit.DefaultPageCreator;
+import com.gargoylesoftware.htmlunit.DefaultPageCreator.PageType;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HTMLParser;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.common.util.RegExUtils;
@@ -30,108 +34,67 @@ import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
 import com.xceptance.xlt.common.tests.AbstractURLTestCase;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
 import com.xceptance.xlt.common.util.UserAgentUtils;
-import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * This is a simple test class for pulling URLs. It is fully configurable using properties.
+ * Performs an AJAX request and parses the response into an container element that can be used for validation.
  */
-public class SimpleURL extends AbstractHtmlPageAction
+public class SimpleURL_XHR extends SimpleURL
 {
-    /**
-     * the action to be executed
-     */
-    protected final CSVBasedURLAction action;
+    protected WebResponse response;
 
     /**
-     * the test case reference for property lookup in the actions
+     * @param testCase
+     * @param prevAction
+     * @param action
      */
-    protected final AbstractURLTestCase testCase;
-
-    /**
-     * Downloader for additional requests belonging to this action (i.e. static content)
-     */
-    protected final Downloader downloader;
-
-    /**
-     * The constructor when a new web session should be started.
-     * 
-     * @param previousAction
-     * @param timerName
-     */
-    public SimpleURL(final AbstractURLTestCase testCase, final CSVBasedURLAction action, final String login,
-        final String password)
-    {
-        super(action.getName(testCase));
-        this.action = action;
-        this.testCase = testCase;
-        this.downloader = new Downloader((XltWebClient) getWebClient());
-
-        // add credentials, if any
-        if (login != null && password != null)
-        {
-            final DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-            credentialsProvider.addCredentials(login, password);
-
-            this.getWebClient().setCredentialsProvider(credentialsProvider);
-        }
-    }
-
-    /**
-     * @param previousAction
-     * @param timerName
-     */
-    public SimpleURL(final AbstractURLTestCase testCase, final AbstractHtmlPageAction prevAction,
+    public SimpleURL_XHR(final AbstractURLTestCase testCase, final AbstractHtmlPageAction prevAction,
         final CSVBasedURLAction action)
     {
-        super(prevAction, action.getName(testCase));
-        this.testCase = testCase;
-        this.action = action;
-        this.downloader = new Downloader((XltWebClient) getWebClient());
+        super(testCase, prevAction, action);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.xceptance.xlt.api.actions.AbstractAction#preValidate()
-     */
-    @Override
-    public void preValidate() throws Exception
-    {
-        // do not prevalidate anything here, we assume a correct URL
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.xceptance.xlt.api.actions.AbstractAction#execute()
+    /**
+     * {@inheritDoc}
      */
     @Override
     protected void execute() throws Exception
     {
-        // set the user agent UID if required
+        final HtmlPage page = getPreviousAction().getHtmlPage();
+
         UserAgentUtils.setUserAgentUID(this.getWebClient(), testCase.getProperty("userAgent.UID", false));
 
-        loadPage(action.getURL(testCase), action.getMethod(), action.getParameters(testCase));
-                
-        // make element Look Up and add to interpreter 
-        final HtmlPage page = getHtmlPage();
-        addPageToInterpreter(page);
-  
+        final WebRequest request = createWebRequestSettings(action.getURL(), action.getMethod(), action.getParameters());
+        request.setAdditionalHeader("X-Requested-With", "XMLHttpRequest");
+        request.setAdditionalHeader("Referer", page.getUrl().toExternalForm());
+        request.setXHR();
+
+        response = getWebClient().loadWebResponse(request);
+        setHtmlPage(page);
+
         downloader.loadRequests(this.testCase, this.action);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.xceptance.xlt.api.actions.AbstractAction#postValidate()
+    /**
+     * {@inheritDoc}
      */
     @Override
     protected void postValidate() throws Exception
     {
-        final HtmlPage page = getHtmlPage();
-
         // response code correct?
-        action.getHttpResponseCodeValidator().validate(page);
+        Assert.assertEquals("Response code did not match", action.getHttpResponseCodeValidator().getHttpResponseCode(),
+                            response.getStatusCode());
+
+        final HtmlPage page = getHtmlPage();
+        final HtmlElement container;
+        if (DefaultPageCreator.determinePageType(response.getContentType()) == PageType.HTML)
+        {
+            container = (HtmlElement) page.createElement("div");
+            HTMLParser.parseFragment(container, response.getContentAsString());
+        }
+        else
+        {
+            return;
+        }
 
         final String xpath = action.getXPath(testCase);
         final String text = action.getText(testCase);
@@ -141,7 +104,7 @@ public class SimpleURL extends AbstractHtmlPageAction
         {
             // get the elements from the page
             @SuppressWarnings("unchecked")
-            final List<HtmlElement> elements = (List<HtmlElement>) page.getByXPath(xpath);
+            final List<HtmlElement> elements = (List<HtmlElement>) container.getByXPath(xpath);
 
             // verify existence
             Assert.assertFalse("Xpath not found: <" + xpath + ">", elements.isEmpty());
@@ -157,21 +120,13 @@ public class SimpleURL extends AbstractHtmlPageAction
         else if (text != null)
         {
             // ok, xpath was null, so we go for the text on the page only
-            final String responseString = page.getWebResponse().getContentAsString();
-            Assert.assertNotNull("Page was totally empty", responseString);
+            final String responseString = response.getContentAsString();
+            Assert.assertNotNull("Response was totally empty", responseString);
 
-            Assert.assertNotNull(MessageFormat.format("Text is not on the page. Expected:<{0}>", text),
+            Assert.assertNotNull(MessageFormat.format("Text is not in response. Expected:<{0}>", text),
                                  RegExUtils.getFirstMatch(responseString, text));
         }
-    }
 
-    /**
-     * Make some data resolution before post validation which is necessary for executing the page load.
-     * 
-     * @param page
-     */
-    private void addPageToInterpreter(final HtmlPage page)
-    {
         // take care of the parameters to fill up the interpreter
         final List<String> xpathGetters = action.getXPathGetterList(testCase);
         final List<Object> xpathGettersResults = new ArrayList<Object>(xpathGetters.size());
@@ -188,7 +143,7 @@ public class SimpleURL extends AbstractHtmlPageAction
 
             // get the elements from the page
             @SuppressWarnings("unchecked")
-            final List<HtmlElement> elements = (List<HtmlElement>) page.getByXPath(xp);
+            final List<HtmlElement> elements = (List<HtmlElement>) container.getByXPath(xp);
 
             if (!elements.isEmpty())
             {
@@ -211,16 +166,6 @@ public class SimpleURL extends AbstractHtmlPageAction
         }
         // send it back for spicing up the interpreter
         action.setXPathGetterResult(xpathGettersResults);
-    }
 
-    /**
-     * Add an additional request to the current action.
-     * 
-     * @param url
-     *            request URL
-     */
-    public void addRequest(final String url)
-    {
-        downloader.addRequest(url);
     }
 }

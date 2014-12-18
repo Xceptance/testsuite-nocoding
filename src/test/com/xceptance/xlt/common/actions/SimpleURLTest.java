@@ -21,18 +21,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import test.com.xceptance.xlt.common.XltMockWebConnection;
+import test.com.xceptance.xlt.common.tests.TTest;
 
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
@@ -41,7 +41,7 @@ import com.xceptance.xlt.common.util.CSVBasedURLAction;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * @author rschwietzke
+ * 
  */
 public class SimpleURLTest
 {
@@ -62,55 +62,60 @@ public class SimpleURLTest
 
     // header
     private final String HEADER = "Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded";
-    
+
     /**
      * Create records from string
      */
     private List<CSVRecord> createRecords(final String... records) throws IOException
     {
         final StringBuilder fullRecord = new StringBuilder();
-        
-        for (final String record:records)
+
+        for (final String record : records)
         {
             fullRecord.append(record.replace("{url}", testUrl));
             fullRecord.append("\n");
         }
-        
-        final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader().build();
+
+        final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#')
+                                                     .withHeader().build();
         final CSVParser parser = new CSVParser(fullRecord.toString(), csvFormat);
-        
-        return parser.getRecords();    
+
+        return parser.getRecords();
     }
-    
+
     /**
      * Mock the action for later execution
      * 
      * @param action
-     * @throws IOException 
+     * @throws IOException
      */
-    private List<AbstractHtmlPageAction> mockIt(final String login, final String password, final String... records) throws IOException
+    private List<AbstractHtmlPageAction> mockIt(final String login, final String password, final String... records)
+        throws IOException
     {
-        final List<CSVRecord> csvRecords = createRecords(records);   
-        
+        final List<CSVRecord> csvRecords = createRecords(records);
+
         final List<AbstractHtmlPageAction> actions = new ArrayList<AbstractHtmlPageAction>();
+
+        // the dummy test case
+        final TTest testCase = new TTest();
         
         // our action tracker to build up a correct chain of pages
-        AbstractHtmlPageAction lastAction = null; 
-            
+        AbstractHtmlPageAction lastAction = null;
+
         // let's loop about the data we have
         for (final CSVRecord csvRecord : csvRecords)
         {
             if (lastAction == null)
             {
                 // our first action, so start the browser too
-                lastAction = new SimpleURL(null, new CSVBasedURLAction(csvRecord), login, password);
+                lastAction = new SimpleURL(testCase, new CSVBasedURLAction(csvRecord), login, password);
             }
             else
             {
                 // subsequent actions
-                lastAction = new SimpleURL(null, lastAction, new CSVBasedURLAction(csvRecord));
+                lastAction = new SimpleURL(testCase, lastAction, new CSVBasedURLAction(csvRecord));
             }
-            
+
             // create mocked web connection and set the response
             final MockWebConnection conn = new XltMockWebConnection((XltWebClient) lastAction.getWebClient());
             conn.setResponse(new URL(testUrl), response);
@@ -120,15 +125,16 @@ public class SimpleURLTest
             // add
             actions.add(lastAction);
         }
-        
-        return actions;
-    }    
 
-    
+        return actions;
+    }
+
     /**********************************************************************************
      * Check names
-     * @throws IOException 
+     * 
+     * @throws IOException
      *********************************************************************************/
+
     @Test
     public void testNames_First() throws IOException
     {
@@ -155,7 +161,7 @@ public class SimpleURLTest
 
         Assert.assertEquals("Timer name does not match.", "Action-1", actions.get(0).getTimerName());
     }
-    
+
     @Test
     public void testNames_NotPassed_Next_Null() throws IOException
     {
@@ -165,12 +171,13 @@ public class SimpleURLTest
         Assert.assertEquals("Timer name does not match.", "Action-1", actions.get(0).getTimerName());
         Assert.assertEquals("Timer name does not match.", "Action-2", actions.get(1).getTimerName());
     }
-    
-    
+
     /**********************************************************************************
      * Check setting of credentials
-     * @throws IOException 
+     * 
+     * @throws IOException
      *********************************************************************************/
+
     @Test
     public void testCredentials_Set() throws IOException
     {
@@ -211,8 +218,10 @@ public class SimpleURLTest
     @Test
     public void testAll_Fail_TextIsRegexp() throws Throwable
     {
-        final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,XPath,Text", "{url},//h1,\"Test [0-9]{2,}\"");
-        
+        final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,XPath,Text",
+                                                            "{url},//h1,\"Test [0-9]{2,}\"");
+
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<Test [0-9]{2,}> but was:<Test 1>");
 
@@ -224,6 +233,7 @@ public class SimpleURLTest
     {
         final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,XPath,Text", "{url},//h1,\"Test 2\"");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<Test 2> but was:<Test 1>");
 
@@ -253,6 +263,7 @@ public class SimpleURLTest
     {
         final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,XPath", "{url},//h2");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Xpath not found: <//h2>");
 
@@ -275,6 +286,7 @@ public class SimpleURLTest
     {
         final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test 2");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text is not on the page. Expected:<Test 2>");
 
@@ -293,6 +305,7 @@ public class SimpleURLTest
     {
         final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test [5-9]");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text is not on the page. Expected:<Test [5-9]>");
 
@@ -315,6 +328,7 @@ public class SimpleURLTest
     {
         final List<AbstractHtmlPageAction> actions = mockIt(null, null, "URL,ResponseCode", "{url},404");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Response code does not match expected:<404> but was:<200>");
 

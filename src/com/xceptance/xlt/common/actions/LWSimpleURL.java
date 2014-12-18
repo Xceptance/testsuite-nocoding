@@ -16,7 +16,6 @@
  */
 package com.xceptance.xlt.common.actions;
 
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +38,13 @@ import com.xceptance.xlt.engine.XltWebClient;
 public class LWSimpleURL extends AbstractLightWeightPageAction
 {
     // the action to be executed
-    private final CSVBasedURLAction action;
+    protected final CSVBasedURLAction action;
 
     // the test case reference for property lookup in the actions
-    private final AbstractURLTestCase testCase;
+    protected final AbstractURLTestCase testCase;
 
     // Downloader for additional requests belonging to this action (i.e. static content)
-    private final Downloader downloader;
+    protected final Downloader downloader;
 
     /**
      * @param previousAction
@@ -107,7 +106,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
 
         loadPage(action.getURL(testCase), action.getMethod(), action.getParameters(testCase));
 
-        downloader.loadRequests();
+        downloader.loadRequests(this.testCase, this.action);
     }
 
     /*
@@ -206,7 +205,7 @@ public class LWSimpleURL extends AbstractLightWeightPageAction
      * @param url
      *            request URL
      */
-    public void addRequest(final URL url)
+    public void addRequest(final String url)
     {
         downloader.addRequest(url);
     }

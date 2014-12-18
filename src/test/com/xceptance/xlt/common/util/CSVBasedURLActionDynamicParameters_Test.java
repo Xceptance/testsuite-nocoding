@@ -20,13 +20,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
-
 import org.apache.commons.csv.CSVRecord;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
-
 
 public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURLAction_Test
 {
@@ -36,8 +34,7 @@ public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURL
     @Test
     public void testParameterReading_XPath() throws IOException
     {
-        final List<CSVRecord> records = createRecords(
-                                                      "Name,URL,xpath1,xpath2,xpath3,xpath4,xpath5,xpath6,xpath7,xpath8,xpath9,xpath10",
+        final List<CSVRecord> records = createRecords("Name,URL,xpath1,xpath2,xpath3,xpath4,xpath5,xpath6,xpath7,xpath8,xpath9,xpath10",
                                                       "Homepage,http://www/,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10");
 
         final CSVBasedURLAction action = new CSVBasedURLAction(records.get(0));
@@ -54,8 +51,7 @@ public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURL
     @Test
     public void testParameterReading_RegExp() throws IOException
     {
-        final List<CSVRecord> records = createRecords(
-                                                      "Name,URL,regexp1,regexp2,regexp3,regexp4,regexp5,regexp6,regexp7,regexp8,regexp9,regexp10",
+        final List<CSVRecord> records = createRecords("Name,URL,regexp1,regexp2,regexp3,regexp4,regexp5,regexp6,regexp7,regexp8,regexp9,regexp10",
                                                       "Homepage,http://www/,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10");
 
         final CSVBasedURLAction action = new CSVBasedURLAction(records.get(0));
@@ -68,16 +64,14 @@ public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURL
             Assert.assertEquals("p" + (i + 1), regexps.get(i).toString());
         }
     }
-    
+
     // ------------------------------------------------------------------------------------
     // Have only a few parameters
     // ------------------------------------------------------------------------------------
     @Test
     public void testParameterReading_XPath_AFew() throws IOException
     {
-        final List<CSVRecord> records = createRecords(
-                                                      "Name,URL,xpath1,xpath2,xpath9",
-                                                      "Homepage,http://www/,p1,p2,p9");
+        final List<CSVRecord> records = createRecords("Name,URL,xpath1,xpath2,xpath9", "Homepage,http://www/,p1,p2,p9");
 
         final CSVBasedURLAction action = new CSVBasedURLAction(records.get(0));
         Assert.assertEquals("Homepage", action.getName());
@@ -99,8 +93,7 @@ public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURL
     @Test
     public void testParameterReading_RegExp_AFew() throws IOException
     {
-        final List<CSVRecord> records = createRecords(
-                                                      "Name,URL,regexp1,regexp2,regexp9",
+        final List<CSVRecord> records = createRecords("Name,URL,regexp1,regexp2,regexp9",
                                                       "Homepage,http://www/,p1,p2,p9");
 
         final CSVBasedURLAction action = new CSVBasedURLAction(records.get(0));
@@ -120,40 +113,15 @@ public class CSVBasedURLActionDynamicParameters_Test extends AbstractCSVBasedURL
         Assert.assertEquals(null, regexps.get(9));
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     @Test
     public void testParameterReading_XPath_TooMany() throws IOException
     {
-        
+
     }
-    
+
     @Test
     public void testParameterReadingAndInterpreter_XPath()
     {
         // replace with beanshell values, replace with properties plain and from test case
     }
-    
-    
 }
-
-
-

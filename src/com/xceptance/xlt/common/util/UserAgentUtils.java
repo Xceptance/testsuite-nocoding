@@ -21,9 +21,7 @@ import java.util.UUID;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
- * Helper for dynamically adjusting the user agent if needed. 
- * 
- * @author Rene Schwietzke (Xceptance Software Technologies GmbH)
+ * Helper for dynamically adjusting the user agent if needed.
  */
 public class UserAgentUtils
 {
@@ -31,13 +29,14 @@ public class UserAgentUtils
      * Constant to identify the UID in the user agent string
      */
     private static final String MARKER = " UID/";
-    
+
     /**
-     * Adds a random UUID to the user agent. Replaces an existing one
-     * if already set.
+     * Adds a random UUID to the user agent. Replaces an existing one if already set.
      * 
-     * @param webClient the client to manipulate
-     * @param active true when parameter should be inserted
+     * @param webClient
+     *            the client to manipulate
+     * @param active
+     *            true when parameter should be inserted
      */
     public static void setUserAgentUID(final WebClient webClient, final boolean active)
     {

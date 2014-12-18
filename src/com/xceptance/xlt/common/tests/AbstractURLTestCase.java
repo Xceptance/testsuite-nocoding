@@ -52,12 +52,12 @@ public class AbstractURLTestCase extends AbstractTestCase
      * Our data. This also guards it.
      */
     protected final List<CSVBasedURLAction> csvBasedActions = new ArrayList<CSVBasedURLAction>();
-    
+
     /**
      * Our interpreter engine for that test case
      */
     private final ParamInterpreter interpreter = new ParamInterpreter();
-    
+
     /**
      * In case we have to authenticate the connection first.
      */
@@ -83,24 +83,27 @@ public class AbstractURLTestCase extends AbstractTestCase
         // XltProperties.getDataFile(String name)
         // or XltProperties.getDataFile(String name, String locale)
         // or XltProperties.getDataFile(String name, Locale locale)
-        final String dataDirectory = XltProperties.getInstance().getProperty(XltConstants.XLT_PACKAGE_PATH + ".data.directory", "config" + File.separatorChar + "data");
+        final String dataDirectory = XltProperties.getInstance().getProperty(XltConstants.XLT_PACKAGE_PATH
+                                                                                 + ".data.directory",
+                                                                             "config" + File.separatorChar + "data");
         final File file = new File(dataDirectory, getProperty("filename", Session.getCurrent().getUserName() + ".csv"));
 
         BufferedReader br = null;
         boolean incorrectLines = false;
-        
+
         try
         {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
             // permit # as comment, empty lines, set comma as separator, and activate the header
-            final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader().withIgnoreSurroundingSpaces(true).build();
+            final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#')
+                                                         .withHeader().withIgnoreSurroundingSpaces(true).build();
             final CSVParser parser = new CSVParser(br, csvFormat);
             final Iterator<CSVRecord> csvRecords = parser.iterator();
 
             // verify header fields to avoid problems with incorrect spelling or spaces
             final Map<String, Integer> headerMap = parser.getHeaderMap();
-            
+
             for (final String headerField : headerMap.keySet())
             {
                 if (!CSVBasedURLAction.isPermittedHeaderField(headerField))
@@ -120,13 +123,14 @@ public class AbstractURLTestCase extends AbstractTestCase
                         break;
                     }
                 }
-                catch(final Exception e)
+                catch (final Exception e)
                 {
                     // the plus 1 is meant to correct the increment missing because of the exception
-                    throw new RuntimeException(MessageFormat.format("Line at {0} is invalid, because of <{1}>. Line is ignored.",
-                                                                    parser.getLineNumber() + 1, e.getMessage()));                   
+                    throw new RuntimeException(
+                                               MessageFormat.format("Line at {0} is invalid, because of <{1}>. Line is ignored.",
+                                                                    parser.getLineNumber() + 1, e.getMessage()));
                 }
-                
+
                 final CSVRecord csvRecord = csvRecords.next();
 
                 // only take ok lines
@@ -144,19 +148,21 @@ public class AbstractURLTestCase extends AbstractTestCase
                         else
                         {
                             XltLogger.runTimeLogger.error(MessageFormat.format("Line at {0} does not contain any URL. Line is ignored: {1}",
-                                                                              parser.getLineNumber(), csvRecord));
+                                                                               parser.getLineNumber(), csvRecord));
                         }
                     }
-                    catch(final Exception e)
+                    catch (final Exception e)
                     {
-                        throw new RuntimeException(MessageFormat.format("Line at {0} is invalid, because of <{2}>. Line is ignored: {1}",
-                                                                        parser.getLineNumber(), csvRecord, e.getMessage()));
+                        throw new RuntimeException(
+                                                   MessageFormat.format("Line at {0} is invalid, because of <{2}>. Line is ignored: {1}",
+                                                                        parser.getLineNumber(), csvRecord,
+                                                                        e.getMessage()));
                     }
                 }
                 else
                 {
                     XltLogger.runTimeLogger.error(MessageFormat.format("Line at {0} has not been correctly formatted. Line is ignored: {1}",
-                                                                      parser.getLineNumber(), csvRecord));
+                                                                       parser.getLineNumber(), csvRecord));
                     incorrectLines = true;
                 }
             }
@@ -165,14 +171,14 @@ public class AbstractURLTestCase extends AbstractTestCase
         {
             IOUtils.closeQuietly(br);
         }
-        
+
         // stop if we have anything the is incorrect, avoid half running test cases
         if (incorrectLines)
         {
             throw new RuntimeException("Found incorrectly formatted lines. Stopping here.");
         }
     }
-    
+
     /**
      * Returns the effective key to be used for property lookup via one of the getProperty(...) methods.
      * <p>
@@ -187,6 +193,7 @@ public class AbstractURLTestCase extends AbstractTestCase
      *            the bare property key, i.e. without any prefixes
      * @return the first key that produces a result
      */
+    @Override
     protected String getEffectiveKey(final String bareKey)
     {
         String effectiveKey = null;

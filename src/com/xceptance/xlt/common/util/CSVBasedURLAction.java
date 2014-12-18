@@ -45,8 +45,9 @@ public class CSVBasedURLAction
 {
     // dynamic parameters
     public static final String XPATH_GETTER_PREFIX = "xpath";
+
     public static final String REGEXP_GETTER_PREFIX = "regexp";
-    
+
     public static final int DYNAMIC_GETTER_COUNT = 10;
 
     /**
@@ -55,12 +56,17 @@ public class CSVBasedURLAction
     private final static Set<String> PERMITTEDHEADERFIELDS = new HashSet<String>();
 
     public static final String GET = "GET";
+
     public static final String POST = "POST";
-    
+
     public static final String TYPE = "Type";
+
     public static final String TYPE_ACTION = "A";
+
     public static final String TYPE_STATIC = "S";
-    
+
+    public static final String TYPE_XHR_ACTION = "XA";
+
     public static final String NAME = "Name";
 
     public static final String URL = "URL";
@@ -91,18 +97,20 @@ public class CSVBasedURLAction
         PERMITTEDHEADERFIELDS.add(REGEXP);
         PERMITTEDHEADERFIELDS.add(TEXT);
         PERMITTEDHEADERFIELDS.add(ENCODED);
-        
+
         for (int i = 1; i <= DYNAMIC_GETTER_COUNT; i++)
         {
             PERMITTEDHEADERFIELDS.add(XPATH_GETTER_PREFIX + i);
             PERMITTEDHEADERFIELDS.add(REGEXP_GETTER_PREFIX + i);
         }
-    }       
-    
+    }
+
     private final String type;
+
     private final String name;
 
     private final URL url;
+
     private final String urlString;
 
     private final String method;
@@ -114,65 +122,75 @@ public class CSVBasedURLAction
     private final String xPath;
 
     private final String regexpString;
+
     private final Pattern regexp;
 
     private final String text;
 
     private final boolean encoded;
-    
+
     private final List<String> xpathGetterList = new ArrayList<String>(DYNAMIC_GETTER_COUNT);
+
     private final List<String> regexpGetterList = new ArrayList<String>(DYNAMIC_GETTER_COUNT);
 
     /**
-     * Our bean shell 
+     * Our bean shell
      */
     private final ParamInterpreter interpreter;
 
     /**
      * Constructor based upon read CSV data
      * 
-     * @param record the record to process
-     * @param interpreter the bean shell interpreter to use
-     * 
+     * @param record
+     *            the record to process
+     * @param interpreter
+     *            the bean shell interpreter to use
      * @throws UnsupportedEncodingException
      * @throws MalformedURLException
      */
-    public CSVBasedURLAction(final CSVRecord record, final ParamInterpreter interpreter) throws UnsupportedEncodingException, MalformedURLException
+    public CSVBasedURLAction(final CSVRecord record, final ParamInterpreter interpreter)
+        throws UnsupportedEncodingException, MalformedURLException
     {
         // no bean shell, so we do not do anything, satisfy final here
         this.interpreter = interpreter;
 
         // the header is record 1, so we have to subtract one, for autonaming
-        this.name = StringUtils.defaultIfBlank(record.get(NAME), "Action-" + (record.getRecordNumber() - 1)); 
+        this.name = StringUtils.defaultIfBlank(record.get(NAME), "Action-" + (record.getRecordNumber() - 1));
 
         // take care of type
-        String _type = StringUtils.defaultIfBlank(record.get(TYPE), TYPE_ACTION); 
-        if (!_type.equals(TYPE_ACTION) && !_type.equals(TYPE_STATIC))
+        String _type = StringUtils.defaultIfBlank(record.get(TYPE), TYPE_ACTION);
+        if (!_type.equals(TYPE_ACTION) && !_type.equals(TYPE_STATIC) && !_type.equals(TYPE_XHR_ACTION))
         {
-            XltLogger.runTimeLogger.warn(MessageFormat.format("Unknown type '{0}' in line {1}, defaulting to 'A'", _type, record.getRecordNumber()));
+            XltLogger.runTimeLogger.warn(MessageFormat.format("Unknown type '{0}' in line {1}, defaulting to 'A'",
+                                                              _type, record.getRecordNumber()));
             _type = TYPE_ACTION;
         }
         this.type = _type;
-        
+
         // we need at least an url, stop here of not given
         this.urlString = record.get(URL);
         if (this.urlString == null)
         {
-            throw new IllegalArgumentException(MessageFormat.format("No url given in record in line {0}. Need at least that.", record.getRecordNumber()));
+            throw new IllegalArgumentException(
+                                               MessageFormat.format("No url given in record in line {0}. Need at least that.",
+                                                                    record.getRecordNumber()));
         }
         this.url = interpreter == null ? new URL(this.urlString) : null;
-        
+
         // take care of method
         String _method = StringUtils.defaultIfBlank(record.get(METHOD), GET);
         if (!_method.equals(GET) && !_method.equals(POST))
         {
-            XltLogger.runTimeLogger.warn(MessageFormat.format("Unknown method '{0}' in line {1}, defaulting to 'GET'", _method, record.getRecordNumber()));
+            XltLogger.runTimeLogger.warn(MessageFormat.format("Unknown method '{0}' in line {1}, defaulting to 'GET'",
+                                                              _method, record.getRecordNumber()));
             _method = GET;
         }
         this.method = _method;
-        
+
         // get the response code validator
-        this.httpResponseCodeValidator = StringUtils.isNotBlank(record.get(RESPONSECODE)) ?  new HttpResponseCodeValidator(Integer.parseInt(record.get(RESPONSECODE))) : HttpResponseCodeValidator.getInstance();
+        this.httpResponseCodeValidator = StringUtils.isNotBlank(record.get(RESPONSECODE)) ? new HttpResponseCodeValidator(
+                                                                                                                          Integer.parseInt(record.get(RESPONSECODE)))
+                                                                                         : HttpResponseCodeValidator.getInstance();
 
         // compile pattern only, if no interpreter shall be used
         this.regexpString = StringUtils.isNotEmpty(record.get(REGEXP)) ? record.get(REGEXP) : null;
@@ -184,24 +202,30 @@ public class CSVBasedURLAction
         {
             this.regexp = null;
         }
-        
-        this.xPath  = StringUtils.isNotBlank(record.get(XPATH)) ? record.get(XPATH) : null;
-        this.text  = StringUtils.isNotEmpty(record.get(TEXT)) ? record.get(TEXT) : null;
-        this.encoded  = StringUtils.isNotBlank(record.get(ENCODED)) ? Boolean.parseBoolean(record.get(ENCODED)) : false;
-        
+
+        this.xPath = StringUtils.isNotBlank(record.get(XPATH)) ? record.get(XPATH) : null;
+        this.text = StringUtils.isNotEmpty(record.get(TEXT)) ? record.get(TEXT) : null;
+        this.encoded = StringUtils.isNotBlank(record.get(ENCODED)) ? Boolean.parseBoolean(record.get(ENCODED)) : false;
+
         // ok, get all the parameters
         for (int i = 1; i <= DYNAMIC_GETTER_COUNT; i++)
         {
-            xpathGetterList.add(StringUtils.isNotBlank(record.get(XPATH_GETTER_PREFIX + i)) ? record.get(XPATH_GETTER_PREFIX + i) : null);
-            regexpGetterList.add(StringUtils.isNotBlank(record.get(REGEXP_GETTER_PREFIX + i)) ? record.get(REGEXP_GETTER_PREFIX + i) : null);
+            xpathGetterList.add(StringUtils.isNotBlank(record.get(XPATH_GETTER_PREFIX + i)) ? record.get(XPATH_GETTER_PREFIX
+                                                                                                         + i)
+                                                                                           : null);
+            regexpGetterList.add(StringUtils.isNotBlank(record.get(REGEXP_GETTER_PREFIX + i)) ? record.get(REGEXP_GETTER_PREFIX
+                                                                                                           + i)
+                                                                                             : null);
         }
-        
+
         // ok, this is the tricky part
-        this.parameters = StringUtils.isNotEmpty(record.get(PARAMETERS)) ? setupParameters(record.get(PARAMETERS)) : null;
+        this.parameters = StringUtils.isNotBlank(record.get(PARAMETERS)) ? setupParameters(record.get(PARAMETERS))
+                                                                        : null;
     }
-    
+
     /**
      * Constructor based upon read CSV data
+     * 
      * @param record
      * @throws UnsupportedEncodingException
      * @throws MalformedURLException
@@ -209,29 +233,30 @@ public class CSVBasedURLAction
     public CSVBasedURLAction(final CSVRecord record) throws UnsupportedEncodingException, MalformedURLException
     {
         this(record, null);
-    }  
+    }
 
     /**
      * Takes the list of parameters and turns it into name value pairs for later usage.
      * 
-     * @param paramers the csv definition string of parameters
+     * @param paramers
+     *            the csv definition string of parameters
      * @return a list with parsed key value pairs
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     private List<NameValuePair> setupParameters(final String parameters) throws UnsupportedEncodingException
     {
         final List<NameValuePair> list = new ArrayList<NameValuePair>();
-        
+
         // ok, turn them into & split strings
         final StringTokenizer tokenizer = new StringTokenizer(parameters, "&");
         while (tokenizer.hasMoreTokens())
         {
             final String token = tokenizer.nextToken();
-            
+
             // the future pair
             String key = null;
             String value = null;
-            
+
             // split it into key and value at =
             final int pos = token.indexOf("=");
             if (pos >= 0)
@@ -246,7 +271,7 @@ public class CSVBasedURLAction
             {
                 key = token;
             }
-            
+
             // ok, if this is encoded, we have to decode it again, because the httpclient will encode it
             // on its own later on
             if (encoded)
@@ -259,30 +284,30 @@ public class CSVBasedURLAction
                 list.add(new NameValuePair(key, value));
             }
         }
-        
+
         return list;
     }
 
-//    /**
-//     * Is this static content or dynamic stuff, important for the downloader and concurrency
-//     * 
-//     * @return it is either A or S
-//     */
-//    public String getType()
-//    {
-//        return type;
-//    }
-    
+    // /**
+    // * Is this static content or dynamic stuff, important for the downloader and concurrency
+    // *
+    // * @return it is either A or S
+    // */
+    // public String getType()
+    // {
+    // return type;
+    // }
+
     /**
      * Returns if this is static content to be downloaded
-     *  
+     * 
      * @return true if this is static content
      */
     public boolean isStaticContent()
     {
         return type.equals(TYPE_STATIC);
     }
-    
+
     /**
      * Returns true if this is an action to be executed
      * 
@@ -292,7 +317,12 @@ public class CSVBasedURLAction
     {
         return type.equals(TYPE_ACTION);
     }
-    
+
+    public boolean isXHRAction()
+    {
+        return type.equals(TYPE_XHR_ACTION);
+    }
+
     /**
      * Returns the name of this line.
      * 
@@ -309,9 +339,21 @@ public class CSVBasedURLAction
     }
 
     /**
+     * Returns the url as String of that action. Is required.
+     * 
+     * @return the url without data resolution
+     */
+    public String getUrlString()
+    {
+        // return bean shell part only as string, process after a page load
+        return urlString;
+    }
+
+    /**
      * Returns the url of that action. Is required.
      * 
-     * @param testCase for the correct data resulution
+     * @param testCase
+     *            for the correct data resulution
      * @return the url with data resolution
      * @throws MalformedURLException
      */
@@ -325,7 +367,7 @@ public class CSVBasedURLAction
     {
         return getURL(null);
     }
-    
+
     public HttpMethod getMethod()
     {
         if (this.method.equals(POST))
@@ -345,17 +387,17 @@ public class CSVBasedURLAction
         {
             // create new list
             final List<NameValuePair> result = new ArrayList<NameValuePair>(parameters.size());
-            
+
             // process all
             for (final NameValuePair pair : parameters)
             {
-                final String name =  interpreter.processDynamicData(testCase, pair.getName());
+                final String name = interpreter.processDynamicData(testCase, pair.getName());
                 String value = pair.getValue();
                 value = value != null ? interpreter.processDynamicData(testCase, value) : value;
-                
+
                 result.add(new NameValuePair(name, value));
             }
-            
+
             return result;
         }
         else
@@ -363,7 +405,7 @@ public class CSVBasedURLAction
             return parameters;
         }
     }
-    
+
     public List<NameValuePair> getParameters()
     {
         return getParameters(null);
@@ -377,7 +419,7 @@ public class CSVBasedURLAction
     public String getXPath(final AbstractURLTestCase testCase)
     {
         // process bean shell part
-        return interpreter != null ? interpreter.processDynamicData(testCase, xPath) : xPath;    
+        return interpreter != null ? interpreter.processDynamicData(testCase, xPath) : xPath;
     }
 
     public String getXPath()
@@ -388,25 +430,27 @@ public class CSVBasedURLAction
     public Pattern getRegexp(final AbstractURLTestCase testCase)
     {
         // process bean shell part
-        return interpreter != null && regexpString != null? RegExUtils.getPattern(interpreter.processDynamicData(testCase, regexpString)) : regexp;    
+        return interpreter != null && regexpString != null ? RegExUtils.getPattern(interpreter.processDynamicData(testCase,
+                                                                                                                  regexpString))
+                                                          : regexp;
     }
 
     public Pattern getRegexp()
     {
-        return getRegexp(null);    
+        return getRegexp(null);
     }
- 
+
     public String getText(final AbstractURLTestCase testCase)
     {
         // process bean shell part
-        return interpreter != null ? interpreter.processDynamicData(testCase, text) : text;    
+        return interpreter != null ? interpreter.processDynamicData(testCase, text) : text;
     }
 
     public String getText()
     {
         return getText(null);
     }
-    
+
     /**
      * Returns true of this data is already html encoded for transfer
      * 
@@ -430,8 +474,7 @@ public class CSVBasedURLAction
     /**
      * Returns the list of optional getters
      * 
-     * @return list of xpath getters
-     * TODO test it
+     * @return list of xpath getters TODO test it
      */
     public List<String> getXPathGetterList(final AbstractURLTestCase testCase)
     {
@@ -440,22 +483,21 @@ public class CSVBasedURLAction
         {
             return xpathGetterList;
         }
-        
+
         final List<String> result = new ArrayList<String>(xpathGetterList.size());
         for (int i = 0; i < xpathGetterList.size(); i++)
         {
             final String s = xpathGetterList.get(i);
-            result.add(interpreter.processDynamicData(testCase, s));    
+            result.add(interpreter.processDynamicData(testCase, s));
         }
-        
+
         return result;
     }
 
     /**
      * Returns the list of regexp patterns
      * 
-     * @return the list of regexp getter patterns
-     * TODO test it
+     * @return the list of regexp getter patterns TODO test it
      */
     public List<Pattern> getRegExpGetterList(final AbstractURLTestCase testCase)
     {
@@ -472,16 +514,15 @@ public class CSVBasedURLAction
                 result.add(s != null ? RegExUtils.getPattern(s) : null);
             }
         }
-        
+
         return result;
     }
 
     /**
      * Take back the evaluation results to spice up the interpreter
      * 
-     * @param xpathGettersResults a list of results
-     * 
-     * TODO test it
+     * @param xpathGettersResults
+     *            a list of results TODO test it
      */
     public void setXPathGetterResult(final List<Object> results)
     {
@@ -496,7 +537,7 @@ public class CSVBasedURLAction
                 }
                 catch (final EvalError e)
                 {
-                    XltLogger.runTimeLogger.warn("Unable to take in the result of an xpath evaluation.", e);    
+                    XltLogger.runTimeLogger.warn("Unable to take in the result of an xpath evaluation.", e);
                 }
             }
         }
@@ -505,8 +546,8 @@ public class CSVBasedURLAction
     /**
      * Take back the evaluation results to spice up the interpreter
      * 
-     * @param xpathGettersResults a list of results
-     * TODO test it
+     * @param xpathGettersResults
+     *            a list of results TODO test it
      */
     public void setRegExpGetterResult(final List<Object> results)
     {
@@ -521,17 +562,18 @@ public class CSVBasedURLAction
                 }
                 catch (final EvalError e)
                 {
-                    XltLogger.runTimeLogger.warn("Unable to take in the result of a regexp evaluation.", e);    
+                    XltLogger.runTimeLogger.warn("Unable to take in the result of a regexp evaluation.", e);
                 }
             }
         }
     }
-    
+
     /**
      * Returns true of header field is value, false otherwise.
-     * @param fieldName header field to check
-     * @return true if valid field, false otherwise
-     * TODO test it
+     * 
+     * @param fieldName
+     *            header field to check
+     * @return true if valid field, false otherwise TODO test it
      */
     public static boolean isPermittedHeaderField(final String fieldName)
     {

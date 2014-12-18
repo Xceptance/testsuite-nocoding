@@ -30,7 +30,7 @@ public class ParamInterpreterNowTest
     {
         final ParamInterpreterNow NOW = new ParamInterpreterNow();
         final long now = System.currentTimeMillis();
-        
+
         Assert.assertTrue(Long.parseLong(NOW.toString()) >= now);
     }
 
@@ -40,14 +40,14 @@ public class ParamInterpreterNowTest
         final ParamInterpreterNow NOW = new ParamInterpreterNow();
         long result = 0;
         final Random r = new Random();
-        
+
         for (int i = 0; i < 10; i++)
         {
             result = result + Long.parseLong(NOW.toString());
             Thread.sleep(r.nextInt(50));
             result = result - Long.parseLong(NOW.toString());
         }
-  
+
         Assert.assertTrue(result != 0);
-    }    
+    }
 }

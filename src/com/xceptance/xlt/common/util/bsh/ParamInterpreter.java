@@ -33,28 +33,25 @@ import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.tests.AbstractURLTestCase;
 
 /**
- * Our implementation of the param interpreter, it will set some default
- * data objects for later use, such as NOW and RANDOM.
- 
- * @author rschwietzke
+ * Our implementation of the param interpreter, it will set some default data objects for later use, such as NOW and
+ * RANDOM.
  */
 public class ParamInterpreter extends Interpreter
 {
     private static final long serialVersionUID = -6490310093160560291L;
 
     /**
-     * The pattern to get the inserted param or commands from strings, such as 
-     * ${bar = System.currentTimeMillis()}    
+     * The pattern to get the inserted param or commands from strings, such as ${bar = System.currentTimeMillis()}
      */
     private final static Pattern parameterPattern = Pattern.compile("\\$\\{([^$]*)\\}");
-    
+
     /**
      * Just setup our interpreter and it will be filled with default data objects.
      */
     public ParamInterpreter()
     {
         super();
-        
+
         try
         {
             this.set("NOW", new ParamInterpreterNow());
@@ -66,13 +63,14 @@ public class ParamInterpreter extends Interpreter
             // nothing should happen here, we just add context
         }
     }
-    
+
     /**
-     * Processes dynamic data on the input and use the set interpreter
-     * and its state.
+     * Processes dynamic data on the input and use the set interpreter and its state.
      * 
-     * @param testCase the currently active testcase, needed for proper property lookup
-     * @param input the input to process
+     * @param testCase
+     *            the currently active testcase, needed for proper property lookup
+     * @param input
+     *            the input to process
      * @return a processed string or the same, if nothing to process
      */
     public String processDynamicData(final AbstractURLTestCase testCase, final String input)
@@ -81,24 +79,24 @@ public class ParamInterpreter extends Interpreter
         {
             return null;
         }
-        
+
         final List<String> params = new ArrayList<String>();
-        
+
         // get all position out of the string
         final Matcher matcher = parameterPattern.matcher(input);
         while (matcher.find())
         {
             params.add(matcher.group(1));
         }
-        
+
         // did we find something?
         if (params.isEmpty())
         {
             return input;
         }
-        
+
         String output = input;
-        
+
         // ok, go over the data
         for (final String param : params)
         {
@@ -106,15 +104,16 @@ public class ParamInterpreter extends Interpreter
             {
                 continue;
             }
-            
+
             // first try to map it to a property if a test case is set otherwise ask the properties directly
-            final String propertyValue = testCase != null ? testCase.getProperty(param) : XltProperties.getInstance().getProperty(param);
+            final String propertyValue = testCase != null ? testCase.getProperty(param)
+                                                         : XltProperties.getInstance().getProperty(param);
             if (propertyValue != null)
             {
                 output = StringUtils.replaceOnce(output, "${" + param + "}", propertyValue);
                 continue;
             }
-            
+
             try
             {
                 final Object evalResult = this.eval(param);
@@ -125,18 +124,20 @@ public class ParamInterpreter extends Interpreter
             }
             catch (final EvalError e)
             {
-                XltLogger.runTimeLogger.warn(MessageFormat.format("Unable to process dynamic parameter {0}", "${" + param + "}"), e);
+                XltLogger.runTimeLogger.warn(MessageFormat.format("Unable to process dynamic parameter {0}", "${"
+                                                                                                             + param
+                                                                                                             + "}"), e);
             }
         }
-        
+
         return output;
     }
-    
+
     /**
-     * Processes dynamic data on the input and use the set interpreter
-     * and its state.
+     * Processes dynamic data on the input and use the set interpreter and its state.
      * 
-     * @param input the input to process
+     * @param input
+     *            the input to process
      * @return a processed string or the same, if nothing to process
      */
     public String processDynamicData(final String input)

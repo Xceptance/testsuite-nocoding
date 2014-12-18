@@ -21,18 +21,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import test.com.xceptance.xlt.common.XltMockWebConnection;
+import test.com.xceptance.xlt.common.tests.TTest;
 
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.xceptance.xlt.api.actions.AbstractLightWeightPageAction;
@@ -41,7 +41,7 @@ import com.xceptance.xlt.common.util.CSVBasedURLAction;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * @author rschwietzke
+ * 
  */
 public class LWSimpleURLTest
 {
@@ -62,55 +62,60 @@ public class LWSimpleURLTest
 
     // header
     private final String HEADER = "Name,URL,Method,Parameters,ResponseCode,XPath,Text,Encoded";
-    
+
     /**
      * Create records from string
      */
     private List<CSVRecord> createRecords(final String... records) throws IOException
     {
         final StringBuilder fullRecord = new StringBuilder();
-        
-        for (final String record:records)
+
+        for (final String record : records)
         {
             fullRecord.append(record.replace("{url}", testUrl));
             fullRecord.append("\n");
         }
-        
-        final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader().build();
+
+        final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#')
+                                                     .withHeader().build();
         final CSVParser parser = new CSVParser(fullRecord.toString(), csvFormat);
-        
-        return parser.getRecords();    
+
+        return parser.getRecords();
     }
-    
+
     /**
      * Mock the action for later execution
      * 
      * @param action
-     * @throws IOException 
+     * @throws IOException
      */
-    private List<AbstractLightWeightPageAction> mockIt(final String login, final String password, final String... records) throws IOException
+    private List<AbstractLightWeightPageAction> mockIt(final String login, final String password,
+                                                       final String... records) throws IOException
     {
-        final List<CSVRecord> csvRecords = createRecords(records);   
-        
+        final List<CSVRecord> csvRecords = createRecords(records);
+
         final List<AbstractLightWeightPageAction> actions = new ArrayList<AbstractLightWeightPageAction>();
+
+        // the dummy test case
+        final TTest testCase = new TTest();
         
         // our action tracker to build up a correct chain of pages
-        AbstractLightWeightPageAction lastAction = null; 
-            
+        AbstractLightWeightPageAction lastAction = null;
+
         // let's loop about the data we have
         for (final CSVRecord csvRecord : csvRecords)
         {
             if (lastAction == null)
             {
                 // our first action, so start the browser too
-                lastAction = new LWSimpleURL(null, new CSVBasedURLAction(csvRecord), login, password);
+                lastAction = new LWSimpleURL(testCase, new CSVBasedURLAction(csvRecord), login, password);
             }
             else
             {
                 // subsequent actions
-                lastAction = new LWSimpleURL(null, lastAction, new CSVBasedURLAction(csvRecord));
+                lastAction = new LWSimpleURL(testCase, lastAction, new CSVBasedURLAction(csvRecord));
             }
-            
+
             // create mocked web connection and set the response
             final MockWebConnection conn = new XltMockWebConnection((XltWebClient) lastAction.getWebClient());
             conn.setResponse(new URL(testUrl), response);
@@ -120,43 +125,41 @@ public class LWSimpleURLTest
             // add
             actions.add(lastAction);
         }
-        
+
         return actions;
-    }        
-    
+    }
 
     /**********************************************************************************
      * Check names
-     * @throws IOException 
+     * 
+     * @throws IOException
      *********************************************************************************/
     @Test
     public void testNames_FirstGiven() throws IOException
     {
-        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, HEADER, "Foo,{url},,,200,//h1,Test 1,");        
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, HEADER, "Foo,{url},,,200,//h1,Test 1,");
         Assert.assertEquals("Timer name does not match.", "Foo", actions.get(0).getTimerName());
     }
 
     @Test
     public void testNames_FirstEmpty() throws IOException
     {
-        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, HEADER, ",{url},,,200,//h1,Test 1,");        
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, HEADER, ",{url},,,200,//h1,Test 1,");
         Assert.assertEquals("Timer name does not match.", "Action-1", actions.get(0).getTimerName());
     }
 
     @Test
     public void testNames_FirstNull() throws IOException
     {
-        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL", "{url}");        
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL", "{url}");
         Assert.assertEquals("Timer name does not match.", "Action-1", actions.get(0).getTimerName());
     }
-    
+
     @Test
     public void testNames_Stepname() throws IOException
     {
-        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, 
-                                                                   HEADER, 
-                                                                   ",{url},,,200,//h1,Test 1,",
-                                                                   ",{url},,,200,//h1,Test 1,");        
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, HEADER, ",{url},,,200,//h1,Test 1,",
+                                                                   ",{url},,,200,//h1,Test 1,");
 
         Assert.assertEquals("Timer name does not match.", "Action-1", actions.get(0).getTimerName());
         Assert.assertEquals("Timer name does not match.", "Action-2", actions.get(1).getTimerName());
@@ -164,7 +167,8 @@ public class LWSimpleURLTest
 
     /**********************************************************************************
      * Check setting of credentials
-     * @throws IOException 
+     * 
+     * @throws IOException
      *********************************************************************************/
     @Test
     public void testCredentials_Set() throws IOException
@@ -192,16 +196,16 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Pass_FullMatch() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},<h1>Test 1</h1>,<h1>Test 1</h1>");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},<h1>Test 1</h1>,<h1>Test 1</h1>");
         actions.get(0).run();
     }
 
     @Test
     public void testAll_Pass_TextIsRegexp() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test [0-9],Test [123]");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},Test [0-9],Test [123]");
         actions.get(0).run();
     }
 
@@ -209,8 +213,8 @@ public class LWSimpleURLTest
     public void testAll_Pass_TextIsRegexp_withCapturing_Text() throws Throwable
     {
         {
-            final List<AbstractLightWeightPageAction> actions = 
-                mockIt(null, null, "URL,RegExp,Text", "{url},Test ([0-9]),1");
+            final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                       "{url},Test ([0-9]),1");
             actions.get(0).run();
         }
     }
@@ -219,8 +223,8 @@ public class LWSimpleURLTest
     public void testAll_Pass_TextIsRegexp_withCapturing_TextIsRegExp() throws Throwable
     {
         {
-            final List<AbstractLightWeightPageAction> actions = 
-                mockIt(null, null, "URL,RegExp,Text", "{url},Test ([0-9]),[123]");
+            final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                       "{url},Test ([0-9]),[123]");
             actions.get(0).run();
         }
     }
@@ -228,9 +232,10 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Fail_TextIsRegexp_withCapturing() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test ([0-9]),Test 1");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},Test ([0-9]),Test 1");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<Test 1> but was:<1>");
 
@@ -240,9 +245,10 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Fail_TextIsPlain() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test [0-9],Test 2");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},Test [0-9],Test 2");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<Test 2> but was:<Test 1>");
 
@@ -252,9 +258,9 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Fail_TextIsPlain_Partial() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test [0-9],1");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text", "{url},Test [0-9],1");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<1> but was:<Test 1>");
 
@@ -264,9 +270,10 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Fail_TextIsRegexp() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test [0-9],\"Test [0-9]{2,}\"");
-        
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},Test [0-9],\"Test [0-9]{2,}\"");
+
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<Test [0-9]{2,}> but was:<Test 1>");
 
@@ -276,9 +283,10 @@ public class LWSimpleURLTest
     @Test
     public void testAll_Fail_TextDoesNotMatch_Capturing() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp,Text", "{url},Test ([0-9]),2");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp,Text",
+                                                                   "{url},Test ([0-9]),2");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text does not match. Expected:<2> but was:<1>");
 
@@ -292,25 +300,23 @@ public class LWSimpleURLTest
     @Test
     public void testRegexp_Pass() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp", "{url},Test [0-9]");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp", "{url},Test [0-9]");
         actions.get(0).run();
     }
 
     @Test
     public void testRegexp_Pass_WithCapturingGroup() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp", "{url},Test ([0-9])");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp", "{url},Test ([0-9])");
         actions.get(0).run();
     }
 
     @Test
     public void testRegexp_Fail() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp", "{url},Test [2-9]");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp", "{url},Test [2-9]");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Regexp <Test [2-9]> does not match");
 
@@ -320,9 +326,9 @@ public class LWSimpleURLTest
     @Test
     public void testRegexp_Fail_WithCapturingGroup() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,RegExp", "{url},Test ([2-9])");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,RegExp", "{url},Test ([2-9])");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Regexp <Test ([2-9])> does not match");
 
@@ -336,17 +342,16 @@ public class LWSimpleURLTest
     @Test
     public void testText_Pass() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,Text", "{url},Test 1");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test 1");
         actions.get(0).run();
     }
 
     @Test
     public void testText_Fail() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,Text", "{url},Test 2");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test 2");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text is not on the page. Expected:<Test 2>");
 
@@ -356,8 +361,7 @@ public class LWSimpleURLTest
     @Test
     public void testText_Pass_RegExp() throws Throwable
     {
-        final List<AbstractLightWeightPageAction> actions = 
-            mockIt(null, null, "URL,Text", "{url},Test [0-1]");
+        final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test [0-1]");
         actions.get(0).run();
     }
 
@@ -366,6 +370,7 @@ public class LWSimpleURLTest
     {
         final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,Text", "{url},Test [5-9]");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Text is not on the page. Expected:<Test [5-9]>");
 
@@ -388,6 +393,7 @@ public class LWSimpleURLTest
     {
         final List<AbstractLightWeightPageAction> actions = mockIt(null, null, "URL,ResponseCode", "{url},404");
 
+        thrown.handleAssertionErrors();
         thrown.expect(AssertionError.class);
         thrown.expectMessage("Response code does not match expected:<404> but was:<200>");
 

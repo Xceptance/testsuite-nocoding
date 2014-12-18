@@ -1,0 +1,12 @@
+# The header. This is for TLWURL, because it uses RegExp, for a full header documentation
+# see the file torder.csv
+#
+# This user just fires a lot of urls, all get, nothing fancy, nearly minimal file format.
+# No verification, nothing. But the default verification is code 200 or anything good, so 
+# a failure case cannot be put into that minimal configuration.
+Name,URL,ResponseCode
+
+Homepage,"${host}/posters/",200
+SearchNOHIT,"${host}/posters/search?searchText=foo${RANDOM.String(5)}",200
+SearchHIT,"${host}/posters/search?searchText=dish",200
+ProductDetailView,"${host}/posters/productDetail/Selfmade%20Mac%20and%20Cheese?productId=43",200

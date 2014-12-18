@@ -16,9 +16,11 @@
  */
 package com.xceptance.xlt.common.tests;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.actions.LWSimpleURL;
+import com.xceptance.xlt.common.actions.LWSimpleURL_XHR;
 import com.xceptance.xlt.common.util.CSVBasedURLAction;
 
 /**
@@ -38,7 +40,7 @@ public class TLWURL extends AbstractURLTestCase
         // let's loop about the data we have
         for (final CSVBasedURLAction csvBasedAction : csvBasedActions)
         {
-            // ok, action or static?
+            // ok, usual action or static?
             if (csvBasedAction.isAction())
             {
                 if (lastAction == null)
@@ -57,7 +59,7 @@ public class TLWURL extends AbstractURLTestCase
             }
 
             // this is the part that deals with the static downloads
-            if (csvBasedAction.isStaticContent())
+            else if (csvBasedAction.isStaticContent())
             {
                 if (lastAction == null)
                 {
@@ -66,8 +68,20 @@ public class TLWURL extends AbstractURLTestCase
                 }
                 else
                 {
-                    lastAction.addRequest(csvBasedAction.getURL(this));
+                    lastAction.addRequest(csvBasedAction.getUrlString());
                 }
+            }
+
+            // handle AJAX actions
+            else if (csvBasedAction.isXHRAction())
+            {
+                Assert.assertNotNull("AJAX actions cannot be used as first action", lastAction);
+
+                // Until know just the request URLs were collected. So run the action now.
+                lastAction.run();
+
+                // subsequent actions
+                lastAction = new LWSimpleURL_XHR(this, lastAction, csvBasedAction);
             }
         }
 

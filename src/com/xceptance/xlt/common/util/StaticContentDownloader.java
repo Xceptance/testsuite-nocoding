@@ -30,11 +30,9 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * The {@link StaticContentDownloader} aids in managing the parallel download of resources. The goal is to better simulate the
- * download behavior of real browsers. The number of threads working in parallel is controlled by configuration. Note
- * that there is no differentiation between requests to different domains.
- * 
- * @author Jörg Werner (Xceptance Software Technologies GmbH)
+ * The {@link StaticContentDownloader} aids in managing the parallel download of resources. The goal is to better
+ * simulate the download behavior of real browsers. The number of threads working in parallel is controlled by
+ * configuration. Note that there is no differentiation between requests to different domains.
  */
 public class StaticContentDownloader
 {
@@ -73,7 +71,7 @@ public class StaticContentDownloader
      * Use dynamic UID in the user agent
      */
     private final boolean userAgentUID;
-    
+
     /**
      * Creates a new RequestQueue object and initializes it with the given web client and the number of threads which
      * process the requests.
@@ -83,7 +81,7 @@ public class StaticContentDownloader
      * @param threadCount
      *            the number of threads
      * @param userAgentUID
-     *            do we need dynamic user agent identifiers          
+     *            do we need dynamic user agent identifiers
      */
     public StaticContentDownloader(final XltWebClient webClient, final int threadCount, final boolean userAgentUID)
     {
