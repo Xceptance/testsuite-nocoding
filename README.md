@@ -53,10 +53,10 @@ If you already know how to work with XLT and test suites, you can skip this chap
 
 * Git clone this test suite or download an archive.
 * Compile it with Ant or simply let your IDE do it (adjust the build path):
-```shell
-  $> cd <testsuite>
-  $> ant compile
-```
+
+	$> cd <testsuite>
+	$> ant compile
+
 * Tell your master controller about the test suite:
   * Open the file `<xlt>/config/mastercontroller.properties` in your favorite editor.
   * Make sure that it contains the following line:    
@@ -78,74 +78,70 @@ and do not cover all details.
 
 ### The Simplest Example
 
-```
-URL
-http://justhost.org/a
-http://justhost.org/ab
-http://justhost.org/aksdfsa?jhsadjfha
-```
+	URL
+	http://justhost.org/a
+	http://justhost.org/ab
+	http://justhost.org/aksdfsa?jhsadjfha
 
 ### A More Sophisticated Example
 
-```
-# The header. This is for TURL, because it uses XPath.
-Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
-# Just load the homepage
-A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+	# The header. This is for TURL, because it uses XPath.
+	Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
+	
+	# Just load the homepage
+	A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+	
+	# Select a category
+	A,SelectCategory,"${host}/posters/category/Main%20Dishes?categoryId=5",GET,,200,id('titleCategoryName'),"Main Dishes",false
+	
+	# View the product in detail
+	A,ProductDetailView,"${host}/posters/productDetail/XXL%20Burger?productId=48",GET,,200,id('titleProductName'),"XXL Burger",false
+	
+	# Configure the product (select finish and size)
+	XA,ConfigureProduct,"${host}/posters/updatePrice",POST,size=32 x 24 in&productId=48,200,,,false
+	
+	# Add the configured product to the cart
+	XA,AddToCart,"${host}/posters/addToCartSlider?productId=48&finish=gloss&size=32%20x%2024%20in",GET,,200,,,false
+	
+	# View the cart
+	A,ViewCart,"${host}/posters/cart",GET,,200,id('titleCart'),"Cart",false
+	
+	# Proceed to checkout
+	A,Checkout,"${hostsec}/posters/checkout",GET,,200,id('titleDelAddr'),"Select or enter a shipping address",false
+	
+	# Fill out and submit shipping address form
+	A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Select or enter a payment method",false
+	
+	# Fill out and submit payment form
+	A,COBilling,"${hostsec}/posters/paymentMethodCompleted",POST,creditCardNumber=4111111111111111&name=Dagobert Duck&expirationDateMonth=01&expirationDateYear=2017&btnAddPayment=,200,id('titleOrderOverview'),"Order Overview",false
+	
+	# Finally, place the order
+	A,PlaceOrder,"${hostsec}/posters/checkoutCompleted",POST,btnOrder=,200,"//script[not(@src) and contains(text(),'""Thank you for shopping with us!""')]",,false
 
-# Select a category
-A,SelectCategory,"${host}/posters/category/Main%20Dishes?categoryId=5",GET,,200,id('titleCategoryName'),"Main Dishes",false
-
-# View the product in detail
-A,ProductDetailView,"${host}/posters/productDetail/XXL%20Burger?productId=48",GET,,200,id('titleProductName'),"XXL Burger",false
-
-# Configure the product (select finish and size)
-XA,ConfigureProduct,"${host}/posters/updatePrice",POST,size=32 x 24 in&productId=48,200,,,false
-
-# Add the configured product to the cart
-XA,AddToCart,"${host}/posters/addToCartSlider?productId=48&finish=gloss&size=32%20x%2024%20in",GET,,200,,,false
-
-# View the cart
-A,ViewCart,"${host}/posters/cart",GET,,200,id('titleCart'),"Cart",false
-
-# Proceed to checkout
-A,Checkout,"${hostsec}/posters/checkout",GET,,200,id('titleDelAddr'),"Select or enter a shipping address",false
-
-# Fill out and submit shipping address form
-A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Select or enter a payment method",false
-
-# Fill out and submit payment form
-A,COBilling,"${hostsec}/posters/paymentMethodCompleted",POST,creditCardNumber=4111111111111111&name=Dagobert Duck&expirationDateMonth=01&expirationDateYear=2017&btnAddPayment=,200,id('titleOrderOverview'),"Order Overview",false
-
-# Finally, place the order
-A,PlaceOrder,"${hostsec}/posters/checkoutCompleted",POST,btnOrder=,200,"//script[not(@src) and contains(text(),'""Thank you for shopping with us!""')]",,false
-
-```
 
 ### An Example with Static Content
 
-```
-Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
-# Just load the homepage including static content.
-A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
-	S,,${host}/posters/assets/css/bootstrap-2.3.1.min.css,GET,,200,,,false
-	S,,${host}/posters/assets/css/bootstrap-responsive-2.0.4.css,GET,,200,,,false
-	S,,${host}/posters/assets/js/jquery-1.9.1.min.js,GET,,200,,,false
-	S,,${host}/posters/assets/css/cartSlider.css,GET,,200,,,false
-	S,,${host}/posters/assets/js/bootstrap-paginator-0.5.js,GET,,200,,,false
-	S,,${host}/posters/assets/js/custom.js,GET,,200,,,false
-	S,,${host}/posters/assets/js/customCartSlider.js,GET,,200,,,false
-	S,,${host}/posters/assets/js/bootstrap-2.3.1.min.js,GET,,200,,,false
-	S,,${host}/posters/assets/img/products/XXL/XXL_1.jpg,GET,,200,,,false
-	S,,${host}/posters/assets/img/xceptanceLogo.png,GET,,200,,,false
-	S,,${host}/posters/assets/img/products/XXL/XXL_2.jpg,GET,,200,,,false
-	S,,${host}/posters/assets/img/products/XXL/XXL_3.jpg,GET,,200,,,false
-	S,,${host}/posters/assets/img/products/XXL/XXL_4.jpg,GET,,200,,,false
-	S,,${host}/posters/assets/img/cartSliderFooter.png,GET,,200,,,false
-	S,,${host}/posters/assets/img/glyphicons-halflings.png,GET,,200,,,false
-```
+	Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
+	
+	# Just load the homepage including static content.
+	A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+		S,,${host}/posters/assets/css/bootstrap-2.3.1.min.css,GET,,200,,,false
+		S,,${host}/posters/assets/css/bootstrap-responsive-2.0.4.css,GET,,200,,,false
+		S,,${host}/posters/assets/js/jquery-1.9.1.min.js,GET,,200,,,false
+		S,,${host}/posters/assets/css/cartSlider.css,GET,,200,,,false
+		S,,${host}/posters/assets/js/bootstrap-paginator-0.5.js,GET,,200,,,false
+		S,,${host}/posters/assets/js/custom.js,GET,,200,,,false
+		S,,${host}/posters/assets/js/customCartSlider.js,GET,,200,,,false
+		S,,${host}/posters/assets/js/bootstrap-2.3.1.min.js,GET,,200,,,false
+		S,,${host}/posters/assets/img/products/XXL/XXL_1.jpg,GET,,200,,,false
+		S,,${host}/posters/assets/img/xceptanceLogo.png,GET,,200,,,false
+		S,,${host}/posters/assets/img/products/XXL/XXL_2.jpg,GET,,200,,,false
+		S,,${host}/posters/assets/img/products/XXL/XXL_3.jpg,GET,,200,,,false
+		S,,${host}/posters/assets/img/products/XXL/XXL_4.jpg,GET,,200,,,false
+		S,,${host}/posters/assets/img/cartSliderFooter.png,GET,,200,,,false
+		S,,${host}/posters/assets/img/glyphicons-halflings.png,GET,,200,,,false
 
 ### Comments and Empty Lines
 
