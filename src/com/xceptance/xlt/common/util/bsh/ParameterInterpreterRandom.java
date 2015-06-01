@@ -26,7 +26,7 @@ import com.xceptance.xlt.api.util.XltRandom;
  * length x. Contains letters from s. ${RANDOM.Number(max)} : returns an integer between 0 (inclusive) and max
  * (inclusive) ${RANDOM.Number(min, max)} : returns an integer between min (inclusive) and max (inclusive)
  */
-public class ParamInterpreterRandom
+public class ParameterInterpreterRandom
 {
     public int Number(final int max)
     {
@@ -46,5 +46,8 @@ public class ParamInterpreterRandom
     public String String(final String characters, final int length)
     {
         return RandomStringUtils.random(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+    }
+    public String DigitString(int length){
+        return RandomStringUtils.randomNumeric(length);
     }
 }

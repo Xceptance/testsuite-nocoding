@@ -19,7 +19,7 @@ package com.xceptance.xlt.common.util.bsh;
 /**
  * NOW in params. Just returns the current time stamp.
  */
-public class ParamInterpreterNow
+public class ParameterInterpreterNow
 {
     /**
      * Returns the current time in millis

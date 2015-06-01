@@ -20,19 +20,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.bsh.ParamInterpreter;
+import bsh.EvalError;
+
+import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 /**
  * Test the parameter handling via beanshell.
  */
-public class ParamInterpreterTest
+public class ParameterInterpreterTest
 {
-    private ParamInterpreter interpreter;
+    private ParameterInterpreter interpreter;
 
     @Before
     public void setup()
     {
-        interpreter = new ParamInterpreter();
+        interpreter = new ParameterInterpreter(null);
     }
 
     @Test
@@ -86,7 +89,47 @@ public class ParamInterpreterTest
         Assert.assertEquals("No 1 here and 3 here.",
                             interpreter.processDynamicData("No ${m = Math.abs(-1)} here and ${m + Math.abs(-2)} here."));
     }
+    @Test
+    public void storeAndEvaluete(){
+        try
+        {
+            interpreter.set("a", "A");
+            interpreter.set("b", "B");
+        }
+        catch (final EvalError e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Assert.assertEquals("A", interpreter.processDynamicData("${a}"));
+        Assert.assertEquals("B", interpreter.processDynamicData("${b}"));
+        Assert.assertEquals("AB", interpreter.processDynamicData("${a}${b}"));
+        
+    }
+    @Test
+    public void storeNVPAndEvaluete(){
+        try
+        {
+            final NameValuePair nvpC = new NameValuePair("c", "C");
+            final NameValuePair nvpD = new NameValuePair("d", "D");
+            interpreter.set(nvpC);
+            interpreter.set(nvpD);
+        }
+        catch (final EvalError e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Assert.assertEquals("C", interpreter.processDynamicData("${c}"));
+        Assert.assertEquals("D", interpreter.processDynamicData("${d}"));
+        Assert.assertEquals("CD", interpreter.processDynamicData("${c}${d}"));
+    }
 
+    @Test
+    public void dateTest(){
+        System.err.println(interpreter.processDynamicData("${DATE.toString()}"));
+        System.err.println(interpreter.processDynamicData("${RANDOM.DigitString(18)}"));
+    }
     // ----------------------------------------------------------------------------------------
     /* Error handling */
     // ----------------------------------------------------------------------------------------

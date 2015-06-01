@@ -21,14 +21,14 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.bsh.ParamInterpreterNow;
+import com.xceptance.xlt.common.util.bsh.ParameterInterpreterNow;
 
-public class ParamInterpreterNowTest
+public class ParameterInterpreterNowTest
 {
     @Test
     public final void testToString()
     {
-        final ParamInterpreterNow NOW = new ParamInterpreterNow();
+        final ParameterInterpreterNow NOW = new ParameterInterpreterNow();
         final long now = System.currentTimeMillis();
 
         Assert.assertTrue(Long.parseLong(NOW.toString()) >= now);
@@ -37,7 +37,7 @@ public class ParamInterpreterNowTest
     @Test
     public final void testChange() throws InterruptedException
     {
-        final ParamInterpreterNow NOW = new ParamInterpreterNow();
+        final ParameterInterpreterNow NOW = new ParameterInterpreterNow();
         long result = 0;
         final Random r = new Random();
 
