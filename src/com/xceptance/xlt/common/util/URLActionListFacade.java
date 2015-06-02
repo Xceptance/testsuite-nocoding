@@ -2,23 +2,52 @@ package com.xceptance.xlt.common.util;
 
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionListFacade
 {
-    private final String filePath;
-
-    private final ParameterInterpreter interpreter;
-
-    public URLActionListFacade(final String filePath, final ParameterInterpreter interpreter)
+    public URLActionListFacade()
     {
-        this.filePath = filePath;
-        this.interpreter = interpreter;
-
     }
 
-    public List<URLAction> buildUrlActions()
+    public List<URLAction> buildUrlActions(final String filePath,
+                                           final ParameterInterpreter interpreter)
     {
-        return null;
+        final URLActionListBuilder builder = createBuilder(filePath, interpreter);
+        return builder.buildURLActions();
+    }
+
+    private String getFileNameExtension(final String filePath)
+    {
+        final String fileNameExtension = FilenameUtils.getExtension(filePath);
+        return fileNameExtension;
+    }
+
+    private URLActionListBuilder createBuilder(final String filePath, final ParameterInterpreter interpreter)
+    {
+        final String fileNameExtension = getFileNameExtension(filePath);
+        final URLActionListBuilder listBuilder;
+        final URLActionBuilder actionBuilder = new URLActionBuilder();
+
+        if (fileNameExtension.equals("yml") || fileNameExtension.equals("yaml"))
+        {
+            listBuilder = new YAMLBasedURLActionListBuilder(filePath, interpreter, actionBuilder);
+        }
+        else if (fileNameExtension.equals("csv"))
+        {
+            listBuilder = new CSVBasedURLActionListBuilder(filePath, interpreter,actionBuilder);
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                                               "Illegal file format: "
+                                                   + fileNameExtension
+                                                   + "\n"
+                                                   + "Supported formats: '.yaml' | '.yml' or '.csv'"
+                                                   + "\n");
+        }
+        return listBuilder;
     }
 }

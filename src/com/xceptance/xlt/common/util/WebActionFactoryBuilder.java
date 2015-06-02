@@ -30,6 +30,16 @@ public class WebActionFactoryBuilder
     {
     }
 
+    public WebActionFactory buildFactory(final String mode,
+                                         final ParameterInterpreter interpreter)
+    {
+
+        setMode(mode);
+        setInterpreter(interpreter);
+        produce();
+        
+        return this.factory;
+    }
     private void setMode(final String mode)
     {
         if (isPermittedMode(mode))
@@ -56,16 +66,6 @@ public class WebActionFactoryBuilder
         }
     }
 
-    public WebActionFactory buildFactory(final String mode,
-                                         final ParameterInterpreter interpreter)
-    {
-
-        setMode(mode);
-        setInterpreter(interpreter);
-        produce();
-        
-        return this.factory;
-    }
     private void produce(){
         
         final WebActionFactory resultFactory;

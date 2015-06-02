@@ -1,0 +1,48 @@
+#########################
+	Messages
+-------------------------
+HTTP-message   = Request | Response
+
+generic-message =
+	start-line
+	*(message-header CRLF)
+	CRLF
+	[message body]
+
+start-line      = Request-Line | Status-Line
+
+
+message-header = field-name ":" [ field-value ]
+field-name     = token
+field-value    = *( field-content | LWS )
+field-content  = <the OCTETs making up the field-value
+                 and consisting of either *TEXT or combinations
+                 of token, separators, and quoted-string>
+
+message-body = entity-body
+                    | <entity-body encoded as per Transfer-Encoding>
+
+entity-body := Content-Encoding( Content-Type( data ) )
+
+#########################
+	Request
+-------------------------
+Request	= Request-Line  
+	*(( general-header | request-header  | entity-header ) CRLF)
+	CRLF
+	[ message-body ]
+
+Request-Line   = Method SP Request-URI SP HTTP-Version CRLF
+
+Method:
+
+#########################
+	Response
+-------------------------
+Response = Status-Line
+	*(( general-header| response-header| entity-header ) CRLF)
+	CRLF
+	[ message-body ]
+
+Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+

@@ -97,8 +97,8 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupURLActionList()
     {
-        urlActionListFacade = new URLActionListFacade(filePath, interpreter);
-        this.actions = urlActionListFacade.buildUrlActions();
+        urlActionListFacade = new URLActionListFacade();
+        this.actions = urlActionListFacade.buildUrlActions(filePath, interpreter);
     }
 
     private void setupWebActionFactory()
