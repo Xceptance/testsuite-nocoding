@@ -542,58 +542,6 @@ public class URLAction
         }
     }
 
-    public void addCookie(final NameValuePair cookie)
-    {
-        if (cookies.isEmpty() && cookie != null)
-        {
-            cookies = new ArrayList<NameValuePair>();
-        }
-        if (cookies != null)
-        {
-            this.cookies.add(cookie);
-            XltLogger.runTimeLogger.info(getAddedToTag("Cookie"));
-        }
-    }
-
-    public void addStore(final URLActionStore storeItem)
-    {
-        if (this.store.isEmpty() && storeItem != null)
-        {
-            this.store = new ArrayList<URLActionStore>();
-        }
-        if (storeItem != null)
-        {
-            this.store.add(storeItem);
-            XltLogger.runTimeLogger.info(getAddedToTag("Store-Item"));
-        }
-    }
-
-    public void addHeader(final NameValuePair header)
-    {
-        if (headers.isEmpty() && header != null)
-        {
-            headers = new ArrayList<NameValuePair>();
-        }
-        if (header != null)
-        {
-            this.headers.add(header);
-            XltLogger.runTimeLogger.info(getAddedToTag("Header"));
-        }
-    }
-
-    public void addValidation(final URLActionValidation validation)
-    {
-        if (validations.isEmpty() && validation != null)
-        {
-            validations = new ArrayList<URLActionValidation>();
-        }
-        if (validation != null)
-        {
-            validations.add(validation);
-            XltLogger.runTimeLogger.info(getAddedToTag("Validation"));
-        }
-    }
-
     private Object throwIllegalArgumentException(final String message)
     {
         throw new IllegalArgumentException(message);

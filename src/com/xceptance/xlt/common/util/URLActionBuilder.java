@@ -1,15 +1,19 @@
 package com.xceptance.xlt.common.util;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionBuilder
 {
+
     private String name;
 
     private String type;
@@ -60,78 +64,125 @@ public class URLActionBuilder
 
     private ParameterInterpreter interpreter;
 
-    public void outline(){
+    public void outline()
+    {
         System.err.println("UrlActionBuilder");
-        if(this.name != null) System.err.println("Name : " + this.name);
-        if(this.d_name != null) System.err.println("D_Name : " + this.d_name);
-        if(this.type != null) System.err.println("Type : " + this.type);
-        if(this.d_type != null) System.err.println("D_Type : " + this.d_type);
-        if(this.url != null) System.err.println("Url : " + this.url);
-        if(this.d_url != null) System.err.println("D_Url : " + this.d_url);
-        if(this.method != null) System.err.println("Method : " + this.method);
-        if(this.d_method != null) System.err.println("D_Method : " + this.d_method);
-        if(this.httpResponceCode != null) System.err.println("HttpCode : " + this.httpResponceCode);
-        if(this.d_httpResponceCode != null) System.err.println("D_HttpCode : " + this.d_httpResponceCode);
-        if(this.body != null) System.err.println("Body : " + this.body);
-        if(this.d_body != null) System.err.println("D_Body : " + this.d_body);
-        if(!parameters.isEmpty()){
+        if (this.name != null)
+            System.err.println("Name : " + this.name);
+        if (this.d_name != null)
+            System.err.println("D_Name : " + this.d_name);
+        if (this.type != null)
+            System.err.println("Type : " + this.type);
+        if (this.d_type != null)
+            System.err.println("D_Type : " + this.d_type);
+        if (this.url != null)
+            System.err.println("Url : " + this.url);
+        if (this.d_url != null)
+            System.err.println("D_Url : " + this.d_url);
+        if (this.method != null)
+            System.err.println("Method : " + this.method);
+        if (this.d_method != null)
+            System.err.println("D_Method : " + this.d_method);
+        if (this.httpResponceCode != null)
+            System.err.println("HttpCode : " + this.httpResponceCode);
+        if (this.d_httpResponceCode != null)
+            System.err.println("D_HttpCode : " + this.d_httpResponceCode);
+        if (this.body != null)
+            System.err.println("Body : " + this.body);
+        if (this.d_body != null)
+            System.err.println("D_Body : " + this.d_body);
+        if (!parameters.isEmpty())
+        {
             System.err.println("Parameters:");
-            for(final NameValuePair nvp : parameters){
-                
-                System.err.println("\t" +  nvp.getName() + " : " + nvp.getValue());
+            for (final NameValuePair nvp : parameters)
+            {
+
+                System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
             }
         }
-        if(!d_parameters.isEmpty()){
+        if (!d_parameters.isEmpty())
+        {
             System.err.println("D_Parameters:");
-            for(final NameValuePair nvp : d_parameters){
-                
+            for (final NameValuePair nvp : d_parameters)
+            {
+
                 System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
             }
         }
-        if(!cookies.isEmpty()){
+        if (!cookies.isEmpty())
+        {
             System.err.println("Cookies:");
-            for(final NameValuePair nvp : cookies){
-                
-                System.err.println("\t" +  nvp.getName() + " : " + nvp.getValue());
+            for (final NameValuePair nvp : cookies)
+            {
+
+                System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
             }
         }
-        if(!d_cookies.isEmpty()){
+        if (!d_cookies.isEmpty())
+        {
             System.err.println("D_Cookies:");
-            for(final NameValuePair nvp : d_cookies){
-                
+            for (final NameValuePair nvp : d_cookies)
+            {
+
                 System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
             }
         }
-        if(!headers.isEmpty()){
+        if (!headers.isEmpty())
+        {
             System.err.println("Headers:");
-            for(final NameValuePair nvp : headers){
-                
-                System.err.println("\t" +  nvp.getName() + " : " + nvp.getValue());
-            }
-        }
-        if(!d_headers.isEmpty()){
-            System.err.println("D_Headers:");
-            for(final NameValuePair nvp : d_headers){
-                
+            for (final NameValuePair nvp : headers)
+            {
+
                 System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
             }
         }
-        if(!store.isEmpty()){
+        if (!d_headers.isEmpty())
+        {
+            System.err.println("D_Headers:");
+            for (final NameValuePair nvp : d_headers)
+            {
+
+                System.err.println("\t" + nvp.getName() + " : " + nvp.getValue());
+            }
+        }
+        if (!store.isEmpty())
+        {
             System.err.println("Store:");
-            for(final URLActionStore nvp : store){
-                
+            for (final URLActionStore nvp : store)
+            {
+
                 nvp.outline();
             }
         }
-        if(!d_store.isEmpty()){
+        if (!d_store.isEmpty())
+        {
             System.err.println("D_Store:");
-            for(final URLActionStore nvp : d_store){
-                
+            for (final URLActionStore nvp : d_store)
+            {
+
+                nvp.outline();
+            }
+        }
+        if (!validations.isEmpty())
+        {
+            System.err.println("validations:");
+            for (final URLActionValidation nvp : validations)
+            {
+
+                nvp.outline();
+            }
+        }
+        if (!d_validations.isEmpty())
+        {
+            System.err.println("D_validations:");
+            for (final URLActionValidation nvp : d_validations)
+            {
+
                 nvp.outline();
             }
         }
     }
-    
+
     public URLAction build()
     {
         URLAction resultAction = null;
@@ -149,15 +200,18 @@ public class URLActionBuilder
             resultAction.setValidations(getValidations());
             resultAction.setStore(getStore());
         }
-        catch (final Exception e)
+        catch (final IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("Failed to create URLAction", e);
+            throw new IllegalArgumentException("Failed to create URLAction : "
+                                               + e.getMessage(), e);
         }
+
         reset();
+
         return resultAction;
     }
 
-    private void reset()
+    public void reset()
     {
         this.interpreter = null;
         this.name = null;
@@ -363,66 +417,80 @@ public class URLActionBuilder
     public void setName(final String name)
     {
         this.name = name;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("name", name));
     }
 
     public void setType(final String type)
     {
         this.type = type;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("type", type));
     }
 
     public void setUrl(final String url)
     {
         this.url = url;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("url", url));
     }
 
     public void setMethod(final String method)
     {
         this.method = method;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("method", method));
     }
 
     public void setEncoded(final String encoded)
     {
         this.encoded = encoded;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("encoded", encoded));
     }
 
     public void setHttpResponceCode(final String httpResponceCode)
     {
         this.httpResponceCode = httpResponceCode;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("httpResponseCode",
+                                                       httpResponceCode));
     }
 
     public void setBody(final String body)
     {
         this.body = body;
+        XltLogger.runTimeLogger.info(infoSetTagToValue("body", body));
     }
 
     public void setValidations(final List<URLActionValidation> validations)
     {
         this.validations = validations;
+        XltLogger.runTimeLogger.info(infoSetTag("validations"));
     }
 
     public void setStore(final List<URLActionStore> store)
     {
         this.store = store;
+        XltLogger.runTimeLogger.info(infoSetTag("store"));
     }
 
     public void setParameters(final List<NameValuePair> parameters)
     {
         this.parameters = parameters;
+        XltLogger.runTimeLogger.info(infoSetTag("parameters"));
     }
 
     public void setCookies(final List<NameValuePair> cookies)
     {
         this.cookies = cookies;
+        XltLogger.runTimeLogger.info(infoSetTag("cookies"));
     }
 
     public void setHeaders(final List<NameValuePair> headers)
     {
         this.headers = headers;
+        XltLogger.runTimeLogger.info(infoSetTag("headers"));
     }
 
     public void setInterpreter(final ParameterInterpreter interpreter)
     {
         this.interpreter = interpreter;
+        XltLogger.runTimeLogger.info(infoSetTag("interpreter"));
     }
 
     public void setDefaultName(final String d_name)
@@ -488,6 +556,67 @@ public class URLActionBuilder
     public void setDefaultHeaders(final List<NameValuePair> d_headers)
     {
         this.d_headers = d_headers;
+    }
+
+    public void addCookie(final NameValuePair cookie)
+    {
+        if (this.cookies.isEmpty() && cookie != null)
+        {
+            this.cookies = new ArrayList<NameValuePair>();
+        }
+        if (this.cookies != null)
+        {
+            this.cookies.add(cookie);
+        }
+    }
+
+    public void addStore(final URLActionStore storeItem)
+    {
+        if (this.store.isEmpty() && storeItem != null)
+        {
+            this.store = new ArrayList<URLActionStore>();
+        }
+        if (storeItem != null)
+        {
+            this.store.add(storeItem);
+        }
+    }
+
+    public void addHeader(final NameValuePair header)
+    {
+        if (this.headers.isEmpty() && header != null)
+        {
+            this.headers = new ArrayList<NameValuePair>();
+        }
+        if (header != null)
+        {
+            this.headers.add(header);
+        }
+    }
+
+    public void addValidation(final URLActionValidation validation)
+    {
+        if (this.validations.isEmpty() && validation != null)
+        {
+            this.validations = new ArrayList<URLActionValidation>();
+        }
+        if (validation != null)
+        {
+            this.validations.add(validation);
+        }
+    }
+
+    private String infoSetTagToValue(final String tag, final String value)
+    {
+        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ", tag,
+                                                    value);
+        return message;
+    }
+
+    private String infoSetTag(final String tag)
+    {
+        final String message = MessageFormat.format("Set tag \"{0}\" ", tag);
+        return message;
     }
 
 }

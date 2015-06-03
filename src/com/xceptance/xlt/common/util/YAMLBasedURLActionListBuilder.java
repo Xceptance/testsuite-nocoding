@@ -25,6 +25,11 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 {
+
+    protected final URLActionValidationBuilder validationBuilder;
+
+    protected final URLActionStoreBuilder storeBuilder;
+
     /*
      * Accepted syntactic keys for the yaml data
      */
@@ -72,9 +77,14 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     public YAMLBasedURLActionListBuilder(final String filePath,
                                          final ParameterInterpreter interpreter,
-                                         final URLActionBuilder builder)
+                                         final URLActionBuilder actionBuilder,
+                                         final URLActionValidationBuilder validationBuilder,
+                                         final URLActionStoreBuilder storeBuilder)
     {
-        super(filePath, interpreter, builder);
+        super(filePath, interpreter, actionBuilder);
+
+        this.storeBuilder = storeBuilder;
+        this.validationBuilder = validationBuilder;
     }
 
     public void outline()
@@ -89,13 +99,22 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             }
         }
         this.actionBuilder.outline();
+
+        if (!actions.isEmpty())
+        {
+            System.err.println("URLAction actions:");
+            for (final URLAction action : actions)
+            {
+                action.outline();
+            }
+        }
     }
 
     public List<URLAction> buildURLActions()
     {
         final List<Object> dataList = loadDataFromFile();
         createActionList(dataList);
-        return actions;
+        return this.actions;
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +173,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         switch (tagName)
         {
             case ACTION:
-                // handleSingleActionListItem(listItem);
+                handleActionListItem(listItem);
                 break;
             case NAME:
                 setDefaultName(listItem);
@@ -193,10 +212,9 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 setDynamicStoreVariables(listItem);
                 break;
             default:
-                XltLogger.runTimeLogger.warn(MessageFormat.format("Ignoring invali list argument : \"{0}\", ignore",
+                XltLogger.runTimeLogger.warn(MessageFormat.format("Ignoring invalid list item : \"{0}\"",
                                                                   tagName));
         }
-        this.outline();
     }
 
     private void setDefaultName(final LinkedHashMap<String, Object> nameItem)
@@ -242,11 +260,11 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             final String code = (String) codeObject;
             if (code.equals(DELETE))
             {
-                actionBuilder.setDefaultName(null);
+                actionBuilder.setDefaultHttpResponceCode(null);
             }
             else
             {
-                actionBuilder.setDefaultName(code);
+                actionBuilder.setDefaultHttpResponceCode(code);
             }
         }
         else
@@ -370,7 +388,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
                 newList.add(nvp);
             }
-            actionBuilder.setParameters(newList);
+            actionBuilder.setDefaultParameters(newList);
         }
         else
         {
@@ -404,7 +422,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
                 newList.add(nvp);
             }
-            actionBuilder.setCookies(newList);
+            actionBuilder.setDefaultCookies(newList);
         }
         else
         {
@@ -420,7 +438,9 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             final String headers = (String) headersObject;
             if (headers.equals(DELETE))
             {
+
                 actionBuilder.setDefaultHeaders(Collections.<NameValuePair> emptyList());
+
             }
             else
             {
@@ -438,7 +458,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
                 newList.add(nvp);
             }
-            actionBuilder.setHeaders(newList);
+            actionBuilder.setDefaultHeaders(newList);
         }
         else
         {
@@ -520,14 +540,428 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         }
     }
 
-    private void handleSingleActionListItem(final LinkedHashMap<String, Object> listItem)
+    private void handleActionListItem(final LinkedHashMap<String, Object> listItem)
     {
-        /*
-         * final Object object = data.get(ACTION); if (object == null) { System.err.println("EMPTY"); break; }
-         * checkForLinkedHashMap(object, getNotOrganizedAsHashMapMessage(ACTION)); final LinkedHashMap<String, Object>
-         * rawAction = (LinkedHashMap<String, Object>) object; final URLAction action = createURLAction(rawAction);
-         * actions.add(action); handleSubrequests(rawAction, action);
-         */
+        final Object actionObject = listItem.get(ACTION);
+        ParameterUtils.isNotNull(actionObject, ACTION);
+        ParameterUtils.isLinkedHashMap(actionObject, ACTION, "Missing Content");
+        final LinkedHashMap<String, Object> rawAction = (LinkedHashMap<String, Object>) actionObject;
+
+        fillURLActionBuilder(rawAction);
+
+        final URLAction action = actionBuilder.build();
+        this.actions.add(action);
+
+        handleSubrequests(rawAction);
+
+    }
+
+    private void handleSubrequests(final LinkedHashMap<String, Object> rawAction)
+    {
+        final Object subrequestObject = rawAction.get(SUBREQUESTS);
+        if (subrequestObject != null)
+        {
+            ParameterUtils.isArrayList(subrequestObject, SUBREQUESTS, "");
+
+            final List<Object> subrequests = (List<Object>) subrequestObject;
+
+            for (final Object subrequestItem : subrequests)
+            {
+                ParameterUtils.isLinkedHashMap(subrequestItem, STATIC, "");
+
+                final LinkedHashMap<String, Object> subrequest = (LinkedHashMap<String, Object>) subrequestItem;
+                createSubrequest(subrequest);
+            }
+        }
+    }
+
+    private void createSubrequest(final LinkedHashMap<String, Object> subrequest)
+    {
+        final Object staticSubrequestObject = subrequest.get(STATIC);
+        if (staticSubrequestObject != null)
+        {
+            ParameterUtils.isArrayList(staticSubrequestObject, SUBREQUESTS, "");
+            final List<Object> staticSubrequest = (List<Object>) staticSubrequestObject;
+            handleStaticSubrequests(staticSubrequest);
+        }
+        else if (!d_static.isEmpty())
+        {
+            for (int i = 0; i < d_static.size(); i++)
+            {
+                actionBuilder.reset();
+                actionBuilder.setUrl(d_static.get(i));
+                actionBuilder.setType(URLAction.TYPE_STATIC);
+                actionBuilder.setMethod(URLAction.METHOD_GET);
+                actionBuilder.setName("static-subrequest" + i);
+                actionBuilder.setInterpreter(this.interpreter);
+                actions.add(actionBuilder.build());
+            }
+        }
+        final Object xhrSubrequestObject = subrequest.get(XHR);
+        if (xhrSubrequestObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(xhrSubrequestObject, SUBREQUESTS, "");
+            final LinkedHashMap<String, Object> xhrSubrequest = (LinkedHashMap<String, Object>) xhrSubrequestObject;
+            handleXhrSubrequests(xhrSubrequest);
+        }
+    }
+
+    private void handleXhrSubrequests(final LinkedHashMap<String, Object> xhrSubrequest)
+    {
+        fillURLActionBuilder(xhrSubrequest);
+        actionBuilder.setType(URLAction.TYPE_XHR);
+        final URLAction xhrAction = actionBuilder.build();
+        actions.add(xhrAction);
+        handleSubrequests(xhrSubrequest);
+    }
+
+    private void handleStaticSubrequests(final List<Object> staticUrls)
+    {
+        for (int i = 0; i < staticUrls.size(); i++)
+        {
+            final Object o = staticUrls.get(i);
+            ParameterUtils.isString(o, STATIC, "");
+
+            final String urlString = (String) o;
+
+            actionBuilder.reset();
+            actionBuilder.setType(URLAction.TYPE_STATIC);
+            actionBuilder.setMethod(URLAction.METHOD_GET);
+            actionBuilder.setUrl(urlString);
+            actionBuilder.setName("static-subrequest" + i);
+            actionBuilder.setInterpreter(this.interpreter);
+            actions.add(actionBuilder.build());
+        }
+    }
+
+    private void fillURLActionBuilder(final LinkedHashMap<String, Object> rawAction)
+    {
+        actionBuilder.reset();
+
+        actionBuilder.setInterpreter(this.interpreter);
+        fillUrlActionBuilderWithName(rawAction);
+        fillUrlActionBuilderWithRequestData(rawAction);
+        fillUrlActionBuilderWithResponseData(rawAction);
+    }
+
+    private void fillUrlActionBuilderWithName(final LinkedHashMap<String, Object> rawAction)
+    {
+        final Object nameObject = rawAction.get(NAME);
+        if (nameObject != null)
+        {
+            ParameterUtils.isString(nameObject, NAME);
+            final String name = (String) nameObject;
+            actionBuilder.setName(name);
+        }
+
+    }
+
+    private void fillUrlActionBuilderWithRequestData(final LinkedHashMap<String, Object> rawAction)
+    {
+        final Object requestObject = rawAction.get(REQUEST);
+        if (requestObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(requestObject, REQUEST, "");
+            final LinkedHashMap<String, Object> rawRequest = (LinkedHashMap<String, Object>) requestObject;
+
+            fillURLActionBuilderWithBodyData(rawRequest);
+            fillURLActionBuilderWithHeaderData(rawRequest);
+            fillURLActionBuilderWithEncodedData(rawRequest);
+            fillURLActionBuilderWithMethodData(rawRequest);
+            fillURLActionBuilderWithParameterData(rawRequest);
+            fillURLActionBuilderWithXhrData(rawRequest);
+            fillURLActionBuilderWithUrlData(rawRequest);
+        }
+    }
+
+    private void fillURLActionBuilderWithBodyData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object bodyObject = rawRequest.get(BODY);
+        if (bodyObject != null)
+        {
+            ParameterUtils.isString(bodyObject, BODY);
+            final String body = (String) bodyObject;
+            actionBuilder.setBody(body);
+        }
+    }
+
+    private void fillURLActionBuilderWithHeaderData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object headersObject = rawRequest.get(HEADERS);
+        if (headersObject != null)
+        {
+            if (headersObject instanceof ArrayList)
+            {
+                final List<Object> objectList = (ArrayList) headersObject;
+
+                final List<NameValuePair> newList = new ArrayList<NameValuePair>();
+
+                for (final Object object : objectList)
+                {
+                    ParameterUtils.isLinkedHashMapParam(object, HEADERS);
+                    final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
+                    final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
+                    newList.add(nvp);
+                }
+                actionBuilder.setHeaders(newList);
+            }
+            else
+            {
+                ParameterUtils.doThrow(HEADERS, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+
+    private void fillURLActionBuilderWithParameterData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object parametersObject = rawRequest.get(PARAMETERS);
+        if (parametersObject != null)
+        {
+            if (parametersObject instanceof ArrayList)
+            {
+                final List<Object> objectList = (ArrayList) parametersObject;
+                final List<NameValuePair> newList = new ArrayList<NameValuePair>();
+                for (final Object object : objectList)
+                {
+                    ParameterUtils.isLinkedHashMapParam(object, PARAMETERS);
+                    final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
+                    final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
+                    newList.add(nvp);
+                }
+                actionBuilder.setParameters(newList);
+            }
+            else
+            {
+                ParameterUtils.doThrow(PARAMETERS, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+
+    private void fillURLActionBuilderWithXhrData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object xhrObject = rawRequest.get(XHR);
+        if (xhrObject != null)
+        {
+            if (xhrObject instanceof Boolean)
+            {
+                final Boolean xhr = (Boolean) xhrObject;
+                if (xhr)
+                {
+                    actionBuilder.setType(URLAction.TYPE_XHR);
+                }
+                else
+                {
+                    actionBuilder.setType(URLAction.TYPE_ACTION);
+                }
+            }
+            else if (xhrObject instanceof String)
+            {
+                final String xhr = (String) xhrObject;
+
+                actionBuilder.setType(xhr);
+            }
+            else
+            {
+                ParameterUtils.doThrow(XHR, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+
+    private void fillURLActionBuilderWithMethodData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object methodObject = rawRequest.get(METHOD);
+        if (methodObject != null)
+        {
+            ParameterUtils.isString(methodObject, METHOD);
+            final String method = (String) methodObject;
+            actionBuilder.setMethod(method);
+        }
+    }
+
+    private void fillURLActionBuilderWithUrlData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object urlObject = rawRequest.get(URL);
+        if (urlObject != null)
+        {
+            ParameterUtils.isString(urlObject, URL);
+            final String url = (String) urlObject;
+            actionBuilder.setUrl(url);
+        }
+    }
+
+    private void fillURLActionBuilderWithEncodedData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object encodedObject = rawRequest.get(ENCODED);
+        if (encodedObject != null)
+        {
+            if (encodedObject instanceof Boolean)
+            {
+                final Boolean encoded = (Boolean) encodedObject;
+                actionBuilder.setEncoded(encoded.toString());
+            }
+            else if (encodedObject instanceof String)
+            {
+                final String encoded = (String) encodedObject;
+                actionBuilder.setEncoded(encoded);
+            }
+            else
+            {
+                ParameterUtils.doThrow(ENCODED, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+
+    private void fillUrlActionBuilderWithResponseData(final LinkedHashMap<String, Object> rawAction)
+    {
+        final Object responseObject = rawAction.get(RESPONSE);
+        if (responseObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(responseObject, RESPONSE, "");
+            final LinkedHashMap<String, Object> rawResponse = (LinkedHashMap<String, Object>) responseObject;
+
+            fillURLActionBuilderWithHttpResponseCodeData(rawResponse);
+            fillURLActionBuilderWithValidationData(rawResponse);
+            fillURLActionBuilderWithStoreData(rawResponse);
+        }
+    }
+
+    private void fillURLActionBuilderWithHttpResponseCodeData(final LinkedHashMap<String, Object> rawResponse)
+    {
+        final Object codeObject = rawResponse.get(HTTPCODE);
+        if (codeObject != null)
+        {
+            if (codeObject instanceof Integer)
+            {
+                final Integer code = (Integer) codeObject;
+                actionBuilder.setHttpResponceCode(code.toString());
+            }
+            else if (codeObject instanceof String)
+            {
+                final String code = (String) codeObject;
+                actionBuilder.setHttpResponceCode(code);
+            }
+            else
+            {
+                ParameterUtils.doThrow(HTTPCODE, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+
+    private void fillURLActionBuilderWithValidationData(final LinkedHashMap<String, Object> rawResponse)
+    {
+        final Object validationsObject = rawResponse.get(VALIDATION);
+        if (validationsObject != null)
+        {
+            ParameterUtils.isArrayList(validationsObject, VALIDATION, "");
+            final List<Object> validations = (List<Object>) validationsObject;
+            for (final Object validationObject : validations)
+            {
+                ParameterUtils.isLinkedHashMap(validationObject, VALIDATION, "");
+                final LinkedHashMap<String, Object> validationItem = (LinkedHashMap<String, Object>) validationObject;
+                fillURLActionValidationBuilder(validationItem);
+                final URLActionValidation validation = validationBuilder.build();
+                actionBuilder.addValidation(validation);
+            }
+        }
+    }
+
+    private void fillURLActionValidationBuilder(final LinkedHashMap<String, Object> rawValidationItem)
+    {
+        validationBuilder.reset();
+
+        final String validationName = getNameOfFirstElementFromLinkedHashMap(rawValidationItem);
+
+        validationBuilder.setName(validationName);
+        validationBuilder.setInterpreter(this.interpreter);
+
+        final Object rawValidateSubObject = rawValidationItem.get(validationName);
+        if (rawValidateSubObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(rawValidateSubObject, validationName, "");
+            final LinkedHashMap<String, Object> validateListSubItem = (LinkedHashMap<String, Object>) rawValidateSubObject;
+            fillURLActionValidationBuilderWithDataFromLinkedHashMap(validateListSubItem);
+        }
+        else
+        {
+            ParameterUtils.doThrow(VALIDATION, validationName, Reason.UNCOMPLETE);
+        }
+    }
+
+    private void fillURLActionValidationBuilderWithDataFromLinkedHashMap(final LinkedHashMap<String, Object> rawValidateSubItem)
+    {
+        final Set<?> entrySet = rawValidateSubItem.entrySet();
+        final Iterator<?> it = entrySet.iterator();
+        Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
+        final String selectionMode = (String) entry.getKey();
+        final String selectionContent = (String) entry.getValue();
+        String validationMode = null;
+        String validationContent = null;
+
+        if (it.hasNext())
+        {
+            entry = (Map.Entry<?, ?>) it.next();
+            validationMode = entry.getKey().toString();
+            validationContent = entry.getValue().toString();
+        }
+        if (validationMode == null)
+        {
+            validationMode = URLActionValidation.EXISTS;
+        }
+        validationBuilder.setSelectionMode(selectionMode);
+        validationBuilder.setValidationContent(validationContent);
+        validationBuilder.setValidationMode(validationMode);
+        validationBuilder.setSelectionContent(selectionContent);
+    }
+
+    private void fillURLActionBuilderWithStoreData(final LinkedHashMap<String, Object> rawResponse)
+    {
+        final Object storeObject = rawResponse.get(STORE);
+        if (storeObject != null)
+        {
+            ParameterUtils.isArrayList(storeObject, STORE, "");
+            final List<Object> storeObjects = (List<Object>) storeObject;
+            for (final Object storeObjectsItem : storeObjects)
+            {
+                ParameterUtils.isLinkedHashMap(storeObjectsItem, VALIDATION, "");
+                final LinkedHashMap<String, Object> storeItem = (LinkedHashMap<String, Object>) storeObjectsItem;
+
+                fillURLActionStoreBuilder(storeItem);
+
+                final URLActionStore store = storeBuilder.build();
+                actionBuilder.addStore(store);
+            }
+        }
+    }
+
+    private void fillURLActionStoreBuilder(final LinkedHashMap<String, Object> storeItem)
+    {
+
+        storeBuilder.reset();
+
+        final String storeName = getNameOfFirstElementFromLinkedHashMap(storeItem);
+
+        storeBuilder.setName(storeName);
+        storeBuilder.setInterpreter(interpreter);
+
+        final Object rawStoreSubObject = storeItem.get(storeName);
+        if (rawStoreSubObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(rawStoreSubObject, storeName, "");
+            final LinkedHashMap<Object, Object> rawStoreSubItem = (LinkedHashMap<Object, Object>) rawStoreSubObject;
+            fillStoreBuilderWithDataFromLinkedHashMap(rawStoreSubItem);
+        }
+        else
+        {
+            ParameterUtils.doThrow(STORE, storeName, Reason.UNCOMPLETE);
+        }
+
+    }
+
+    private void fillStoreBuilderWithDataFromLinkedHashMap(final LinkedHashMap<Object, Object> rawStoreSubItem)
+    {
+        final NameValuePair nvp = createPairfromLinkedHashMap(rawStoreSubItem);
+        storeBuilder.setSelectionMode(nvp.getName());
+        storeBuilder.setSelectionContent(nvp.getValue());
     }
 
     private String determineTagName(final LinkedHashMap<String, Object> tag)

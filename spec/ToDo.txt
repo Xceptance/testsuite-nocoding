@@ -1,10 +1,14 @@
 #########################
 	Do Sheet
 #########################
-	Do Today
+	Do Today / Tomorrow
 -------------------------
--Test YAMLBasedURLActionBuilderLIst
--Finish YAMLBasedURLActionBuilderLIst
+-	ParameterUtils, check message
+-	Add Error Messages + Log Messages
+- 	Update Description @GitHUb
+- 	Catch null's @ constructors
+-	Test YAMLBasedURLActionBuilderList
+-	Finish YAMLBasedURLActionBuilderList
 
 #########################
 	Do Soon
@@ -43,4 +47,4 @@
 ##########################
 	Bugs
 --------------------------
-
+see issues.txt

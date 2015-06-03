@@ -23,21 +23,40 @@ public class ParameterUtils
             doThrow(parameterName, Reason.NULL);
         }
     }
-    public static void isNotNullMessages(final Object parameter, final String parameterName, final String... messages)
+
+    public static void isNotNullMessages(final Object parameter,
+                                         final String parameterName,
+                                         final String... messages)
     {
         if (parameter == null)
         {
             doThrowMessages(parameterName, Reason.NULL, messages);
         }
     }
-    public static void isString(final Object parameter, final String parameterName)
+
+    public static void isString(final Object parameter, final String parameterName, final String... strings)
     {
-        if (parameter == null)
+        isNotNull(parameter, parameterName);
+        if (!(parameter instanceof String))
         {
             doThrow(parameterName, Reason.STRING);
         }
     }
-    public static void isStringMessage(final Object parameter, final String parameterName,  final String... messages)
+
+    public static void isStringOrNull(final Object parameter, final String parameterName)
+    {
+        if (parameter != null)
+        {
+            if (parameter instanceof String)
+            {
+                doThrow(parameterName, Reason.STRING);
+            }
+        }
+    }
+
+    public static void isStringMessage(final Object parameter,
+                                       final String parameterName,
+                                       final String... messages)
     {
         if (parameter == null)
         {
@@ -397,7 +416,9 @@ public class ParameterUtils
         }
     }
 
-    public static void isArrayListParam(final Object o, final String parameterName, final String... arguments)
+    public static void isArrayListParam(final Object o,
+                                        final String parameterName,
+                                        final String... arguments)
     {
 
         isNotNull(o, parameterName);
@@ -408,7 +429,9 @@ public class ParameterUtils
         }
     }
 
-    public static void isLinkedHashMapParam(final Object o, final String parameterName, final String... arguments)
+    public static void isLinkedHashMapParam(final Object o,
+                                            final String parameterName,
+                                            final String... arguments)
     {
         isNotNull(o, parameterName);
 
@@ -417,7 +440,10 @@ public class ParameterUtils
             doThrow(parameterName, Reason.NOT_LINKEDHASHMAP, arguments);
         }
     }
-    public static void isArrayList(final Object o, final String name, final String... messages)
+
+    public static void isArrayList(final Object o,
+                                   final String name,
+                                   final String... messages)
     {
 
         isNotNullMessages(o, name, messages);
@@ -428,7 +454,9 @@ public class ParameterUtils
         }
     }
 
-    public static void isLinkedHashMap(final Object o, final String parameterName, final String... messages)
+    public static void isLinkedHashMap(final Object o,
+                                       final String parameterName,
+                                       final String... messages)
     {
         isNotNullMessages(o, parameterName, messages);
 
@@ -451,8 +479,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      */
     public static void doThrow(final String parameterName,
-                                final Reason reason,
-                                final String... arguments)
+                               final Reason reason,
+                               final String... arguments)
     {
         String s = "Parameter '" + parameterName + "' is invalid, because "
                    + reason.toString();
@@ -462,24 +490,32 @@ public class ParameterUtils
         }
         throw new IllegalArgumentException(s);
     }
+
     public static void doThrowMessages(final String parameterName,
-                                final Reason reason,
-                                final String... messages)
+                                       final Reason reason,
+                                       final String... messages)
     {
         String s = "Parameter '" + parameterName + "' is invalid, because "
                    + reason.toString();
         if (messages != null && messages.length > 0)
         {
-            for(final String message : messages){
+            for (final String message : messages)
+            {
                 s += "\n\t\t" + message;
             }
         }
         throw new IllegalArgumentException(s);
     }
-    public static void doThrow(final String parameterName, final String value, final Reason reason,  final String... messages){
-        String s = "Parameter '" + parameterName + "' = '" + value + "' is invalid, because " +
-            reason.toString();
-        for(final String message : messages){
+
+    public static void doThrow(final String parameterName,
+                               final String value,
+                               final Reason reason,
+                               final String... messages)
+    {
+        String s = "Parameter '" + parameterName + "' = '" + value
+                   + "' is invalid, because " + reason.toString();
+        for (final String message : messages)
+        {
             s += "\n\t\t" + message;
         }
         throw new IllegalArgumentException(s);
@@ -494,9 +530,9 @@ public class ParameterUtils
             "an unwritable file"), ABSOLUTE("an absolute path"), LESS("less than"), GREATER(
             "greater than"), NOT_ARRAY("not an array"), NOT_ARRAYLIST("not an array list"), NOT_LINKEDHASHMAP(
             "not a linked hash map"), NOT_DIRECTORY("not a directory"), NON_EXISTENT(
-            "non-existent"), NOT_FILE("not a file"), UNACCESSIBLE("an unaccessible file"),
-            STRING("not a String"), INTEGER("not an Integer"), UNSUPPORTED_TYPE("not of a supported type"),
-            UNSUPPORTED_VALUE("not a supported value");
+            "non-existent"), NOT_FILE("not a file"), UNACCESSIBLE("an unaccessible file"), STRING(
+            "not a String"), INTEGER("not an Integer"), UNSUPPORTED_TYPE(
+            "not of a supported type"), UNSUPPORTED_VALUE("not a supported value"), UNCOMPLETE("is uncomplete");
 
         /**
          * Description of reason.

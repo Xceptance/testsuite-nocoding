@@ -1,13 +1,13 @@
 package com.xceptance.xlt.common.util;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public abstract class URLActionListBuilder
 {
-    protected List<URLAction> actions = Collections.emptyList();
+    protected List<URLAction> actions = new ArrayList<URLAction>();
     
     protected final String filePath;
     
@@ -17,11 +17,11 @@ public abstract class URLActionListBuilder
     
     protected URLActionListBuilder(final String filePath,
                                    final ParameterInterpreter interpreter,
-                                   final URLActionBuilder builder)
+                                   final URLActionBuilder actionBuilder)
     {
         this.filePath = filePath;
         this.interpreter = interpreter;
-        this.actionBuilder = builder;
+        this.actionBuilder = actionBuilder;
        
     }
     

@@ -8,10 +8,10 @@ public class CSVBasedURLActionListBuilder extends URLActionListBuilder
 {
     public CSVBasedURLActionListBuilder(final String filePath,
                                         final ParameterInterpreter interpreter,
-                                        final URLActionBuilder builder)
-    {
-        super(filePath, interpreter,builder);
-    }
+                                        final URLActionBuilder actionBuilder)
+   {
+       super(filePath, interpreter, actionBuilder);
+   }
 
     public List<URLAction> buildURLActions()
     {

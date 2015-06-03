@@ -25,7 +25,8 @@ public class URLActionListFacade
         return fileNameExtension;
     }
 
-    private URLActionListBuilder createBuilder(final String filePath, final ParameterInterpreter interpreter)
+    private URLActionListBuilder createBuilder(final String filePath,
+                                               final ParameterInterpreter interpreter)
     {
         final String fileNameExtension = getFileNameExtension(filePath);
         final URLActionListBuilder listBuilder;
@@ -33,11 +34,17 @@ public class URLActionListFacade
 
         if (fileNameExtension.equals("yml") || fileNameExtension.equals("yaml"))
         {
-            listBuilder = new YAMLBasedURLActionListBuilder(filePath, interpreter, actionBuilder);
+            final URLActionStoreBuilder storeBuilder = new URLActionStoreBuilder();
+            final URLActionValidationBuilder validationBuilder = new URLActionValidationBuilder();
+            listBuilder = new YAMLBasedURLActionListBuilder(filePath, interpreter,
+                                                            actionBuilder,
+                                                            validationBuilder,
+                                                            storeBuilder);
         }
         else if (fileNameExtension.equals("csv"))
         {
-            listBuilder = new CSVBasedURLActionListBuilder(filePath, interpreter,actionBuilder);
+            listBuilder = new CSVBasedURLActionListBuilder(filePath, interpreter,
+                                                           actionBuilder);
         }
         else
         {
