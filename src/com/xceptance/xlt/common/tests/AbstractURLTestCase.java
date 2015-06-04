@@ -3,6 +3,7 @@ package com.xceptance.xlt.common.tests;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Before;
 
 import com.xceptance.xlt.api.engine.Session;
@@ -12,14 +13,15 @@ import com.xceptance.xlt.common.XltConstants;
 import com.xceptance.xlt.common.util.URLAction;
 import com.xceptance.xlt.common.util.URLActionListFacade;
 import com.xceptance.xlt.common.util.WebActionFactory;
-import com.xceptance.xlt.common.util.WebActionFactoryBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class AbstractURLTestCase extends AbstractTestCase
 {
 
+    @Nullable
     protected String login;
 
+    @Nullable
     protected String password;
 
     protected String dataDirectory;
@@ -58,10 +60,18 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void loadDataDirectory()
     {
-        this.dataDirectory = getProperty(XltConstants.XLT_PACKAGE_PATH
+        final String dataDirectory = getProperty(XltConstants.XLT_PACKAGE_PATH
                                          + ".data.directory", "config"
                                                               + File.separatorChar
                                                               + "data");
+        if (dataDirectory != null)
+        {
+            this.dataDirectory = dataDirectory + File.separatorChar + filePath;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Missing 'data' directory!");
+        }
     }
 
     private void loadFilePath()
@@ -97,14 +107,14 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupURLActionList()
     {
-        urlActionListFacade = new URLActionListFacade();
-        this.actions = urlActionListFacade.buildUrlActions(filePath, interpreter);
+        urlActionListFacade = new URLActionListFacade(this.filePath, this.interpreter);
+        this.actions = urlActionListFacade.buildUrlActions();
     }
 
     private void setupWebActionFactory()
     {
-        final WebActionFactoryBuilder factoryBuilder = new WebActionFactoryBuilder();
-        this.webActionFactory = factoryBuilder.buildFactory(this.mode,this.interpreter);
+        //final WebActionFactoryBuilder factoryBuilder = new WebActionFactoryBuilder();
+        //this.webActionFactory = factoryBuilder.buildFactory(this.mode,this.interpreter);
     }
 
     /**

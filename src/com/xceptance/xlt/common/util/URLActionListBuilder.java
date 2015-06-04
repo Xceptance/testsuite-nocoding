@@ -9,21 +9,39 @@ public abstract class URLActionListBuilder
 {
     protected List<URLAction> actions = new ArrayList<URLAction>();
     
-    protected final String filePath;
+    protected String filePath;
     
-    protected final ParameterInterpreter interpreter;
+    protected ParameterInterpreter interpreter;
     
-    protected final URLActionBuilder actionBuilder;
+    protected URLActionBuilder actionBuilder;
     
     protected URLActionListBuilder(final String filePath,
                                    final ParameterInterpreter interpreter,
                                    final URLActionBuilder actionBuilder)
     {
-        this.filePath = filePath;
-        this.interpreter = interpreter;
-        this.actionBuilder = actionBuilder;
-       
+        setFilePath(filePath);
+        setInterpreter(interpreter);
+        setActionBuilder(actionBuilder);
     }
     
-    public abstract List<URLAction> buildURLActions();
+    abstract protected List<URLAction> buildURLActions(); 
+
+    private void setFilePath(final String filePath)
+    {
+        ParameterUtils.isNotNull(filePath, "filePath");
+        this.filePath = filePath;
+    }
+
+    private void setInterpreter(final ParameterInterpreter interpreter)
+    {
+        ParameterUtils.isNotNull(interpreter, "ParameterInterpreter");
+        this.interpreter = interpreter;
+    }
+
+    private void setActionBuilder(final URLActionBuilder actionBuilder)
+    {
+        ParameterUtils.isNotNull(actionBuilder, "URLActionBuilder");
+        this.actionBuilder = actionBuilder;
+    }
+
 }

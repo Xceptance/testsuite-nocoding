@@ -12,37 +12,91 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionListFacadeTest
 {
-    private final String filePathYaml = "file.yaml";
-    private final String filePathYml = "file.yml";
-    private final String filePathCsv = "file.csv";
-    private final String filePathX = "file.x";
-    private ParameterInterpreter interpreter;
-    private URLActionListFacade facade;
+    private final String fileWithYamlExtension = "file.yaml";
+
+    private final String fileWithYmlExtension = "file.yml";
+
+    private final String fileWithCsvExtension = "file.csv";
+
+    private final String fileWithUnknownExtension = "file.unknown";
+
+    private final String fileWithNoExtension = "file";
     
+    private final String fileWithEmptyExtension = "file.";
+    
+    private final String fileWithOnlyExtension = ".yml";
+    
+    private final String emptyFileString = "";
+
+    private ParameterInterpreter interpreter;
+
+    private URLActionListFacade facade;
+
     @Before
-    public void setup(){
+    public void setup()
+    {
         interpreter = new ParameterInterpreter(null);
-        facade = new URLActionListFacade();
     }
+
     @Test
-    public void testYaml(){
-        final List<URLAction> actions = facade.buildUrlActions(filePathYaml, interpreter);
+    public void testFileWithYamlExtension()
+    {
+        facade = new URLActionListFacade(fileWithYamlExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
+        Assert.assertTrue(actions.isEmpty());
+    }
+
+    @Test
+    public void testFileWithYmlExtension()
+    {
+        facade = new URLActionListFacade(fileWithYmlExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
+        Assert.assertTrue(actions.isEmpty());
+    }
+
+    @Test
+    public void testFileWithCsvExtension()
+    {
+        facade = new URLActionListFacade(fileWithCsvExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
+        Assert.assertTrue(actions.isEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFileWithUnknownExtension()
+    {
+        facade = new URLActionListFacade(fileWithUnknownExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
         Assert.assertNotNull(actions);
     }
-    @Test
-    public void testYml(){
-        final List<URLAction> actions = facade.buildUrlActions(filePathYml, interpreter);
-        Assert.assertNotNull(actions);
-    }
-    @Test
-    public void testCsv(){
-        final List<URLAction> actions = facade.buildUrlActions(filePathCsv, interpreter);
-        Assert.assertNotNull(actions);
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFileWithNoExtension()
+    {
+        facade = new URLActionListFacade(fileWithNoExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testOther(){
-        final List<URLAction> actions = facade.buildUrlActions(filePathX, interpreter);
-        Assert.assertNotNull(actions);
+    public void testFileWithEmptyExtension()
+    {
+        facade = new URLActionListFacade(fileWithEmptyExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
     }
     
+    @Test
+    public void testFileWithOnlyExtension()
+    {
+        facade = new URLActionListFacade(fileWithOnlyExtension, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
+        Assert.assertTrue(actions.isEmpty());
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptyFileString()
+    {
+        facade = new URLActionListFacade(emptyFileString, interpreter);
+        final List<URLAction> actions = facade.buildUrlActions();
+        Assert.assertTrue(actions.isEmpty());
+    }
+    
+
 }

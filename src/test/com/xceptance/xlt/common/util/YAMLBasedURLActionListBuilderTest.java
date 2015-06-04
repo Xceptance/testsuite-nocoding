@@ -22,12 +22,14 @@ public class YAMLBasedURLActionListBuilderTest
     private final ParameterInterpreter interpreter = new ParameterInterpreter(null);
 
     private final String path = "./config/data/test/";
+    private final String fileTmp = path + "tmp.yml";
     private final String fileXhrSubrequests = path + "xhrSubrequests.yml";
     private final String fileTestData =  path + "testData.yml";
     private final String fileEmptyFile =  path + "emptyFile.yml";
     private final String fileNotExistingFile =  path + "notExistingFile.yml";
     private final String fileSingleActionNoDefaultsData =  path + "SAND.yml";
     private final String fileStaticSubrequests = path + "staticSubrequests.yml";
+    private final String fileComplexTestCase = path + "complexTestCase.yml";
     private final URLActionBuilder actionBuilder = new URLActionBuilder();
     private final URLActionStoreBuilder storeBuilder = new URLActionStoreBuilder();
     private final URLActionValidationBuilder validationBuilder = new URLActionValidationBuilder();
@@ -200,6 +202,28 @@ public class YAMLBasedURLActionListBuilderTest
         final List<URLAction> actions  = listBuilder.buildURLActions();
         Assert.assertFalse(actions.isEmpty());
         
+    }
+    @Test
+    public void testXomplexTestCase() throws MalformedURLException{
+        final YAMLBasedURLActionListBuilder listBuilder = new YAMLBasedURLActionListBuilder(
+                                                                                            this.fileComplexTestCase,
+                                                                                            this.interpreter,
+                                                                                            this.actionBuilder,
+                                                                                            this.validationBuilder,
+                                                                                            this.storeBuilder);
+        final List<URLAction> actions  = listBuilder.buildURLActions();
+        Assert.assertFalse(actions.isEmpty());
+        
+    }
+    @Test
+    public void testTmp() throws MalformedURLException{
+        final YAMLBasedURLActionListBuilder listBuilder = new YAMLBasedURLActionListBuilder(
+                                                                                            this.fileTmp,
+                                                                                            this.interpreter,
+                                                                                            this.actionBuilder,
+                                                                                            this.validationBuilder,
+                                                                                            this.storeBuilder);
+        final List<URLAction> actions  = listBuilder.buildURLActions();    
     }
     
 }

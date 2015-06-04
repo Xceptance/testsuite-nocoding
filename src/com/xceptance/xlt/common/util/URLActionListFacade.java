@@ -8,43 +8,47 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionListFacade
 {
-    public URLActionListFacade()
+    private String filePath;
+
+    private ParameterInterpreter interpreter;
+
+    public URLActionListFacade(final String filePath,
+                               final ParameterInterpreter interpreter)
     {
+        setFilePath(filePath);
+        setParameterInterpreter(interpreter);
     }
 
-    public List<URLAction> buildUrlActions(final String filePath,
-                                           final ParameterInterpreter interpreter)
+    private void setFilePath(final String filePath)
     {
-        final URLActionListBuilder builder = createBuilder(filePath, interpreter);
+        ParameterUtils.isNotNull(filePath, "filePath");
+        this.filePath = filePath;
+    }
+
+    private void setParameterInterpreter(final ParameterInterpreter interpreter)
+    {
+        ParameterUtils.isNotNull(interpreter, "ParameterInterpreter");
+        this.interpreter = interpreter;
+    }
+
+    public List<URLAction> buildUrlActions()
+    {
+        final URLActionListBuilder builder = createBuilder();
         return builder.buildURLActions();
     }
 
-    private String getFileNameExtension(final String filePath)
+    private URLActionListBuilder createBuilder()
     {
-        final String fileNameExtension = FilenameUtils.getExtension(filePath);
-        return fileNameExtension;
-    }
-
-    private URLActionListBuilder createBuilder(final String filePath,
-                                               final ParameterInterpreter interpreter)
-    {
-        final String fileNameExtension = getFileNameExtension(filePath);
-        final URLActionListBuilder listBuilder;
-        final URLActionBuilder actionBuilder = new URLActionBuilder();
+        final String fileNameExtension = getFileNameExtension(this.filePath);
+        final URLActionListBuilder resultBuilder;
 
         if (fileNameExtension.equals("yml") || fileNameExtension.equals("yaml"))
         {
-            final URLActionStoreBuilder storeBuilder = new URLActionStoreBuilder();
-            final URLActionValidationBuilder validationBuilder = new URLActionValidationBuilder();
-            listBuilder = new YAMLBasedURLActionListBuilder(filePath, interpreter,
-                                                            actionBuilder,
-                                                            validationBuilder,
-                                                            storeBuilder);
+            resultBuilder = createYAMLBuilder();
         }
         else if (fileNameExtension.equals("csv"))
         {
-            listBuilder = new CSVBasedURLActionListBuilder(filePath, interpreter,
-                                                           actionBuilder);
+            resultBuilder = createCSVBuilder();
         }
         else
         {
@@ -55,6 +59,37 @@ public class URLActionListFacade
                                                    + "Supported formats: '.yaml' | '.yml' or '.csv'"
                                                    + "\n");
         }
-        return listBuilder;
+        return resultBuilder;
+    }
+
+    private String getFileNameExtension(final String filePath)
+    {
+        final String fileNameExtension = FilenameUtils.getExtension(filePath);
+        return fileNameExtension;
+    }
+
+    private YAMLBasedURLActionListBuilder createYAMLBuilder()
+    {
+        final URLActionStoreBuilder storeBuilder = new URLActionStoreBuilder();
+        final URLActionBuilder actionBuilder = new URLActionBuilder();
+        final URLActionValidationBuilder validationBuilder = new URLActionValidationBuilder();
+
+        final YAMLBasedURLActionListBuilder yamlBuilder = new YAMLBasedURLActionListBuilder(
+                                                                                            this.filePath,
+                                                                                            this.interpreter,
+                                                                                            actionBuilder,
+                                                                                            validationBuilder,
+                                                                                            storeBuilder);
+        return yamlBuilder;
+    }
+    private CSVBasedURLActionListBuilder createCSVBuilder(){
+        
+        final URLActionBuilder actionBuilder = new URLActionBuilder();
+        
+        final CSVBasedURLActionListBuilder csvBuilder = new CSVBasedURLActionListBuilder(this.filePath,
+                                                       this.interpreter,
+                                                       actionBuilder);
+        return csvBuilder;
+        
     }
 }

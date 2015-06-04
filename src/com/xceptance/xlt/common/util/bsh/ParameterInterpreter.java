@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import bsh.EvalError;
@@ -42,7 +41,7 @@ import com.xceptance.xlt.api.util.XltProperties;
  */
 public class ParameterInterpreter extends Interpreter
 {
-
+    @Nullable
     private AbstractTestCase testCase;
 
     private static final long serialVersionUID = -6490310093160560291L;
@@ -64,7 +63,7 @@ public class ParameterInterpreter extends Interpreter
     public ParameterInterpreter(final AbstractTestCase testCase)
     {
         super();
-
+        XltLogger.runTimeLogger.info("Creating new ParameterInterpreter");
         try
         {
             this.set("NOW", new ParameterInterpreterNow());
@@ -83,7 +82,7 @@ public class ParameterInterpreter extends Interpreter
      * Just setup our interpreter and it will be filled with default data objects.
      */
 
-    public void set(@NonNull final NameValuePair nvp) throws EvalError
+    public void set(final NameValuePair nvp) throws EvalError
     {
         final String name = nvp.getName();
         final String value = nvp.getValue();

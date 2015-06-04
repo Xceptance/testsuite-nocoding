@@ -26,9 +26,9 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 {
 
-    protected final URLActionValidationBuilder validationBuilder;
+    protected URLActionValidationBuilder validationBuilder;
 
-    protected final URLActionStoreBuilder storeBuilder;
+    protected URLActionStoreBuilder storeBuilder;
 
     /*
      * Accepted syntactic keys for the yaml data
@@ -70,7 +70,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
     private static final String DELETE = "delete";
 
     /*
-     * Default values
+     * Default static URLs
      */
 
     private List<String> d_static = new ArrayList<String>();
@@ -83,7 +83,19 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
     {
         super(filePath, interpreter, actionBuilder);
 
+        setStoreBuilder(storeBuilder);
+        setValidationBuilder(validationBuilder);
+    }
+
+    private void setStoreBuilder(final URLActionStoreBuilder storeBuilder)
+    {
+        ParameterUtils.isNotNull(storeBuilder, "URLActionStoreBuilder");
         this.storeBuilder = storeBuilder;
+    }
+
+    private void setValidationBuilder(final URLActionValidationBuilder validationBuilder)
+    {
+        ParameterUtils.isNotNull(validationBuilder, "URLActionStoreBuilder");
         this.validationBuilder = validationBuilder;
     }
 
@@ -157,19 +169,22 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
     @SuppressWarnings("unchecked")
     private void createActionList(final List<Object> dataList)
     {
+        XltLogger.runTimeLogger.info("Start building URLAction list");
         for (final Object listObject : dataList)
         {
-            ParameterUtils.isLinkedHashMap(listObject, "List Items",
-                                           "See the no-coding syntax sepecification!");
+            ParameterUtils.isLinkedHashMap(listObject, "YAML - List",
+                                           SEESPEC);
 
             final LinkedHashMap<String, Object> listItem = (LinkedHashMap<String, Object>) listObject;
             handleListItem(listItem);
         }
+        XltLogger.runTimeLogger.info("Terminated building URLAction list");
     }
 
     private void handleListItem(final LinkedHashMap<String, Object> listItem)
     {
         final String tagName = determineTagName(listItem);
+        
         switch (tagName)
         {
             case ACTION:
@@ -989,5 +1004,9 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         final String name = entry.getKey().toString();
         return name;
     }
+  
+    static private final String SPECIFICATION = "YAMLSyntaxSpecification.txt";
+    static private final String SEESPEC = "See " + SPECIFICATION + " for the correct Syntax!";
+        
 
 }

@@ -3,6 +3,8 @@
 #########################
 	Do Today / Tomorrow
 -------------------------
+- update 'DID'
+- standartize 'Commmits'
 -	ParameterUtils, check message
 -	Add Error Messages + Log Messages
 - 	Update Description @GitHUb

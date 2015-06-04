@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
@@ -75,11 +74,11 @@ public class URLAction
     /*
      * @Parameters: Minimal parameters to create a legit URLAction
      */
-    public URLAction(@NonNull final String name,
-                     @NonNull final String url,
-                     @NonNull final ParameterInterpreter interpreter)
+    public URLAction(final String name,
+                     final String url,
+                     final ParameterInterpreter interpreter)
     {
-        XltLogger.runTimeLogger.info("Creating new URLAction ");
+        XltLogger.runTimeLogger.info("Start creating new URLAction ");
         setName(name);
         setUrl(url);
         setType(TYPE_ACTION); // default
