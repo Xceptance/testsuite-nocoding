@@ -54,8 +54,8 @@ public class URLActionTest
                 action.setCookies(null);
                 Assert.assertEquals(Collections.emptyList(), action.getCookies());
                 
-                action.setEncoded(true);
-                Assert.assertEquals(true, action.isEncoded());
+                action.setEncodedParameters(true);
+                Assert.assertEquals(true, action.isParametersEncoded());
                 
                 action.setHeaders(null);
                 Assert.assertEquals(Collections.emptyList(), action.getHeaders());
@@ -140,8 +140,8 @@ public class URLActionTest
         action.setMethod("x");
         Assert.assertEquals(URLAction.METHOD_GET, action.getMethod().toString());
         
-        action.setEncoded("x");
-        Assert.assertEquals(false, action.isEncoded());
+        action.setEncodedParameters("x");
+        Assert.assertEquals(false, action.isParametersEncoded());
         
         action.setType("x");
         Assert.assertEquals(URLAction.TYPE_ACTION, action.getType());

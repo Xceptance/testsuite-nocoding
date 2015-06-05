@@ -51,7 +51,9 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     private static final String METHOD = "Method";
 
-    private static final String ENCODED = "Encoded";
+    private static final String ENCODEDPARAMETERS = "Encoded";
+    
+    private static final String ENCODEDBODY = "BEncoded";
 
     private static final String XHR = "Xhr";
 
@@ -205,7 +207,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             case METHOD:
                 setDefaultMethod(listItem);
                 break;
-            case ENCODED:
+            case ENCODEDPARAMETERS:
                 setDefaultEncoded(listItem);
                 break;
             case XHR:
@@ -320,7 +322,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     private void setDefaultEncoded(final LinkedHashMap<String, Object> encodedItem)
     {
-        final Object encodedObject = encodedItem.get(ENCODED);
+        final Object encodedObject = encodedItem.get(ENCODEDPARAMETERS);
         if (encodedObject instanceof Boolean)
         {
             final Boolean encoded = (Boolean) encodedObject;
@@ -340,7 +342,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(ENCODED, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(ENCODEDPARAMETERS, Reason.UNSUPPORTED_TYPE);
         }
     }
 
@@ -806,7 +808,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     private void fillURLActionBuilderWithEncodedData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object encodedObject = rawRequest.get(ENCODED);
+        final Object encodedObject = rawRequest.get(ENCODEDPARAMETERS);
         if (encodedObject != null)
         {
             if (encodedObject instanceof Boolean)
@@ -821,7 +823,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(ENCODED, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(ENCODEDPARAMETERS, Reason.UNSUPPORTED_TYPE);
             }
         }
     }

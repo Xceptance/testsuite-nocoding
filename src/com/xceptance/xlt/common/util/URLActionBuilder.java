@@ -22,7 +22,9 @@ public class URLActionBuilder
 
     private String method;
 
-    private String encoded;
+    private String encodedParameters;
+    
+    private String encodedBody;
 
     private String httpResponceCode;
 
@@ -46,7 +48,9 @@ public class URLActionBuilder
 
     private String d_method;
 
-    private String d_encoded;
+    private String d_encodedParameters;
+    
+    private String d_encodedBody;
 
     private String d_httpResponceCode;
 
@@ -191,7 +195,8 @@ public class URLActionBuilder
             resultAction = new URLAction(getName(), getUrl(), getInterpreter());
             resultAction.setType(getType());
             resultAction.setMethod(getMethod());
-            resultAction.setEncoded(getEncoded());
+            resultAction.setEncodedParameters(getEncodedParameters());
+            resultAction.setEncodedBody(getEncodedBody());
             resultAction.setHttpResponceCode(getHttpResponceCode());
             resultAction.setBody(getBody());
             resultAction.setCookies(getCookies());
@@ -218,7 +223,8 @@ public class URLActionBuilder
         this.type = null;
         this.url = null;
         this.method = null;
-        this.encoded = null;
+        this.encodedParameters = null;
+        this.encodedBody = null;
         this.httpResponceCode = null;
         this.body = null;
         this.validations = Collections.emptyList();
@@ -289,16 +295,30 @@ public class URLActionBuilder
     }
 
     @Nullable
-    public String getEncoded()
+    public String getEncodedParameters()
     {
         String result = null;
-        if (this.encoded != null)
+        if (this.encodedParameters != null)
         {
-            result = this.encoded;
+            result = this.encodedParameters;
         }
-        else if (this.d_encoded != null)
+        else if (this.d_encodedParameters != null)
         {
-            result = d_encoded;
+            result = d_encodedParameters;
+        }
+        return result;
+    }
+    @Nullable
+    public String getEncodedBody()
+    {
+        String result = null;
+        if (this.encodedBody != null)
+        {
+            result = this.encodedBody;
+        }
+        else if (this.d_encodedBody != null)
+        {
+            result = d_encodedBody;
         }
         return result;
     }
@@ -440,7 +460,7 @@ public class URLActionBuilder
 
     public void setEncoded(final String encoded)
     {
-        this.encoded = encoded;
+        this.encodedParameters = encoded;
         XltLogger.runTimeLogger.info(infoSetTagToValue("encoded", encoded));
     }
 
@@ -520,7 +540,7 @@ public class URLActionBuilder
 
     public void setDefaultEncoded(final String d_encoded)
     {
-        this.d_encoded = d_encoded;
+        this.d_encodedParameters = d_encoded;
     }
 
     public void setDefaultHttpResponceCode(final String d_httpResponceCode)

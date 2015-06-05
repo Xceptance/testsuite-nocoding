@@ -5,34 +5,17 @@
 - Store :
     - variable_1 : value_1
     - variable_2 : value_2
-    
-# Variable Pool for dynamic data processing    
-- Cookies :
-    - Cookie :
-        Name :
-        Value :
-        Expires :
-        Domain :
-        Path :
-        Max-Age :
-        
-    - Cookie :
-        Name :
-        Value :
-        Expires :
-        Domain :
-        Path :
-        Max-Age :
-    
+     
 # Default values
 - Name : name
 - Httpcode : 400
 - Url : https://www.xceptance.com
 - Method : POST
 - Xhr : false
-- Encoded : true
+- Parameter-Encoding : true
+- Body-Encoding : true
 
-- Header :
+- Headers :
     - header_1 : value
     - header_2 : value
     - header_3 : value

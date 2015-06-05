@@ -29,7 +29,9 @@ public class URLAction
 
     private String method;
 
-    private String encoded;
+    private String encodedParameters;
+
+    private String encodedBody;
 
     private String httpResponceCode;
 
@@ -83,7 +85,7 @@ public class URLAction
         setUrl(url);
         setType(TYPE_ACTION); // default
         setMethod(METHOD_GET); // default
-        setEncoded("false"); // default
+        setEncodedParameters("false"); // default
         setHttpResponceCode("200");
         setInterpreter(interpreter);
     }
@@ -98,7 +100,7 @@ public class URLAction
             System.err.println("\t" + "Is Xhr: " + isXHRAction());
             System.err.println("\t" + "Method: " + getMethod());
             System.err.println("\t" + "URL: " + getUrl().toString());
-            System.err.println("\t" + "Is Encoded: " + isEncoded());
+            System.err.println("\t" + "Is Encoded: " + isParametersEncoded());
             System.err.println("\t" + "HttpCode: "
                                + getResponseCodeValidator().getHttpResponseCode());
             if (body != null)
@@ -192,21 +194,42 @@ public class URLAction
         }
     }
 
-    public void setEncoded(final String encoded)
+    public void setEncodedParameters(final String encoded)
     {
         if (encoded != null)
         {
-            this.encoded = encoded;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("Encoded", this.encoded));
+            this.encodedParameters = encoded;
+            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
+                                                                 this.encodedParameters));
         }
     }
 
-    public void setEncoded(final Boolean encoded)
+    public void setEncodedParameters(final Boolean encoded)
     {
         if (encoded != null)
         {
-            this.encoded = encoded.toString();
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("Encoded", this.encoded));
+            this.encodedParameters = encoded.toString();
+            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
+                                                                 this.encodedParameters));
+        }
+    }
+    public void setEncodedBody(final String encoded)
+    {
+        if (encoded != null)
+        {
+            this.encodedBody = encoded;
+            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
+                                                                 this.encodedBody));
+        }
+    }
+
+    public void setEncodedBody(final Boolean encoded)
+    {
+        if (encoded != null)
+        {
+            this.encodedBody = encoded.toString();
+            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
+                                                                 this.encodedBody));
         }
     }
 
@@ -223,7 +246,8 @@ public class URLAction
     {
         this.name = ((name != null) ? name
                                    : (String) throwIllegalArgumentException("Name' cannot be null"));
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set Action 'Name' to \"{0}\"", this.name));
+        XltLogger.runTimeLogger.info(MessageFormat.format("Set Action 'Name' to \"{0}\"",
+                                                          this.name));
 
     }
 
@@ -430,10 +454,10 @@ public class URLAction
     }
 
     @SuppressWarnings("null")
-    public Boolean isEncoded()
+    public Boolean isParametersEncoded()
     {
         Boolean result = false; // default
-        final String dynamicEncoded = interpreter.processDynamicData(this.encoded);
+        final String dynamicEncoded = interpreter.processDynamicData(this.encodedParameters);
         if (dynamicEncoded.equals("true"))
         {
             result = true;
@@ -445,8 +469,35 @@ public class URLAction
         else
         {
             XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicEncoded,
-                                                                          "Encoded", "false"));
+                                                                          "Encoded",
+                                                                          "false"));
             result = false;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("null")
+    public Boolean isBodyEncoded()
+    {
+        Boolean result = false; // default
+        if (this.body != null)
+        {
+            final String dynamicEncoded = interpreter.processDynamicData(this.encodedBody);
+            if (dynamicEncoded.equals("true"))
+            {
+                result = true;
+            }
+            else if (dynamicEncoded.equals("false"))
+            {
+                result = false;
+            }
+            else
+            {
+                XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicEncoded,
+                                                                              "Encoded",
+                                                                              "false"));
+                result = false;
+            }
         }
         return result;
     }
@@ -466,7 +517,8 @@ public class URLAction
         }
         else
         {
-            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType, "Type",
+            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType,
+                                                                          "Type",
                                                                           TYPE_ACTION));
             result = false;
         }
@@ -488,7 +540,8 @@ public class URLAction
         }
         else
         {
-            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType, "Type",
+            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType,
+                                                                          "Type",
                                                                           TYPE_ACTION));
             ;
             result = false;
@@ -511,11 +564,22 @@ public class URLAction
         }
         else
         {
-            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType, "Type",
+            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicType,
+                                                                          "Type",
                                                                           TYPE_ACTION));
             result = true;
         }
         return result;
+    }
+
+    public Boolean hasBody()
+    {
+        Boolean b = false;
+        if (getBody() != null)
+        {
+            b = true;
+        }
+        return b;
     }
 
     public static boolean isPermittedMethod(final String s)
@@ -562,8 +626,8 @@ public class URLAction
 
     private String getSetNewTagMessage(final String tag)
     {
-        final String message = MessageFormat.format("Action: \"{0}\", Set new \"{1}\"", this.name,
-                                                    tag);
+        final String message = MessageFormat.format("Action: \"{0}\", Set new \"{1}\"",
+                                                    this.name, tag);
         return message;
     }
 

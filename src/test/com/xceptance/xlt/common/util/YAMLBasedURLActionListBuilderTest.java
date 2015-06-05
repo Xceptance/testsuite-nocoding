@@ -106,7 +106,7 @@ public class YAMLBasedURLActionListBuilderTest
         Assert.assertEquals(URLAction.TYPE_XHR, action.getType());
         Assert.assertTrue(action.isXHRAction());
         Assert.assertEquals(URLAction.METHOD_GET, action.getMethod().toString());
-        Assert.assertTrue(action.isEncoded());
+        Assert.assertTrue(action.isParametersEncoded());
         Assert.assertEquals("body", action.getBody());
         Assert.assertEquals(400, action.getResponseCodeValidator().getHttpResponseCode());
         

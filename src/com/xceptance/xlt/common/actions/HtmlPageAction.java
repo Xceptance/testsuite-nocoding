@@ -19,16 +19,13 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
         setWebRequest(webRequest);
     }
 
-    public HtmlPageAction(final String name,
-                          final WebRequest webRequest,
-                          final Downloader downloader)
+    public HtmlPageAction(final String name, final WebRequest webRequest)
     {
-        super(name);
-        setDownloader(downloader);
+        super(null, name);
         setWebRequest(webRequest);
     }
 
-    private void setDownloader(final Downloader downloader)
+    public void setDownloader(final Downloader downloader)
     {
         ParameterUtils.isNotNull(downloader, "Downloader");
         this.downloader = downloader;
