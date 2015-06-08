@@ -23,12 +23,12 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils.Reason;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
+public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 {
 
-    protected URLActionValidationBuilder validationBuilder;
+    protected URLActionDataValidationBuilder validationBuilder;
 
-    protected URLActionStoreBuilder storeBuilder;
+    protected URLActionDataStoreBuilder storeBuilder;
 
     /*
      * Accepted syntactic keys for the yaml data
@@ -51,9 +51,9 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     private static final String METHOD = "Method";
 
-    private static final String ENCODEDPARAMETERS = "Encoded";
+    private static final String ENCODEPARAMETERS = "Encode-Parameters";
     
-    private static final String ENCODEDBODY = "BEncoded";
+    private static final String ENCODEBODY = "Encode-Body";
 
     private static final String XHR = "Xhr";
 
@@ -77,25 +77,27 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
     private List<String> d_static = new ArrayList<String>();
 
-    public YAMLBasedURLActionListBuilder(final String filePath,
+    public YAMLBasedURLActionDataListBuilder(final String filePath,
                                          final ParameterInterpreter interpreter,
-                                         final URLActionBuilder actionBuilder,
-                                         final URLActionValidationBuilder validationBuilder,
-                                         final URLActionStoreBuilder storeBuilder)
+                                         final URLActionDataBuilder actionBuilder,
+                                         final URLActionDataValidationBuilder validationBuilder,
+                                         final URLActionDataStoreBuilder storeBuilder)
     {
         super(filePath, interpreter, actionBuilder);
 
         setStoreBuilder(storeBuilder);
         setValidationBuilder(validationBuilder);
+        
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    private void setStoreBuilder(final URLActionStoreBuilder storeBuilder)
+    private void setStoreBuilder(final URLActionDataStoreBuilder storeBuilder)
     {
         ParameterUtils.isNotNull(storeBuilder, "URLActionStoreBuilder");
         this.storeBuilder = storeBuilder;
     }
 
-    private void setValidationBuilder(final URLActionValidationBuilder validationBuilder)
+    private void setValidationBuilder(final URLActionDataValidationBuilder validationBuilder)
     {
         ParameterUtils.isNotNull(validationBuilder, "URLActionStoreBuilder");
         this.validationBuilder = validationBuilder;
@@ -117,14 +119,14 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         if (!actions.isEmpty())
         {
             System.err.println("URLAction actions:");
-            for (final URLAction action : actions)
+            for (final URLActionData action : actions)
             {
                 action.outline();
             }
         }
     }
 
-    public List<URLAction> buildURLActions()
+    public List<URLActionData> buildURLActions()
     {
         final List<Object> dataList = loadDataFromFile();
         createActionList(dataList);
@@ -176,16 +178,17 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         {
             ParameterUtils.isLinkedHashMap(listObject, "YAML - List",
                                            SEESPEC);
-
             final LinkedHashMap<String, Object> listItem = (LinkedHashMap<String, Object>) listObject;
             handleListItem(listItem);
         }
-        XltLogger.runTimeLogger.info("Terminated building URLAction list");
+        XltLogger.runTimeLogger.info("Finished building URLAction list");
     }
 
     private void handleListItem(final LinkedHashMap<String, Object> listItem)
     {
         final String tagName = determineTagName(listItem);
+        
+        XltLogger.runTimeLogger.debug("Handling tag: " + tagName);
         
         switch (tagName)
         {
@@ -207,8 +210,11 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             case METHOD:
                 setDefaultMethod(listItem);
                 break;
-            case ENCODEDPARAMETERS:
-                setDefaultEncoded(listItem);
+            case ENCODEPARAMETERS:
+                setDefaultEncodeParameters(listItem);
+                break;
+            case ENCODEBODY:
+                setDefaultEncodeBody(listItem);
                 break;
             case XHR:
                 setDefaultXhr(listItem);
@@ -320,29 +326,54 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         }
     }
 
-    private void setDefaultEncoded(final LinkedHashMap<String, Object> encodedItem)
+    private void setDefaultEncodeParameters(final LinkedHashMap<String, Object> encodedItem)
     {
-        final Object encodedObject = encodedItem.get(ENCODEDPARAMETERS);
+        final Object encodedObject = encodedItem.get(ENCODEPARAMETERS);
         if (encodedObject instanceof Boolean)
         {
             final Boolean encoded = (Boolean) encodedObject;
-            actionBuilder.setDefaultEncoded(encoded.toString());
+            actionBuilder.setDefaultEncodeParameters(encoded.toString());
         }
         else if (encodedObject instanceof String)
         {
             final String encoded = (String) encodedObject;
             if (encoded.equals(DELETE))
             {
-                actionBuilder.setDefaultEncoded(null);
+                actionBuilder.setDefaultEncodeParameters(null);
             }
             else
             {
-                actionBuilder.setDefaultEncoded(encoded);
+                actionBuilder.setDefaultEncodeParameters(encoded);
             }
         }
         else
         {
-            ParameterUtils.doThrow(ENCODEDPARAMETERS, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
+        }
+    }
+    private void setDefaultEncodeBody(final LinkedHashMap<String, Object> encodedItem)
+    {
+        final Object encodedObject = encodedItem.get(ENCODEBODY);
+        if (encodedObject instanceof Boolean)
+        {
+            final Boolean encoded = (Boolean) encodedObject;
+            actionBuilder.setDefaultEncodeBody(encoded.toString());
+        }
+        else if (encodedObject instanceof String)
+        {
+            final String encoded = (String) encodedObject;
+            if (encoded.equals(DELETE))
+            {
+                actionBuilder.setDefaultEncodeBody(null);
+            }
+            else
+            {
+                actionBuilder.setDefaultEncodeBody(encoded);
+            }
+        }
+        else
+        {
+            ParameterUtils.doThrow(ENCODEBODY, Reason.UNSUPPORTED_TYPE);
         }
     }
 
@@ -354,11 +385,11 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             final Boolean xhr = (Boolean) xhrObject;
             if (xhr)
             {
-                actionBuilder.setDefaultType(URLAction.TYPE_XHR);
+                actionBuilder.setDefaultType(URLActionData.TYPE_XHR);
             }
             else
             {
-                actionBuilder.setDefaultType(URLAction.TYPE_ACTION);
+                actionBuilder.setDefaultType(URLActionData.TYPE_ACTION);
             }
         }
         else if (xhrObject instanceof String)
@@ -566,7 +597,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
         fillURLActionBuilder(rawAction);
 
-        final URLAction action = actionBuilder.build();
+        final URLActionData action = actionBuilder.build();
         this.actions.add(action);
 
         handleSubrequests(rawAction);
@@ -607,8 +638,8 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             {
                 actionBuilder.reset();
                 actionBuilder.setUrl(d_static.get(i));
-                actionBuilder.setType(URLAction.TYPE_STATIC);
-                actionBuilder.setMethod(URLAction.METHOD_GET);
+                actionBuilder.setType(URLActionData.TYPE_STATIC);
+                actionBuilder.setMethod(URLActionData.METHOD_GET);
                 actionBuilder.setName("static-subrequest" + i);
                 actionBuilder.setInterpreter(this.interpreter);
                 actions.add(actionBuilder.build());
@@ -626,8 +657,8 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
     private void handleXhrSubrequests(final LinkedHashMap<String, Object> xhrSubrequest)
     {
         fillURLActionBuilder(xhrSubrequest);
-        actionBuilder.setType(URLAction.TYPE_XHR);
-        final URLAction xhrAction = actionBuilder.build();
+        actionBuilder.setType(URLActionData.TYPE_XHR);
+        final URLActionData xhrAction = actionBuilder.build();
         actions.add(xhrAction);
         handleSubrequests(xhrSubrequest);
     }
@@ -642,8 +673,8 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
             final String urlString = (String) o;
 
             actionBuilder.reset();
-            actionBuilder.setType(URLAction.TYPE_STATIC);
-            actionBuilder.setMethod(URLAction.METHOD_GET);
+            actionBuilder.setType(URLActionData.TYPE_STATIC);
+            actionBuilder.setMethod(URLActionData.METHOD_GET);
             actionBuilder.setUrl(urlString);
             actionBuilder.setName("static-subrequest" + i);
             actionBuilder.setInterpreter(this.interpreter);
@@ -683,7 +714,8 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
             fillURLActionBuilderWithBodyData(rawRequest);
             fillURLActionBuilderWithHeaderData(rawRequest);
-            fillURLActionBuilderWithEncodedData(rawRequest);
+            fillURLActionBuilderWithEncodeParametersData(rawRequest);
+            fillURLActionBuilderWithEncodeBodyData(rawRequest);
             fillURLActionBuilderWithMethodData(rawRequest);
             fillURLActionBuilderWithParameterData(rawRequest);
             fillURLActionBuilderWithXhrData(rawRequest);
@@ -764,11 +796,11 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 final Boolean xhr = (Boolean) xhrObject;
                 if (xhr)
                 {
-                    actionBuilder.setType(URLAction.TYPE_XHR);
+                    actionBuilder.setType(URLActionData.TYPE_XHR);
                 }
                 else
                 {
-                    actionBuilder.setType(URLAction.TYPE_ACTION);
+                    actionBuilder.setType(URLActionData.TYPE_ACTION);
                 }
             }
             else if (xhrObject instanceof String)
@@ -806,24 +838,45 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         }
     }
 
-    private void fillURLActionBuilderWithEncodedData(final LinkedHashMap<String, Object> rawRequest)
+    private void fillURLActionBuilderWithEncodeParametersData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object encodedObject = rawRequest.get(ENCODEDPARAMETERS);
+        final Object encodedObject = rawRequest.get(ENCODEPARAMETERS);
         if (encodedObject != null)
         {
             if (encodedObject instanceof Boolean)
             {
                 final Boolean encoded = (Boolean) encodedObject;
-                actionBuilder.setEncoded(encoded.toString());
+                actionBuilder.setEncodeParameters(encoded.toString());
             }
             else if (encodedObject instanceof String)
             {
                 final String encoded = (String) encodedObject;
-                actionBuilder.setEncoded(encoded);
+                actionBuilder.setEncodeParameters(encoded);
             }
             else
             {
-                ParameterUtils.doThrow(ENCODEDPARAMETERS, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+    private void fillURLActionBuilderWithEncodeBodyData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object encodedObject = rawRequest.get(ENCODEBODY);
+        if (encodedObject != null)
+        {
+            if (encodedObject instanceof Boolean)
+            {
+                final Boolean encoded = (Boolean) encodedObject;
+                actionBuilder.setEncodeBody(encoded.toString());
+            }
+            else if (encodedObject instanceof String)
+            {
+                final String encoded = (String) encodedObject;
+                actionBuilder.setEncodeBody(encoded);
+            }
+            else
+            {
+                ParameterUtils.doThrow(ENCODEBODY, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
@@ -876,7 +929,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
                 ParameterUtils.isLinkedHashMap(validationObject, VALIDATION, "");
                 final LinkedHashMap<String, Object> validationItem = (LinkedHashMap<String, Object>) validationObject;
                 fillURLActionValidationBuilder(validationItem);
-                final URLActionValidation validation = validationBuilder.build();
+                final URLActionDataValidation validation = validationBuilder.build();
                 actionBuilder.addValidation(validation);
             }
         }
@@ -922,7 +975,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
         }
         if (validationMode == null)
         {
-            validationMode = URLActionValidation.EXISTS;
+            validationMode = URLActionDataValidation.EXISTS;
         }
         validationBuilder.setSelectionMode(selectionMode);
         validationBuilder.setValidationContent(validationContent);
@@ -944,7 +997,7 @@ public class YAMLBasedURLActionListBuilder extends URLActionListBuilder
 
                 fillURLActionStoreBuilder(storeItem);
 
-                final URLActionStore store = storeBuilder.build();
+                final URLActionDataStore store = storeBuilder.build();
                 actionBuilder.addStore(store);
             }
         }

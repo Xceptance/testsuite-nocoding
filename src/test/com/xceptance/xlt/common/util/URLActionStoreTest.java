@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLActionStore;
+import com.xceptance.xlt.common.util.URLActionDataStore;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionStoreTest
@@ -16,7 +16,7 @@ public class URLActionStoreTest
 
     List<String> selectionModes;
 
-    List<URLActionStore> stores;
+    List<URLActionDataStore> stores;
 
     @BeforeClass
     public void setup()
@@ -24,7 +24,7 @@ public class URLActionStoreTest
         interpreter = new ParameterInterpreter(null);
         selectionModes = new ArrayList<String>();
 
-        selectionModes.addAll(URLActionStore.PERMITTEDSELECTIONMODE);
+        selectionModes.addAll(URLActionDataStore.PERMITTEDSELECTIONMODE);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class URLActionStoreTest
                 {
                     "null", "unused"
                 })
-            final URLActionStore store = new URLActionStore("name", selectionMode, "content",
+            final URLActionDataStore store = new URLActionDataStore("name", selectionMode, "content",
                                                             interpreter);
         }
     }
@@ -48,7 +48,7 @@ public class URLActionStoreTest
             {
                 "null", "unused"
             })
-        final URLActionStore store = new URLActionStore(null, URLActionStore.REGEXP, "content",
+        final URLActionDataStore store = new URLActionDataStore(null, URLActionDataStore.REGEXP, "content",
                                                         interpreter);
     }
 
@@ -59,7 +59,7 @@ public class URLActionStoreTest
             {
                 "null", "unused"
             })
-        final URLActionStore store = new URLActionStore("name", null, "content", interpreter);
+        final URLActionDataStore store = new URLActionDataStore("name", null, "content", interpreter);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -69,7 +69,7 @@ public class URLActionStoreTest
             {
                 "null", "unused"
             })
-        final URLActionStore store = new URLActionStore("name", URLActionStore.REGEXP, "content",
+        final URLActionDataStore store = new URLActionDataStore("name", URLActionDataStore.REGEXP, "content",
                                                         null);
     }
     @Test(expected = IllegalArgumentException.class)
@@ -79,7 +79,7 @@ public class URLActionStoreTest
             {
                 "null", "unused"
             })
-        final URLActionStore store = new URLActionStore("name", "bla", "content",
+        final URLActionDataStore store = new URLActionDataStore("name", "bla", "content",
                                                         interpreter);
        final String name = store.getName();
        final String mode = store.getSelectionMode();

@@ -21,8 +21,8 @@ public class Downloader
     public Downloader(final XltWebClient webClient)
     {
         setWebClient(webClient);
-        setUserAgentUID(false); //default
-        setThreadCount(1); //default
+        setUserAgentUID(false); // default
+        setThreadCount(1); // default
     }
 
     public Downloader(final XltWebClient webClient,

@@ -2,7 +2,7 @@ package com.xceptance.xlt.common.util;
 
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionValidationBuilder
+public class URLActionDataValidationBuilder
 {
     private String name;
 
@@ -16,12 +16,12 @@ public class URLActionValidationBuilder
 
     private ParameterInterpreter interpreter;
 
-    public URLActionValidation build(){
+    public URLActionDataValidation build(){
         
-        URLActionValidation validation;
+        URLActionDataValidation validation;
         
         try{
-            validation = new URLActionValidation(getName(), getSelectionMode(), getSelectionContent(), getValidationMode(), getValidationContent(), getInterpreter());
+            validation = new URLActionDataValidation(getName(), getSelectionMode(), getSelectionContent(), getValidationMode(), getValidationContent(), getInterpreter());
         }
         catch (final IllegalArgumentException e)
         {

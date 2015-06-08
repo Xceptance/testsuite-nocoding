@@ -18,7 +18,7 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.validators.HttpResponseCodeValidator;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLAction
+public class URLActionData
 {
 
     private String name;
@@ -29,17 +29,17 @@ public class URLAction
 
     private String method;
 
-    private String encodedParameters;
+    private String encodeParameters;
 
-    private String encodedBody;
+    private String encodeBody;
 
     private String httpResponceCode;
 
     private String body;
 
-    private List<URLActionValidation> validations = Collections.emptyList();
+    private List<URLActionDataValidation> validations = Collections.emptyList();
 
-    private List<URLActionStore> store = Collections.emptyList();
+    private List<URLActionDataStore> store = Collections.emptyList();
 
     private List<NameValuePair> parameters = Collections.emptyList();
 
@@ -76,7 +76,7 @@ public class URLAction
     /*
      * @Parameters: Minimal parameters to create a legit URLAction
      */
-    public URLAction(final String name,
+    public URLActionData(final String name,
                      final String url,
                      final ParameterInterpreter interpreter)
     {
@@ -85,8 +85,9 @@ public class URLAction
         setUrl(url);
         setType(TYPE_ACTION); // default
         setMethod(METHOD_GET); // default
-        setEncodedParameters("false"); // default
-        setHttpResponceCode("200");
+        setEncodeParameters("true"); // default
+        setEncodeBody("true"); //default
+        setHttpResponceCode("200"); //default
         setInterpreter(interpreter);
     }
 
@@ -100,7 +101,8 @@ public class URLAction
             System.err.println("\t" + "Is Xhr: " + isXHRAction());
             System.err.println("\t" + "Method: " + getMethod());
             System.err.println("\t" + "URL: " + getUrl().toString());
-            System.err.println("\t" + "Is Encoded: " + isParametersEncoded());
+            System.err.println("\t" + "Encode-Parameters: " + encodeParameters());
+            System.err.println("\t" + "Encode-Body: " + encodeBody());
             System.err.println("\t" + "HttpCode: "
                                + getResponseCodeValidator().getHttpResponseCode());
             if (body != null)
@@ -137,7 +139,7 @@ public class URLAction
             if (!validations.isEmpty())
             {
                 System.err.println("\t" + "Validations: ");
-                for (final URLActionValidation v : validations)
+                for (final URLActionDataValidation v : validations)
                 {
                     v.outline();
                 }
@@ -145,7 +147,7 @@ public class URLAction
             if (!store.isEmpty())
             {
                 System.err.println("\tStore:");
-                for (final URLActionStore storeItem : store)
+                for (final URLActionDataStore storeItem : store)
                 {
                     storeItem.outline();
                 }
@@ -194,42 +196,42 @@ public class URLAction
         }
     }
 
-    public void setEncodedParameters(final String encoded)
+    public void setEncodeParameters(final String encoded)
     {
         if (encoded != null)
         {
-            this.encodedParameters = encoded;
+            this.encodeParameters = encoded;
             XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
-                                                                 this.encodedParameters));
+                                                                 this.encodeParameters));
         }
     }
 
-    public void setEncodedParameters(final Boolean encoded)
+    public void setEncodeParameters(final Boolean encoded)
     {
         if (encoded != null)
         {
-            this.encodedParameters = encoded.toString();
+            this.encodeParameters = encoded.toString();
             XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
-                                                                 this.encodedParameters));
+                                                                 this.encodeParameters));
         }
     }
-    public void setEncodedBody(final String encoded)
+    public void setEncodeBody(final String encoded)
     {
         if (encoded != null)
         {
-            this.encodedBody = encoded;
+            this.encodeBody = encoded;
             XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
-                                                                 this.encodedBody));
+                                                                 this.encodeBody));
         }
     }
 
-    public void setEncodedBody(final Boolean encoded)
+    public void setEncodeBody(final Boolean encoded)
     {
         if (encoded != null)
         {
-            this.encodedBody = encoded.toString();
+            this.encodeBody = encoded.toString();
             XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
-                                                                 this.encodedBody));
+                                                                 this.encodeBody));
         }
     }
 
@@ -260,7 +262,7 @@ public class URLAction
 
     }
 
-    public void setValidations(final List<URLActionValidation> validations)
+    public void setValidations(final List<URLActionDataValidation> validations)
     {
         if (validations != null)
         {
@@ -278,7 +280,7 @@ public class URLAction
         }
     }
 
-    public void setStore(final List<URLActionStore> store)
+    public void setStore(final List<URLActionDataStore> store)
     {
         if (store != null)
         {
@@ -320,7 +322,6 @@ public class URLAction
         return interpreter.processDynamicData(this.body);
     }
 
-    @SuppressWarnings("unused")
     public String getType()
     {
         String result;
@@ -339,9 +340,16 @@ public class URLAction
         return result;
     }
 
-    public URL getUrl() throws MalformedURLException
+    public URL getUrl()
     {
-        return new URL(interpreter.processDynamicData(url));
+        try
+        {
+            return new URL(interpreter.processDynamicData(url));
+        }
+        catch (final MalformedURLException e)
+        {
+            throw new IllegalArgumentException("Malformed URL for action" + getName() + ": " + e.getMessage(), e);
+        }
     }
 
     public String getUrlString() throws MalformedURLException
@@ -390,12 +398,12 @@ public class URLAction
         return result;
     }
 
-    public List<URLActionValidation> getValidations()
+    public List<URLActionDataValidation> getValidations()
     {
         return this.validations;
     }
 
-    public List<URLActionStore> getStore()
+    public List<URLActionDataStore> getStore()
     {
         return this.store;
     }
@@ -453,65 +461,63 @@ public class URLAction
         return interpreter;
     }
 
-    @SuppressWarnings("null")
-    public Boolean isParametersEncoded()
+
+    public Boolean encodeParameters()
     {
         Boolean result = false; // default
-        final String dynamicEncoded = interpreter.processDynamicData(this.encodedParameters);
-        if (dynamicEncoded.equals("true"))
+        final String dynamicEncoded = interpreter.processDynamicData(this.encodeParameters);
+        if ("true".equals(dynamicEncoded))
         {
             result = true;
         }
-        else if (dynamicEncoded.equals("false"))
+        else if ("false".equals(dynamicEncoded))
         {
             result = false;
         }
         else
         {
             XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicEncoded,
-                                                                          "Encoded",
+                                                                          "encodeParameters",
                                                                           "false"));
             result = false;
         }
         return result;
     }
 
-    @SuppressWarnings("null")
-    public Boolean isBodyEncoded()
+    public Boolean encodeBody()
     {
         Boolean result = false; // default
         if (this.body != null)
         {
-            final String dynamicEncoded = interpreter.processDynamicData(this.encodedBody);
-            if (dynamicEncoded.equals("true"))
+            final String dynamicEncoded = interpreter.processDynamicData(this.encodeBody);
+            if ("true".equals(dynamicEncoded))
             {
                 result = true;
             }
-            else if (dynamicEncoded.equals("false"))
+            else if ("false".equals(dynamicEncoded))
             {
                 result = false;
             }
             else
             {
                 XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicEncoded,
-                                                                              "Encoded",
+                                                                              "encodeBody",
                                                                               "false"));
                 result = false;
             }
         }
         return result;
     }
-
-    @SuppressWarnings("null")
+    
     public boolean isStaticContent()
     {
         Boolean result = false; // default
         final String dynamicType = interpreter.processDynamicData(this.type);
-        if (dynamicType.equals(TYPE_STATIC))
+        if (TYPE_STATIC.equals(dynamicType))
         {
             result = true;
         }
-        else if (dynamicType.equals(TYPE_XHR) || dynamicType.equals(TYPE_ACTION))
+        else if (TYPE_XHR.equals(dynamicType) || TYPE_ACTION.equals(dynamicType))
         {
             result = false;
         }
@@ -525,16 +531,15 @@ public class URLAction
         return result;
     }
 
-    @SuppressWarnings("null")
     public boolean isXHRAction()
     {
         Boolean result = false; // default
         final String dynamicType = interpreter.processDynamicData(this.type);
-        if (dynamicType.equals(TYPE_XHR))
+        if (TYPE_XHR.equals(dynamicType))
         {
             result = true;
         }
-        else if (dynamicType.equals(TYPE_ACTION) || dynamicType.equals(TYPE_STATIC))
+        else if (TYPE_ACTION.equals(dynamicType) || TYPE_STATIC.equals(dynamicType))
         {
             result = false;
         }
@@ -549,16 +554,15 @@ public class URLAction
         return result;
     }
 
-    @SuppressWarnings("null")
     public Boolean isAction()
     {
         Boolean result = true; // default
         final String dynamicType = interpreter.processDynamicData(this.type);
-        if (dynamicType.equals(TYPE_ACTION))
+        if (TYPE_ACTION.equals(dynamicType))
         {
             result = true;
         }
-        else if (dynamicType.equals(TYPE_XHR) || dynamicType.equals(TYPE_STATIC))
+        else if (TYPE_XHR.equals(dynamicType) || TYPE_STATIC.equals(dynamicType))
         {
             result = false;
         }

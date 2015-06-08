@@ -10,7 +10,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionStore
+public class URLActionDataStore
 {
     private String name;
 
@@ -38,7 +38,7 @@ public class URLActionStore
         PERMITTEDSELECTIONMODE.add(COOKIE);
     }
 
-    public URLActionStore(@NonNull final String name,
+    public URLActionDataStore(@NonNull final String name,
                           @NonNull final String selectionMode,
                           @NonNull final String selectionContent,
                           @NonNull final ParameterInterpreter interpreter)

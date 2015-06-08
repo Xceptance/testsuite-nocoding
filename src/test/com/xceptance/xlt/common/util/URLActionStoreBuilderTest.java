@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLActionStore;
-import com.xceptance.xlt.common.util.URLActionStoreBuilder;
+import com.xceptance.xlt.common.util.URLActionDataStore;
+import com.xceptance.xlt.common.util.URLActionDataStoreBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionStoreBuilderTest
@@ -14,7 +14,7 @@ public class URLActionStoreBuilderTest
     String name;
     String selectionMode;
     String selectionContent;
-    URLActionStoreBuilder storeBuilder;
+    URLActionDataStoreBuilder storeBuilder;
    
     @Before
     public void setup(){
@@ -22,7 +22,7 @@ public class URLActionStoreBuilderTest
        name = "name";
        selectionMode = "XPath";
        selectionContent = "someXPath";
-       storeBuilder = new URLActionStoreBuilder();
+       storeBuilder = new URLActionDataStoreBuilder();
     }
     @Test
     public void testSettersAndGetters()
@@ -66,7 +66,7 @@ public class URLActionStoreBuilderTest
         storeBuilder.setSelectionContent(selectionContent);
         storeBuilder.setInterpreter(interpreter);
         
-        final URLActionStore store = storeBuilder.build();
+        final URLActionDataStore store = storeBuilder.build();
         
         Assert.assertNotNull(store);
         

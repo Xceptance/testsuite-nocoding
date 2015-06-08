@@ -4,19 +4,21 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionListFacade
+public class URLActionDataListFacade
 {
     private String filePath;
 
     private ParameterInterpreter interpreter;
 
-    public URLActionListFacade(final String filePath,
+    public URLActionDataListFacade(final String filePath,
                                final ParameterInterpreter interpreter)
     {
         setFilePath(filePath);
         setParameterInterpreter(interpreter);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     private void setFilePath(final String filePath)
@@ -31,16 +33,16 @@ public class URLActionListFacade
         this.interpreter = interpreter;
     }
 
-    public List<URLAction> buildUrlActions()
+    public List<URLActionData> buildUrlActions()
     {
-        final URLActionListBuilder builder = createBuilder();
+        final URLActionDataListBuilder builder = createBuilder();
         return builder.buildURLActions();
     }
 
-    private URLActionListBuilder createBuilder()
+    private URLActionDataListBuilder createBuilder()
     {
         final String fileNameExtension = getFileNameExtension(this.filePath);
-        final URLActionListBuilder resultBuilder;
+        final URLActionDataListBuilder resultBuilder;
 
         if (fileNameExtension.equals("yml") || fileNameExtension.equals("yaml"))
         {
@@ -68,13 +70,13 @@ public class URLActionListFacade
         return fileNameExtension;
     }
 
-    private YAMLBasedURLActionListBuilder createYAMLBuilder()
+    private YAMLBasedURLActionDataListBuilder createYAMLBuilder()
     {
-        final URLActionStoreBuilder storeBuilder = new URLActionStoreBuilder();
-        final URLActionBuilder actionBuilder = new URLActionBuilder();
-        final URLActionValidationBuilder validationBuilder = new URLActionValidationBuilder();
+        final URLActionDataStoreBuilder storeBuilder = new URLActionDataStoreBuilder();
+        final URLActionDataBuilder actionBuilder = new URLActionDataBuilder();
+        final URLActionDataValidationBuilder validationBuilder = new URLActionDataValidationBuilder();
 
-        final YAMLBasedURLActionListBuilder yamlBuilder = new YAMLBasedURLActionListBuilder(
+        final YAMLBasedURLActionDataListBuilder yamlBuilder = new YAMLBasedURLActionDataListBuilder(
                                                                                             this.filePath,
                                                                                             this.interpreter,
                                                                                             actionBuilder,
@@ -82,11 +84,11 @@ public class URLActionListFacade
                                                                                             storeBuilder);
         return yamlBuilder;
     }
-    private CSVBasedURLActionListBuilder createCSVBuilder(){
+    private CSVBasedURLActionDataListBuilder createCSVBuilder(){
         
-        final URLActionBuilder actionBuilder = new URLActionBuilder();
+        final URLActionDataBuilder actionBuilder = new URLActionDataBuilder();
         
-        final CSVBasedURLActionListBuilder csvBuilder = new CSVBasedURLActionListBuilder(this.filePath,
+        final CSVBasedURLActionDataListBuilder csvBuilder = new CSVBasedURLActionDataListBuilder(this.filePath,
                                                        this.interpreter,
                                                        actionBuilder);
         return csvBuilder;

@@ -11,7 +11,7 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionBuilder
+public class URLActionDataBuilder
 {
 
     private String name;
@@ -22,17 +22,17 @@ public class URLActionBuilder
 
     private String method;
 
-    private String encodedParameters;
-    
-    private String encodedBody;
+    private String encodeParameters;
+
+    private String encodeBody;
 
     private String httpResponceCode;
 
     private String body;
 
-    private List<URLActionValidation> validations = Collections.emptyList();
+    private List<URLActionDataValidation> validations = Collections.emptyList();
 
-    private List<URLActionStore> store = Collections.emptyList();
+    private List<URLActionDataStore> store = Collections.emptyList();
 
     private List<NameValuePair> parameters = Collections.emptyList();
 
@@ -48,17 +48,17 @@ public class URLActionBuilder
 
     private String d_method;
 
-    private String d_encodedParameters;
-    
-    private String d_encodedBody;
+    private String d_encodeParameters;
+
+    private String d_encodeBody;
 
     private String d_httpResponceCode;
 
     private String d_body;
 
-    private List<URLActionValidation> d_validations = Collections.emptyList();
+    private List<URLActionDataValidation> d_validations = Collections.emptyList();
 
-    private List<URLActionStore> d_store = Collections.emptyList();
+    private List<URLActionDataStore> d_store = Collections.emptyList();
 
     private List<NameValuePair> d_parameters = Collections.emptyList();
 
@@ -152,7 +152,7 @@ public class URLActionBuilder
         if (!store.isEmpty())
         {
             System.err.println("Store:");
-            for (final URLActionStore nvp : store)
+            for (final URLActionDataStore nvp : store)
             {
 
                 nvp.outline();
@@ -161,7 +161,7 @@ public class URLActionBuilder
         if (!d_store.isEmpty())
         {
             System.err.println("D_Store:");
-            for (final URLActionStore nvp : d_store)
+            for (final URLActionDataStore nvp : d_store)
             {
 
                 nvp.outline();
@@ -170,7 +170,7 @@ public class URLActionBuilder
         if (!validations.isEmpty())
         {
             System.err.println("validations:");
-            for (final URLActionValidation nvp : validations)
+            for (final URLActionDataValidation nvp : validations)
             {
 
                 nvp.outline();
@@ -179,7 +179,7 @@ public class URLActionBuilder
         if (!d_validations.isEmpty())
         {
             System.err.println("D_validations:");
-            for (final URLActionValidation nvp : d_validations)
+            for (final URLActionDataValidation nvp : d_validations)
             {
 
                 nvp.outline();
@@ -187,16 +187,16 @@ public class URLActionBuilder
         }
     }
 
-    public URLAction build()
+    public URLActionData build()
     {
-        URLAction resultAction = null;
+        URLActionData resultAction = null;
         try
         {
-            resultAction = new URLAction(getName(), getUrl(), getInterpreter());
+            resultAction = new URLActionData(getName(), getUrl(), getInterpreter());
             resultAction.setType(getType());
             resultAction.setMethod(getMethod());
-            resultAction.setEncodedParameters(getEncodedParameters());
-            resultAction.setEncodedBody(getEncodedBody());
+            resultAction.setEncodeParameters(encodeParameters());
+            resultAction.setEncodeBody(encodeBody());
             resultAction.setHttpResponceCode(getHttpResponceCode());
             resultAction.setBody(getBody());
             resultAction.setCookies(getCookies());
@@ -218,13 +218,14 @@ public class URLActionBuilder
 
     public void reset()
     {
+        
         this.interpreter = null;
         this.name = null;
         this.type = null;
         this.url = null;
         this.method = null;
-        this.encodedParameters = null;
-        this.encodedBody = null;
+        this.encodeParameters = null;
+        this.encodeBody = null;
         this.httpResponceCode = null;
         this.body = null;
         this.validations = Collections.emptyList();
@@ -232,6 +233,8 @@ public class URLActionBuilder
         this.parameters = Collections.emptyList();
         this.cookies = Collections.emptyList();
         this.headers = Collections.emptyList();
+        
+        XltLogger.runTimeLogger.debug("Resetting stored values!");
     }
 
     @Nullable
@@ -295,30 +298,31 @@ public class URLActionBuilder
     }
 
     @Nullable
-    public String getEncodedParameters()
+    public String encodeParameters()
     {
         String result = null;
-        if (this.encodedParameters != null)
+        if (this.encodeParameters != null)
         {
-            result = this.encodedParameters;
+            result = this.encodeParameters;
         }
-        else if (this.d_encodedParameters != null)
+        else if (this.d_encodeParameters != null)
         {
-            result = d_encodedParameters;
+            result = d_encodeParameters;
         }
         return result;
     }
+
     @Nullable
-    public String getEncodedBody()
+    public String encodeBody()
     {
         String result = null;
-        if (this.encodedBody != null)
+        if (this.encodeBody != null)
         {
-            result = this.encodedBody;
+            result = this.encodeBody;
         }
-        else if (this.d_encodedBody != null)
+        else if (this.d_encodeBody != null)
         {
-            result = d_encodedBody;
+            result = d_encodeBody;
         }
         return result;
     }
@@ -354,9 +358,9 @@ public class URLActionBuilder
     }
 
     @Nullable
-    public List<URLActionValidation> getValidations()
+    public List<URLActionDataValidation> getValidations()
     {
-        List<URLActionValidation> result = Collections.emptyList();
+        List<URLActionDataValidation> result = Collections.emptyList();
         if (this.validations != null)
         {
             result = this.validations;
@@ -414,9 +418,9 @@ public class URLActionBuilder
     }
 
     @Nullable
-    public List<URLActionStore> getStore()
+    public List<URLActionDataStore> getStore()
     {
-        List<URLActionStore> result = Collections.emptyList();
+        List<URLActionDataStore> result = Collections.emptyList();
         if (this.store != null)
         {
             result = this.store;
@@ -437,145 +441,166 @@ public class URLActionBuilder
     public void setName(final String name)
     {
         this.name = name;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("name", name));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("name", name));
     }
 
     public void setType(final String type)
     {
         this.type = type;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("type", type));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("type", type));
     }
 
     public void setUrl(final String url)
     {
         this.url = url;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("url", url));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("url", url));
     }
 
     public void setMethod(final String method)
     {
         this.method = method;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("method", method));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("method", method));
     }
 
-    public void setEncoded(final String encoded)
+    public void setEncodeParameters(final String encoded)
     {
-        this.encodedParameters = encoded;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("encoded", encoded));
+        this.encodeParameters = encoded;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("encodeParameters", encoded));
+    }
+
+    public void setEncodeBody(final String encoded)
+    {
+        this.encodeBody = encoded;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("encodeBody", encoded));
     }
 
     public void setHttpResponceCode(final String httpResponceCode)
     {
         this.httpResponceCode = httpResponceCode;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("httpResponseCode",
-                                                       httpResponceCode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("httpResponseCode",
+                                                        httpResponceCode));
     }
 
     public void setBody(final String body)
     {
         this.body = body;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("body", body));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("body", body));
     }
 
-    public void setValidations(final List<URLActionValidation> validations)
+    public void setValidations(final List<URLActionDataValidation> validations)
     {
         this.validations = validations;
-        XltLogger.runTimeLogger.info(infoSetTag("validations"));
+        XltLogger.runTimeLogger.debug(infoSetTag("validations"));
     }
 
-    public void setStore(final List<URLActionStore> store)
+    public void setStore(final List<URLActionDataStore> store)
     {
         this.store = store;
-        XltLogger.runTimeLogger.info(infoSetTag("store"));
+        XltLogger.runTimeLogger.debug(infoSetTag("store"));
     }
 
     public void setParameters(final List<NameValuePair> parameters)
     {
         this.parameters = parameters;
-        XltLogger.runTimeLogger.info(infoSetTag("parameters"));
+        XltLogger.runTimeLogger.debug(infoSetTag("parameters"));
     }
 
     public void setCookies(final List<NameValuePair> cookies)
     {
         this.cookies = cookies;
-        XltLogger.runTimeLogger.info(infoSetTag("cookies"));
+        XltLogger.runTimeLogger.debug(infoSetTag("cookies"));
     }
 
     public void setHeaders(final List<NameValuePair> headers)
     {
         this.headers = headers;
-        XltLogger.runTimeLogger.info(infoSetTag("headers"));
+        XltLogger.runTimeLogger.debug(infoSetTag("headers"));
     }
 
     public void setInterpreter(final ParameterInterpreter interpreter)
     {
         this.interpreter = interpreter;
-        XltLogger.runTimeLogger.info(infoSetTag("interpreter"));
+        XltLogger.runTimeLogger.debug(infoSetTag("interpreter"));
     }
 
     public void setDefaultName(final String d_name)
     {
         this.d_name = d_name;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_name", d_name));
     }
 
     public void setDefaultType(final String d_type)
     {
         this.d_type = d_type;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_type", d_type));
     }
 
     public void setDefaultUrl(final String d_url)
     {
         this.d_url = d_url;
-    }
-
-    public String getDefaultMethod()
-    {
-        return d_method;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_url", d_url));
     }
 
     public void setDefaultMethod(final String d_method)
     {
         this.d_method = d_method;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_method", d_method));
     }
 
-    public void setDefaultEncoded(final String d_encoded)
+    public void setDefaultEncodeParameters(final String d_encoded)
     {
-        this.d_encodedParameters = d_encoded;
+        this.d_encodeParameters = d_encoded;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_encodeParameters", d_encoded));
+    }
+
+    public void setDefaultEncodeBody(final String d_encoded)
+    {
+        this.d_encodeBody = d_encoded;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_encodeBody", d_encoded));
     }
 
     public void setDefaultHttpResponceCode(final String d_httpResponceCode)
     {
         this.d_httpResponceCode = d_httpResponceCode;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_httpResponceCode",
+                                                        d_httpResponceCode));
     }
 
     public void setDefaultBody(final String d_body)
     {
         this.d_body = d_body;
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_body", d_body));
+
     }
 
-    public void setDefaultValidations(final List<URLActionValidation> d_validations)
+    public void setDefaultValidations(final List<URLActionDataValidation> d_validations)
     {
         this.d_validations = d_validations;
+        XltLogger.runTimeLogger.debug(infoSetTag("d_validations"));
     }
 
-    public void setDefaultStore(final List<URLActionStore> d_store)
+    public void setDefaultStore(final List<URLActionDataStore> d_store)
     {
         this.d_store = d_store;
+        XltLogger.runTimeLogger.debug(infoSetTag("d_store"));
     }
 
     public void setDefaultParameters(final List<NameValuePair> d_parameters)
     {
         this.d_parameters = d_parameters;
+        XltLogger.runTimeLogger.debug(infoSetTag("d_parameters"));
     }
 
     public void setDefaultCookies(final List<NameValuePair> d_cookies)
     {
         this.d_cookies = d_cookies;
+        XltLogger.runTimeLogger.debug(infoSetTag("d_cookies"));
     }
 
     public void setDefaultHeaders(final List<NameValuePair> d_headers)
     {
         this.d_headers = d_headers;
+        XltLogger.runTimeLogger.debug(infoSetTag("d_headers"));
     }
 
     public void addCookie(final NameValuePair cookie)
@@ -587,18 +612,22 @@ public class URLActionBuilder
         if (this.cookies != null)
         {
             this.cookies.add(cookie);
+            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Cookies",
+                                                                  cookie.getName(),
+                                                                  cookie.getValue()));
         }
     }
 
-    public void addStore(final URLActionStore storeItem)
+    public void addStore(final URLActionDataStore storeItem)
     {
         if (this.store.isEmpty() && storeItem != null)
         {
-            this.store = new ArrayList<URLActionStore>();
+            this.store = new ArrayList<URLActionDataStore>();
         }
         if (storeItem != null)
         {
             this.store.add(storeItem);
+            XltLogger.runTimeLogger.debug("Added URLActionDataStore");
         }
     }
 
@@ -611,18 +640,22 @@ public class URLActionBuilder
         if (header != null)
         {
             this.headers.add(header);
+            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Headers",
+                                                                  header.getName(),
+                                                                  header.getValue()));
         }
     }
 
-    public void addValidation(final URLActionValidation validation)
+    public void addValidation(final URLActionDataValidation validation)
     {
         if (this.validations.isEmpty() && validation != null)
         {
-            this.validations = new ArrayList<URLActionValidation>();
+            this.validations = new ArrayList<URLActionDataValidation>();
         }
         if (validation != null)
         {
             this.validations.add(validation);
+            XltLogger.runTimeLogger.debug("Added URLActionDataValidation");
         }
     }
 
@@ -636,6 +669,15 @@ public class URLActionBuilder
     private String infoSetTag(final String tag)
     {
         final String message = MessageFormat.format("Set tag \"{0}\" ", tag);
+        return message;
+    }
+
+    private String infoAddedNameValueToTag(final String tag,
+                                           final String name,
+                                           final String value)
+    {
+        final String message = MessageFormat.format("Added \"{0}\" = \"{1}\" to tag \"{2}\" ",
+                                                    name, value, tag);
         return message;
     }
 

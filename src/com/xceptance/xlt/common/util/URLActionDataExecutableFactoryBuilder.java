@@ -2,18 +2,17 @@ package com.xceptance.xlt.common.util;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.api.util.XltProperties;
 
-public class WebActionFactoryBuilder
+public class URLActionDataExecutableFactoryBuilder
 {
-    private ParameterInterpreter interpreter;
 
     private String mode;
-    
-    private List<URLAction> actions;
+
+    private XltProperties properties;
 
     public static final String MODE_DOM = "dom";
 
@@ -27,22 +26,24 @@ public class WebActionFactoryBuilder
         PERMITTEDMODES.add(MODE_LIGHT);
     }
 
-    public WebActionFactoryBuilder(final ParameterInterpreter interpreter,
-                                   final String mode,
-                                   final List<URLAction> actions)
+    public URLActionDataExecutableFactoryBuilder(final XltProperties properties,
+                                             final String mode)
     {
         setMode(mode);
-        setInterpreter(interpreter);
-        setActions(actions);
+        setProperties(properties);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
-    public WebActionFactory buildFactory()
+
+    public URLActionDataExecutableFactory buildFactory()
     {
-        final WebActionFactory factory = produceFactory();
+        final URLActionDataExecutableFactory factory = produceFactory();
         return factory;
     }
-    private void setActions(final List<URLAction> actions){
-        ParameterUtils.isNotNull(actions, "List<URLAction>");
-        this.actions = actions;
+
+    private void setProperties(final XltProperties properties)
+    {
+        ParameterUtils.isNotNull(properties, "XltProperties");
+        this.properties = properties;
     }
 
     private void setMode(final String mode)
@@ -59,16 +60,10 @@ public class WebActionFactoryBuilder
         }
     }
 
-    private void setInterpreter(final ParameterInterpreter interpreter)
-    {
-        ParameterUtils.isNotNull(interpreter, "ParameterInterpreter");
-        this.interpreter = interpreter;
-    }
-
-    private WebActionFactory produceFactory()
+    private URLActionDataExecutableFactory produceFactory()
     {
 
-        final WebActionFactory resultFactory;
+        final URLActionDataExecutableFactory resultFactory;
 
         if (this.mode.equals(MODE_DOM))
         {
@@ -87,12 +82,12 @@ public class WebActionFactoryBuilder
 
     private HtmlPageActionFactory createHtmlPageActionFactory()
     {
-        return new HtmlPageActionFactory(this.interpreter);
+        return new HtmlPageActionFactory(properties);
     }
 
     private LightWeightPageActionFactory createLightWeightPageActionFactory()
     {
-        return new LightWeightPageActionFactory(this.interpreter);
+        return new LightWeightPageActionFactory();
     }
 
     private boolean isPermittedMode(final String item)

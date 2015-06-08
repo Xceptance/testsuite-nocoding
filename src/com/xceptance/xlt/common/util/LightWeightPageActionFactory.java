@@ -1,11 +1,28 @@
 package com.xceptance.xlt.common.util;
 
-import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.xceptance.xlt.api.util.XltLogger;
 
-public class LightWeightPageActionFactory extends WebActionFactory
+
+public class LightWeightPageActionFactory extends URLActionDataExecutableFactory
 {
-    public LightWeightPageActionFactory(final ParameterInterpreter interpreter)
+    public LightWeightPageActionFactory()
     {
-        super(interpreter);
+        super();
+        XltLogger.runTimeLogger.debug("Creating new Instance");
+    }
+
+    @Override
+    public URLActionDataExecutable createPageAction(final String name, final WebRequest request)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public URLActionDataExecutable createXhrPageAction(final String name, final WebRequest request)
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

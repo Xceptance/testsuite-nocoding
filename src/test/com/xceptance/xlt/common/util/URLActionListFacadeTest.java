@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLAction;
-import com.xceptance.xlt.common.util.URLActionListFacade;
+import com.xceptance.xlt.common.util.URLActionData;
+import com.xceptance.xlt.common.util.URLActionDataListFacade;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionListFacadeTest
@@ -30,7 +30,7 @@ public class URLActionListFacadeTest
 
     private ParameterInterpreter interpreter;
 
-    private URLActionListFacade facade;
+    private URLActionDataListFacade facade;
 
     @Before
     public void setup()
@@ -41,60 +41,60 @@ public class URLActionListFacadeTest
     @Test
     public void testFileWithYamlExtension()
     {
-        facade = new URLActionListFacade(fileWithYamlExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithYamlExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertTrue(actions.isEmpty());
     }
 
     @Test
     public void testFileWithYmlExtension()
     {
-        facade = new URLActionListFacade(fileWithYmlExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithYmlExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertTrue(actions.isEmpty());
     }
 
     @Test
     public void testFileWithCsvExtension()
     {
-        facade = new URLActionListFacade(fileWithCsvExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithCsvExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertTrue(actions.isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFileWithUnknownExtension()
     {
-        facade = new URLActionListFacade(fileWithUnknownExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithUnknownExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertNotNull(actions);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFileWithNoExtension()
     {
-        facade = new URLActionListFacade(fileWithNoExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithNoExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
     }
     @Test(expected = IllegalArgumentException.class)
     public void testFileWithEmptyExtension()
     {
-        facade = new URLActionListFacade(fileWithEmptyExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithEmptyExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
     }
     
     @Test
     public void testFileWithOnlyExtension()
     {
-        facade = new URLActionListFacade(fileWithOnlyExtension, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(fileWithOnlyExtension, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertTrue(actions.isEmpty());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyFileString()
     {
-        facade = new URLActionListFacade(emptyFileString, interpreter);
-        final List<URLAction> actions = facade.buildUrlActions();
+        facade = new URLActionDataListFacade(emptyFileString, interpreter);
+        final List<URLActionData> actions = facade.buildUrlActions();
         Assert.assertTrue(actions.isEmpty());
     }
     

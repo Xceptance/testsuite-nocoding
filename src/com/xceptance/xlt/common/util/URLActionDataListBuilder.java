@@ -3,28 +3,30 @@ package com.xceptance.xlt.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public abstract class URLActionListBuilder
+public abstract class URLActionDataListBuilder
 {
-    protected List<URLAction> actions = new ArrayList<URLAction>();
+    protected List<URLActionData> actions = new ArrayList<URLActionData>();
     
     protected String filePath;
     
     protected ParameterInterpreter interpreter;
     
-    protected URLActionBuilder actionBuilder;
+    protected URLActionDataBuilder actionBuilder;
     
-    protected URLActionListBuilder(final String filePath,
+    protected URLActionDataListBuilder(final String filePath,
                                    final ParameterInterpreter interpreter,
-                                   final URLActionBuilder actionBuilder)
+                                   final URLActionDataBuilder actionBuilder)
     {
         setFilePath(filePath);
         setInterpreter(interpreter);
         setActionBuilder(actionBuilder);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
     
-    abstract protected List<URLAction> buildURLActions(); 
+    abstract protected List<URLActionData> buildURLActions(); 
 
     private void setFilePath(final String filePath)
     {
@@ -38,7 +40,7 @@ public abstract class URLActionListBuilder
         this.interpreter = interpreter;
     }
 
-    private void setActionBuilder(final URLActionBuilder actionBuilder)
+    private void setActionBuilder(final URLActionDataBuilder actionBuilder)
     {
         ParameterUtils.isNotNull(actionBuilder, "URLActionBuilder");
         this.actionBuilder = actionBuilder;

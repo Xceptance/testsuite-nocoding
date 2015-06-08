@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionStoreBuilder
+public class URLActionDataStoreBuilder
 {
     private String name;
 
@@ -15,12 +15,12 @@ public class URLActionStoreBuilder
 
     private ParameterInterpreter interpreter;
 
-    public URLActionStore build()
+    public URLActionDataStore build()
     {
-        URLActionStore store = null;
+        URLActionDataStore store = null;
         try
         {
-            store = new URLActionStore(getName(), getSelectionMode(),
+            store = new URLActionDataStore(getName(), getSelectionMode(),
                                        getSelectionContent(), getInterpreter());
         }
         catch (final IllegalArgumentException e)

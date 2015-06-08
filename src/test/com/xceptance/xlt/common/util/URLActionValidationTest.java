@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLActionValidation;
+import com.xceptance.xlt.common.util.URLActionDataValidation;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionValidationTest
@@ -17,7 +17,7 @@ public class URLActionValidationTest
 
     List<String> validationModes;
 
-    List<URLActionValidation> validations;
+    List<URLActionDataValidation> validations;
 
     @Before
     public void setup()
@@ -26,8 +26,8 @@ public class URLActionValidationTest
         selectionModes = new ArrayList<String>();
         validationModes = new ArrayList<String>();
 
-        selectionModes.addAll(URLActionValidation.PERMITTEDSELECTIONMODE);
-        validationModes.addAll(URLActionValidation.PERMITTEDVALIDATIONMODE);
+        selectionModes.addAll(URLActionDataValidation.PERMITTEDSELECTIONMODE);
+        validationModes.addAll(URLActionDataValidation.PERMITTEDVALIDATIONMODE);
 
     }
     @Test 
@@ -39,7 +39,7 @@ public class URLActionValidationTest
                 @SuppressWarnings({
                         "null", "unused"
                     })
-                final URLActionValidation validation = new URLActionValidation("name",
+                final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                                selectionMode,
                                                                                "content",
                                                                                validationMode,
@@ -55,7 +55,7 @@ public class URLActionValidationTest
         @SuppressWarnings({
                 "unused", "null"
             })
-        final URLActionValidation validation = new URLActionValidation(null, null, null, null,
+        final URLActionDataValidation validation = new URLActionDataValidation(null, null, null, null,
                                                                        null, null);
     }
 
@@ -65,8 +65,8 @@ public class URLActionValidationTest
         @SuppressWarnings({
                 "null", "unused"
             })
-        final URLActionValidation validation = new URLActionValidation("name", null, "something",
-                                                                       URLActionValidation.EXISTS,
+        final URLActionDataValidation validation = new URLActionDataValidation("name", null, "something",
+                                                                       URLActionDataValidation.EXISTS,
                                                                        null, interpreter);
     }
 
@@ -76,8 +76,8 @@ public class URLActionValidationTest
         @SuppressWarnings({
                 "null", "unused"
             })
-        final URLActionValidation validation = new URLActionValidation("name",
-                                                                       URLActionValidation.XPATH,
+        final URLActionDataValidation validation = new URLActionDataValidation("name",
+                                                                       URLActionDataValidation.XPATH,
                                                                        "something", null, null,
                                                                        interpreter);
     }
@@ -88,10 +88,10 @@ public class URLActionValidationTest
         @SuppressWarnings({
                 "null", "unused"
             })
-        final URLActionValidation validation = new URLActionValidation("name",
-                                                                       URLActionValidation.XPATH,
+        final URLActionDataValidation validation = new URLActionDataValidation("name",
+                                                                       URLActionDataValidation.XPATH,
                                                                        "something",
-                                                                       URLActionValidation.MATCHES,
+                                                                       URLActionDataValidation.MATCHES,
                                                                        null, null);
     }
 
@@ -99,8 +99,8 @@ public class URLActionValidationTest
     public void wrongSelectionMode()
     {
         @SuppressWarnings("null")
-        final URLActionValidation validation = new URLActionValidation("name", "x", "something",
-                                                                       URLActionValidation.MATCHES,
+        final URLActionDataValidation validation = new URLActionDataValidation("name", "x", "something",
+                                                                       URLActionDataValidation.MATCHES,
                                                                        null, interpreter);
 
         validation.outline();
@@ -111,8 +111,8 @@ public class URLActionValidationTest
     public void wrongValidationMode()
     {
         @SuppressWarnings("null")
-        final URLActionValidation validation = new URLActionValidation("name",
-                                                                       URLActionValidation.XPATH,
+        final URLActionDataValidation validation = new URLActionDataValidation("name",
+                                                                       URLActionDataValidation.XPATH,
                                                                        "something", "x", null,
                                                                        interpreter);
         validation.outline();

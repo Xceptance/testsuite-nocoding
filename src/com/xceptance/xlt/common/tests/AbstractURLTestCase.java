@@ -3,25 +3,27 @@ package com.xceptance.xlt.common.tests;
 import java.io.File;
 import java.util.List;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Before;
 
+import com.xceptance.xlt.api.data.GeneralDataProvider;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.tests.AbstractTestCase;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.XltConstants;
-import com.xceptance.xlt.common.util.URLAction;
-import com.xceptance.xlt.common.util.URLActionListFacade;
-import com.xceptance.xlt.common.util.WebActionFactory;
+import com.xceptance.xlt.common.util.URLActionData;
+import com.xceptance.xlt.common.util.URLActionDataExecutableFactory;
+import com.xceptance.xlt.common.util.URLActionDataExecutableFactoryBuilder;
+import com.xceptance.xlt.common.util.URLActionDataListFacade;
+import com.xceptance.xlt.common.util.URLActionDataRequestBuilder;
+import com.xceptance.xlt.common.util.URLActionDataResponseHandler;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class AbstractURLTestCase extends AbstractTestCase
 {
 
-    @Nullable
     protected String login;
 
-    @Nullable
     protected String password;
 
     protected String dataDirectory;
@@ -30,24 +32,45 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     protected ParameterInterpreter interpreter;
 
-    protected WebActionFactory webActionFactory;
+    protected URLActionDataExecutableFactory executableFactory;
 
-    protected URLActionListFacade urlActionListFacade;
+    protected URLActionDataListFacade urlActionListFacade;
+
+    protected URLActionDataResponseHandler responseHandler;
+
+    protected URLActionDataRequestBuilder requestBuilder;
+
+    protected GeneralDataProvider dataProvider;
+
+    protected XltProperties properties;
 
     protected String mode;
 
-    protected List<URLAction> actions;
+    protected List<URLActionData> actions;
 
     @Before
     public void initializeVariables()
     {
+        loadXltProperties();
+        loadGeneralDataProvider();
         loadCredentials();
         loadDataDirectory();
         loadFilePath();
         loadMode();
         setupParameterInterpreter();
         setupURLActionList();
-        setupWebActionFactory();
+        setupURLActionExecutableFactory();
+        setupURLActionRequestBuilder();
+    }
+
+    private void loadXltProperties()
+    {
+        this.properties = XltProperties.getInstance();
+    }
+
+    private void loadGeneralDataProvider()
+    {
+        this.dataProvider = GeneralDataProvider.getInstance();
     }
 
     private void loadCredentials()
@@ -55,22 +78,21 @@ public class AbstractURLTestCase extends AbstractTestCase
         this.login = getProperty("login", getProperty("com.xceptance.xlt.auth.userName"));
         this.password = getProperty("password",
                                     getProperty("com.xceptance.xlt.auth.password"));
-
+    
     }
 
     private void loadDataDirectory()
     {
         final String dataDirectory = getProperty(XltConstants.XLT_PACKAGE_PATH
-                                         + ".data.directory", "config"
-                                                              + File.separatorChar
-                                                              + "data");
+                                                     + ".data.directory",
+                                                 "config" + File.separatorChar + "data");
         if (dataDirectory != null)
         {
-            this.dataDirectory = dataDirectory + File.separatorChar + filePath;
+            this.dataDirectory = dataDirectory + File.separatorChar;
         }
         else
         {
-            throw new IllegalArgumentException("Missing 'data' directory!");
+            throw new IllegalArgumentException("Missing property 'data directory'!");
         }
     }
 
@@ -93,6 +115,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         if (mode != null)
         {
             this.mode = mode;
+            XltLogger.runTimeLogger.info("Test Mode : " + mode);
         }
         else
         {
@@ -102,19 +125,26 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupParameterInterpreter()
     {
-        this.interpreter = new ParameterInterpreter(this);
+        this.interpreter = new ParameterInterpreter(this.properties, this.dataProvider);
     }
 
     private void setupURLActionList()
     {
-        urlActionListFacade = new URLActionListFacade(this.filePath, this.interpreter);
+        urlActionListFacade = new URLActionDataListFacade(this.filePath, this.interpreter);
         this.actions = urlActionListFacade.buildUrlActions();
     }
 
-    private void setupWebActionFactory()
+    private void setupURLActionExecutableFactory()
     {
-        //final WebActionFactoryBuilder factoryBuilder = new WebActionFactoryBuilder();
-        //this.webActionFactory = factoryBuilder.buildFactory(this.mode,this.interpreter);
+        final URLActionDataExecutableFactoryBuilder factoryBuilder = new URLActionDataExecutableFactoryBuilder(
+                                                                                                               this.properties,
+                                                                                                               this.mode);
+        this.executableFactory = factoryBuilder.buildFactory();
+    }
+
+    private void setupURLActionRequestBuilder()
+    {
+        this.requestBuilder = new URLActionDataRequestBuilder();
     }
 
     /**

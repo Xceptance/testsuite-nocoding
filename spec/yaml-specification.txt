@@ -12,8 +12,8 @@
 - Url : https://www.xceptance.com
 - Method : POST
 - Xhr : false
-- Parameter-Encoding : true
-- Body-Encoding : true
+- Encode-Parameters: true
+- Encode-Body : true
 
 - Headers :
     - header_1 : value
@@ -39,7 +39,7 @@
         Url : <mandatory>
         Method : <default = GET, optional: POST>
         Xhr : <default = false>
-        Encoded : <default = false>
+        Encode-Parameters : <default = true>
         Parameters : <optional>
             - parameter_1 : value_1
             - parameter 2 : value_2
@@ -48,6 +48,7 @@
             - header_2 : value_2
             - header_3 : value_3
         Body : xy
+        Encode-Body : <default = true>
                               
     Response :
         Httpcode : <default = 200>

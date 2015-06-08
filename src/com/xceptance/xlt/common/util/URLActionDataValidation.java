@@ -10,7 +10,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionValidation
+public class URLActionDataValidation
 {
     private String name;
 
@@ -58,7 +58,7 @@ public class URLActionValidation
 
     }
 
-    public URLActionValidation(@NonNull final String name,
+    public URLActionDataValidation(@NonNull final String name,
                                @NonNull final String selectionMode,
                                final String selectionContent,
                                @NonNull final String validationMode,

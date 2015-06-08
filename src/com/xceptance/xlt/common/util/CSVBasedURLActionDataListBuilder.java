@@ -4,16 +4,16 @@ import java.util.List;
 
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class CSVBasedURLActionListBuilder extends URLActionListBuilder
+public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 {
-    public CSVBasedURLActionListBuilder(final String filePath,
+    public CSVBasedURLActionDataListBuilder(final String filePath,
                                         final ParameterInterpreter interpreter,
-                                        final URLActionBuilder actionBuilder)
+                                        final URLActionDataBuilder actionBuilder)
    {
        super(filePath, interpreter, actionBuilder);
    }
 
-    public List<URLAction> buildURLActions()
+    public List<URLActionData> buildURLActions()
     {
         return actions;
     }

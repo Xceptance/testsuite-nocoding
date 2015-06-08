@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLAction;
+import com.xceptance.xlt.common.util.URLActionData;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionTest 
@@ -26,9 +26,9 @@ public class URLActionTest
     {
         interpreter = new ParameterInterpreter(null);
         methods = new ArrayList<String>();
-        methods.addAll(URLAction.PERMITTEDMETHODS);
+        methods.addAll(URLActionData.PERMITTEDMETHODS);
         types = new ArrayList<String>();
-        types.addAll(URLAction.PERMITTEDTYPES);
+        types.addAll(URLActionData.PERMITTEDTYPES);
 
     }
 
@@ -39,14 +39,14 @@ public class URLActionTest
         @SuppressWarnings({
                 "unused", "null"
             })
-        final URLAction action = new URLAction("name", "http://www.xceptance.com", interpreter);
+        final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
 
     }
     @Test
     public void rightSetup(){
         for(final String type : types){
             for(final String method : methods){
-                final URLAction action = new URLAction("name", "http://www.xceptance.com", interpreter);
+                final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
                 
                 action.setBody("Body");
                 Assert.assertEquals("Body", action.getBody());
@@ -54,8 +54,8 @@ public class URLActionTest
                 action.setCookies(null);
                 Assert.assertEquals(Collections.emptyList(), action.getCookies());
                 
-                action.setEncodedParameters(true);
-                Assert.assertEquals(true, action.isParametersEncoded());
+                action.setEncodeParameters(true);
+                Assert.assertEquals(true, action.encodeParameters());
                 
                 action.setHeaders(null);
                 Assert.assertEquals(Collections.emptyList(), action.getHeaders());
@@ -101,7 +101,7 @@ public class URLActionTest
         @SuppressWarnings({
                 "unused", "null"
             })
-        final URLAction action = new URLAction(null, "http://www.xceptance.com", interpreter);
+        final URLActionData action = new URLActionData(null, "http://www.xceptance.com", interpreter);
     }
     
 
@@ -111,7 +111,7 @@ public class URLActionTest
         @SuppressWarnings({
                 "unused", "null"
             })
-        final URLAction action = new URLAction("name", null, interpreter);
+        final URLActionData action = new URLActionData("name", null, interpreter);
     }
     @Test(expected = IllegalArgumentException.class)
     public void wrongSetupInterpreter()
@@ -119,14 +119,14 @@ public class URLActionTest
         @SuppressWarnings({
                 "unused", "null"
             })
-        final URLAction action = new URLAction("name", "http://www.xceptance.com", null);
+        final URLActionData action = new URLActionData("name", "http://www.xceptance.com", null);
     }
     
     @Test(expected = MalformedURLException.class)
     public void wrongUrl() throws MalformedURLException
     {
 
-        final URLAction action = new URLAction("name", "c", interpreter);
+        final URLActionData action = new URLActionData("name", "c", interpreter);
 
          final URL url = action.getUrl();
     }
@@ -134,17 +134,17 @@ public class URLActionTest
     
     @Test
     public void defaultValues(){
-        final URLAction action = new URLAction("name", "http://www.xceptance.com", interpreter);
+        final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
         Assert.assertEquals(200, action.getResponseCodeValidator().getHttpResponseCode());
         
         action.setMethod("x");
-        Assert.assertEquals(URLAction.METHOD_GET, action.getMethod().toString());
+        Assert.assertEquals(URLActionData.METHOD_GET, action.getMethod().toString());
         
-        action.setEncodedParameters("x");
-        Assert.assertEquals(false, action.isParametersEncoded());
+        action.setEncodeParameters("x");
+        Assert.assertEquals(false, action.encodeParameters());
         
         action.setType("x");
-        Assert.assertEquals(URLAction.TYPE_ACTION, action.getType());
+        Assert.assertEquals(URLActionData.TYPE_ACTION, action.getType());
     }
     
 }

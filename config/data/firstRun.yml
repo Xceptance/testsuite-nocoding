@@ -30,10 +30,17 @@
 - Method : delete
 - Body : delete
 - Xhr : delete
-- Encoded : delete
+- Encode-Parameters : delete
+- Encode-Body : delete
 - Headers : delete
 - Parameters : delete
 - Static : delete
-- Encode-Parameters : delete
-- Encode-Body : delete
-    
+
+- Action :
+    Name : name
+    Request :
+        Url : http://www.xceptance.com
+        Method : GET
+        Xhr : false  
+    Response :
+        Httpcode : 200

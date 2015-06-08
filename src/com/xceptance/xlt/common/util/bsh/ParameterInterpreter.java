@@ -31,7 +31,6 @@ import bsh.Interpreter;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.data.GeneralDataProvider;
-import com.xceptance.xlt.api.tests.AbstractTestCase;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 
@@ -42,7 +41,7 @@ import com.xceptance.xlt.api.util.XltProperties;
 public class ParameterInterpreter extends Interpreter
 {
     @Nullable
-    private AbstractTestCase testCase;
+    private XltProperties properties;
 
     private static final long serialVersionUID = -6490310093160560291L;
 
@@ -60,17 +59,17 @@ public class ParameterInterpreter extends Interpreter
      *            the input to process
      * @return a processed string or the same, if nothing to process
      */
-    public ParameterInterpreter(final AbstractTestCase testCase)
+    public ParameterInterpreter(final XltProperties properties, final GeneralDataProvider dataProvider)
     {
         super();
-        XltLogger.runTimeLogger.info("Creating new ParameterInterpreter");
+        XltLogger.runTimeLogger.debug("Creating new ParameterInterpreter");
         try
         {
             this.set("NOW", new ParameterInterpreterNow());
             this.set("RANDOM", new ParameterInterpreterRandom());
-            this.set("DATA", GeneralDataProvider.getInstance());
+            this.set("DATA", dataProvider);
             this.set("DATE", new Date());
-            this.testCase = testCase;
+            this.properties = properties;
         }
         catch (final EvalError e)
         {
@@ -88,7 +87,7 @@ public class ParameterInterpreter extends Interpreter
         final String value = nvp.getValue();
         if (name != null && value != null)
         {
-            XltLogger.runTimeLogger.info(addVariableMessage(name, value));
+            XltLogger.runTimeLogger.debug(addVariableMessage(name, value));
             this.set(name, value);
         }
     }
@@ -154,14 +153,13 @@ public class ParameterInterpreter extends Interpreter
     @Nullable
     protected String getPropertyValue(final String propertyName)
     {
-        final String propertyValue = testCase != null ? testCase.getProperty(propertyName)
-                                                     : XltProperties.getInstance().getProperty(propertyName);
+        final String propertyValue = properties.getProperty(propertyName);
         return propertyValue;
     }
 
     protected String addVariableMessage(final String name, final String value)
     {
-        final String message = MessageFormat.format("Added Variables: \"{0}\" = \"{1}\"", name, value);
+        final String message = MessageFormat.format("Adding Variables: \"{0}\" = \"{1}\"", name, value);
         return message;
 
     }

@@ -1,13 +1,19 @@
 package com.xceptance.xlt.common.actions;
 
+import java.net.URL;
+
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.common.util.ParameterUtils;
+import com.xceptance.xlt.common.util.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.URLActionDataResult;
 
-public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
+public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements URLActionDataExecutable
 {
     protected Downloader downloader;
 
     protected WebRequest webRequest;
+    
+    protected URLActionDataResult result;
 
     public HtmlPageAction(final HtmlPageAction previousAction,
                           final String name,
@@ -31,7 +37,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
         this.downloader = downloader;
     }
 
-    private void setWebRequest(final WebRequest webRequest)
+    protected void setWebRequest(final WebRequest webRequest)
     {
         ParameterUtils.isNotNull(webRequest, "WebRequest");
         this.webRequest = webRequest;
@@ -42,6 +48,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     protected void execute() throws Exception
     {
         loadPage(this.webRequest);
+        this.result = new URLActionDataResult(getHtmlPage());
     }
 
     @Override
@@ -57,8 +64,39 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
 
     }
 
-    public void addRequest(final String url)
+    @Override
+    public URLActionDataResult getResult()
     {
-        downloader.addRequest(url);
+        return this.result;
     }
+    @Override
+    public void executeURLAction(){
+        try
+        {
+            this.run();
+        }
+        catch (final Throwable e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addStaticRequest(final URL url)
+    {
+        this.downloader.addRequest(url.toString());
+        //UGLY -> change
+    }
+
+    @Override
+    public URL getUrl()
+    {
+        return this.webRequest.getUrl();
+    }
+    
+    
+    
+    
+    
+    
 }

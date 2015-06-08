@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.xceptance.xlt.common.util.URLAction;
-import com.xceptance.xlt.common.util.URLActionBuilder;
-import com.xceptance.xlt.common.util.URLActionStore;
-import com.xceptance.xlt.common.util.URLActionValidation;
+import com.xceptance.xlt.common.util.URLActionData;
+import com.xceptance.xlt.common.util.URLActionDataBuilder;
+import com.xceptance.xlt.common.util.URLActionDataStore;
+import com.xceptance.xlt.common.util.URLActionDataValidation;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionBuilderTest
@@ -34,17 +34,17 @@ public class URLActionBuilderTest
 
     private String body;
 
-    private List<URLActionValidation> validations = new ArrayList<URLActionValidation>();
+    private List<URLActionDataValidation> validations = new ArrayList<URLActionDataValidation>();
 
-    URLActionValidation validation = new URLActionValidation("validation",
-                                                             URLActionValidation.XPATH,
+    URLActionDataValidation validation = new URLActionDataValidation("validation",
+                                                             URLActionDataValidation.XPATH,
                                                              "xpath",
-                                                             URLActionValidation.MATCHES,
+                                                             URLActionDataValidation.MATCHES,
                                                              "matcher", interpreter);
 
-    private List<URLActionStore> store = Collections.emptyList();
+    private List<URLActionDataStore> store = Collections.emptyList();
     
-    URLActionStore storeItem = new URLActionStore("store", URLActionStore.XPATH, "some xpath", interpreter);
+    URLActionDataStore storeItem = new URLActionDataStore("store", URLActionDataStore.XPATH, "some xpath", interpreter);
 
     private List<NameValuePair> parameters = Collections.emptyList();
 
@@ -66,9 +66,9 @@ public class URLActionBuilderTest
 
     private String d_body;
 
-    private List<URLActionValidation> d_validations = Collections.emptyList();
+    private List<URLActionDataValidation> d_validations = Collections.emptyList();
 
-    private List<URLActionStore> d_store = Collections.emptyList();
+    private List<URLActionDataStore> d_store = Collections.emptyList();
 
     private List<NameValuePair> d_parameters = Collections.emptyList();
 
@@ -83,11 +83,11 @@ public class URLActionBuilderTest
 
         name = "name";
         
-        type = URLAction.TYPE_ACTION;
+        type = URLActionData.TYPE_ACTION;
 
         url = "http://www.xceptance.com";
 
-        method = URLAction.METHOD_GET;
+        method = URLActionData.METHOD_GET;
 
         encoded = "true";
 
@@ -95,10 +95,10 @@ public class URLActionBuilderTest
 
         body = "body";
 
-        validations = new ArrayList<URLActionValidation>();
+        validations = new ArrayList<URLActionDataValidation>();
         validations.add(validation);
 
-        store = new ArrayList<URLActionStore>();
+        store = new ArrayList<URLActionDataStore>();
         store.add(storeItem);
 
         parameters = new ArrayList<NameValuePair>();
@@ -112,11 +112,11 @@ public class URLActionBuilderTest
 
         d_name = "d_name";
 
-        d_type = URLAction.TYPE_STATIC;
+        d_type = URLActionData.TYPE_STATIC;
 
         d_url = "http://www.blog.xceptance.com";
 
-        d_method = URLAction.METHOD_POST;
+        d_method = URLActionData.METHOD_POST;
 
         d_encoded = "fale";
 
@@ -124,9 +124,9 @@ public class URLActionBuilderTest
 
         d_body = "d_body";
 
-        d_validations = new ArrayList<URLActionValidation>();
+        d_validations = new ArrayList<URLActionDataValidation>();
 
-        d_store = new ArrayList<URLActionStore>();
+        d_store = new ArrayList<URLActionDataStore>();
 
         d_parameters = new ArrayList<NameValuePair>();
 
@@ -138,11 +138,11 @@ public class URLActionBuilderTest
     @Test
     public void testCorrectActionBuild() throws MalformedURLException
     {
-        final URLActionBuilder builder = new URLActionBuilder();
+        final URLActionDataBuilder builder = new URLActionDataBuilder();
 
         builder.setBody(body);
         builder.setCookies(cookies);
-        builder.setEncoded(encoded);
+        builder.setEncodeParameters(encoded);
         builder.setHeaders(headers);
         builder.setHttpResponceCode(httpResponceCode);
         builder.setValidations(validations);
@@ -157,7 +157,7 @@ public class URLActionBuilderTest
 
         builder.setDefaultBody(d_body);
         builder.setDefaultCookies(d_cookies);
-        builder.setDefaultEncoded(d_encoded);
+        builder.setDefaultEncodeParameters(d_encoded);
         builder.setDefaultHeaders(d_headers);
         builder.setDefaultHttpResponceCode(d_httpResponceCode);
         builder.setDefaultValidations(d_validations);
@@ -169,7 +169,7 @@ public class URLActionBuilderTest
         builder.setDefaultMethod(d_method);
         builder.setInterpreter(interpreter);
         
-        URLAction action = builder.build();
+        URLActionData action = builder.build();
 
         Assert.assertEquals(action.getName(), name);
         Assert.assertEquals(action.getBody(), body);
@@ -184,13 +184,13 @@ public class URLActionBuilderTest
 
         builder.setBody(null);
         builder.setCookies(Collections.<NameValuePair> emptyList());
-        builder.setEncoded(null);
+        builder.setEncodeParameters(null);
         builder.setHeaders(Collections.<NameValuePair> emptyList());
         builder.setHttpResponceCode(null);
-        builder.setValidations(Collections.<URLActionValidation> emptyList());
+        builder.setValidations(Collections.<URLActionDataValidation> emptyList());
         builder.setUrl(null);
         builder.setType(null);
-        builder.setStore(Collections.<URLActionStore> emptyList());
+        builder.setStore(Collections.<URLActionDataStore> emptyList());
         builder.setParameters(Collections.<NameValuePair> emptyList());
         builder.setName(null);
         builder.setMethod(null);
@@ -216,10 +216,10 @@ public class URLActionBuilderTest
     @Test
     public void constructActionFromDefaults()
     {
-        final URLActionBuilder builder = new URLActionBuilder();
+        final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setDefaultBody(body);
         builder.setDefaultCookies(cookies);
-        builder.setDefaultEncoded(encoded);
+        builder.setDefaultEncodeParameters(encoded);
         builder.setDefaultHeaders(headers);
         builder.setDefaultHttpResponceCode(httpResponceCode);
         builder.setDefaultValidations(validations);
@@ -235,28 +235,28 @@ public class URLActionBuilderTest
     @Test(expected = IllegalArgumentException.class)
     public void missingName()
     {
-        final URLActionBuilder builder = new URLActionBuilder();
+        final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setUrl(url);
         builder.setInterpreter(interpreter);
-        final URLAction action = builder.build();
+        final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void missingUrl()
     {
-        final URLActionBuilder builder = new URLActionBuilder();
+        final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setName(name);
         builder.setInterpreter(interpreter);
-        final URLAction action = builder.build();
+        final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void missingInterpreter()
     {
-        final URLActionBuilder builder = new URLActionBuilder();
+        final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setUrl(url);
         builder.setName(name);
-        final URLAction action = builder.build();
+        final URLActionData action = builder.build();
     }
 
 }

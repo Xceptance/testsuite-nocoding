@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.URLActionValidation;
-import com.xceptance.xlt.common.util.URLActionValidationBuilder;
+import com.xceptance.xlt.common.util.URLActionDataValidation;
+import com.xceptance.xlt.common.util.URLActionDataValidationBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionValidationBuilderTest
@@ -16,7 +16,7 @@ public class URLActionValidationBuilderTest
     String selectionContent;
     String validationMode;
     String validationContent;
-    URLActionValidationBuilder validationBuilder;
+    URLActionDataValidationBuilder validationBuilder;
     
     @Before
     public void setup(){
@@ -25,7 +25,7 @@ public class URLActionValidationBuilderTest
         selectionContent = "someXPath";
         validationMode = "Matches";
         validationContent = "someText";
-        validationBuilder = new URLActionValidationBuilder();
+        validationBuilder = new URLActionDataValidationBuilder();
         interpreter = new ParameterInterpreter(null);
     }
     @Test
@@ -52,7 +52,7 @@ public class URLActionValidationBuilderTest
         validationBuilder.setValidationContent(validationContent);
         validationBuilder.setValidationMode(validationMode);
         
-        final URLActionValidation validation = validationBuilder.build();
+        final URLActionDataValidation validation = validationBuilder.build();
         
         Assert.assertEquals(name, validation.getName());
         Assert.assertEquals(selectionMode, validation.getSelectionMode());
