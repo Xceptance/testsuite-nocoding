@@ -4,7 +4,7 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 
-public class URLActionDataResult
+public class URLActionExecutableResult
 {
     private HtmlPage htmlPage = null;
 
@@ -12,19 +12,19 @@ public class URLActionDataResult
 
     private WebResponse response = null;
 
-    public URLActionDataResult(final HtmlPage htmlPage)
+    public URLActionExecutableResult(final HtmlPage htmlPage)
     {
         ParameterUtils.isNotNull(htmlPage, "HtmlPage");
         this.htmlPage = htmlPage;
     }
 
-    public URLActionDataResult(final LightWeightPage lightHtmlPage)
+    public URLActionExecutableResult(final LightWeightPage lightHtmlPage)
     {
         ParameterUtils.isNotNull(lightHtmlPage, "LightWeightPage");
         this.lightHtmlPage = lightHtmlPage;
     }
 
-    public URLActionDataResult(final WebResponse response)
+    public URLActionExecutableResult(final WebResponse response)
     {
         ParameterUtils.isNotNull(response, "WebResponse");
         this.response = response;

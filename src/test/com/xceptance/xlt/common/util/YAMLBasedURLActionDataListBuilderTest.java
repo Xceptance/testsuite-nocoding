@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.URLActionData;
 import com.xceptance.xlt.common.util.URLActionDataBuilder;
 import com.xceptance.xlt.common.util.URLActionDataStore;
@@ -17,9 +19,12 @@ import com.xceptance.xlt.common.util.URLActionDataValidationBuilder;
 import com.xceptance.xlt.common.util.YAMLBasedURLActionDataListBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class YAMLBasedURLActionListBuilderTest
+public class YAMLBasedURLActionDataListBuilderTest
 {
-    private final ParameterInterpreter interpreter = new ParameterInterpreter(null);
+    ParameterInterpreter interpreter;
+    private XltProperties properties;
+
+    private GeneralDataProvider dataProvider;
 
     private final String path = "./config/data/test/";
     private final String fileTmp = path + "tmp.yml";
@@ -37,7 +42,9 @@ public class YAMLBasedURLActionListBuilderTest
     @Before
     public void setup()
     {
-
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
     }
 
     @Test

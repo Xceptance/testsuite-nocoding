@@ -10,21 +10,30 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.URLActionData;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionTest 
+public class URLActionDataTest 
 {
     private List<String> types;
 
     private List<String> methods;
 
     private ParameterInterpreter interpreter;
+    
+    private XltProperties properties;
+    
+    private GeneralDataProvider dataProvider;
 
     @Before
     public void setup()
     {
-        interpreter = new ParameterInterpreter(null);
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
+        
         methods = new ArrayList<String>();
         methods.addAll(URLActionData.PERMITTEDMETHODS);
         types = new ArrayList<String>();
@@ -54,8 +63,11 @@ public class URLActionTest
                 action.setCookies(null);
                 Assert.assertEquals(Collections.emptyList(), action.getCookies());
                 
-                action.setEncodeParameters(true);
-                Assert.assertEquals(true, action.encodeParameters());
+                action.setEncodeBody(false);
+                Assert.assertEquals(false, action.encodeBody());
+                
+                action.setEncodeParameters(false);
+                Assert.assertEquals(false, action.encodeParameters());
                 
                 action.setHeaders(null);
                 Assert.assertEquals(Collections.emptyList(), action.getHeaders());
@@ -78,6 +90,9 @@ public class URLActionTest
                 action.setStore(null);
                 Assert.assertEquals(Collections.emptyList(), action.getStore());
                 
+                action.setCookies(null);
+                Assert.assertEquals(Collections.emptyList(), action.getCookies());
+                
                 action.setUrl("http://www.xceptance.com");
                 try
                 {
@@ -85,7 +100,6 @@ public class URLActionTest
                 }
                 catch (final MalformedURLException e)
                 {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 
@@ -122,13 +136,13 @@ public class URLActionTest
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", null);
     }
     
-    @Test(expected = MalformedURLException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void wrongUrl() throws MalformedURLException
     {
 
         final URLActionData action = new URLActionData("name", "c", interpreter);
-
-         final URL url = action.getUrl();
+        
+        final URL url = action.getUrl();
     }
     
     

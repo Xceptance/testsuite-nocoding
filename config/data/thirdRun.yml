@@ -1,0 +1,302 @@
+- Action :
+    Name : TestAction
+    Request : 
+        Url : http://www.google.com
+        Method : POST
+        Parameters : 
+            - p1 : "&&&$§"
+            - p2 : "&&&/$"
+        Headers : 
+            - header_1 : a   
+            - header_2 : value_2
+            - header_3 : value_3
+        Cookies :
+            - cookie_1 : bla
+            - cookie_2 : vla
+            
+        Body : "%&$§$"
+                              
+    Response :
+        Httpcode : 200
+        Validate :
+            - validation_name_1 :
+                XPath : value
+            - validation_name_2 :
+                XPath : value
+                Matches : value
+            - validation_name_3 :
+                XPath : value
+                Count : value
+            - validation_name_3 :
+                RegExp : value
+                Matches : value
+            - validation_name_4 :
+                Header : header_element
+            - validation_name_5 :
+                Header : header_element_2
+                Matches : header_element_2_content
+            - validation_name_6 :
+                Header : header_element_3
+                Count : header_element_3_content
+                
+    Store :
+        - variable :
+            XPath : path
+        - variable_2 :
+            Regexp : path
+        - variable_3 :
+            Header : header
+            
+
+- Action:
+    Name : Open Homepage
+    Request :
+       Url : ${host}/posters/
+       Encoded : "false"
+       Xhr: "false"
+    Response :
+       Httpcode : "200"
+       Validate:
+            - Header:
+                XPath: id('titleIndex')
+                Matches: "Check out our *" 
+            - Button:
+                XPath: id('btnShowLoginForm')
+    Subrequests: 
+        - Static:
+            - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
+            - ${host}/posters/assets/css/bootstrap-responsive-2.0.4.css
+            - ${host}/posters/assets/css/cartSlider.css
+            - ${host}/posters/assets/js/bootstrap-2.3.1.min.js
+            - ${host}/posters/assets/js/bootstrap-paginator-0.5.js
+            - ${host}/posters/assets/js/customCartSlider.js
+            - ${host}/posters/assets/js/custom.js
+            - ${host}/posters/assets/img/products/XXL/XXL_1.jpg
+            - ${host}/posters/assets/img/products/XXL/XXL_2.jpg
+            - ${host}/posters/assets/img/xceptanceLogo.png
+            - ${host}/posters/assets/img/products/XXL/XXL_3.jpg
+            - ${host}/posters/assets/img/products/XXL/XXL_4.jpg
+            - ${host}/posters/assets/img/cartSliderFooter.png
+            - ${host}/posters/assets/img/glyphicons-halflings.png
+
+
+- Action:
+    Name : Select Category Dining
+    Request :
+       Url : ${host}/posters/topCategory/Dining
+       Parameters :
+           - categoryId : "2"
+    Response :
+       Httpcode : "200"
+       Validate:
+            - Header:
+                XPath: id('titleCategoryName')
+                Matches: "Dining"   
+            - Button:
+                XPath: id('slidingTopTriggerShow')
+    Subrequests: 
+        - Static:
+            - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
+            - ${host}/posters/assets/css/bootstrap-responsive-2.0.4.css
+            - ${host}/posters/assets/css/cartSlider.css
+            - ${host}/posters/assets/js/jquery-1.9.1.min.js
+            - ${host}/posters/assets/js/bootstrap-2.3.1.min.js
+            - ${host}/posters/assets/js/bootstrap-paginator-0.5.js
+            - ${host}/posters/assets/js/customCartSlider.js
+            - ${host}/posters/assets/js/custom.js
+            - ${host}/posters/assets/img/xceptanceLogo.png
+            - ${host}/posters/assets/img/products/Food/Cold_Cuts/Cold_Cuts_1.jpg
+            - ${host}/posters/assets/img/products/Food/Cold_Cuts/Cold_Cuts_2.jpg
+            - ${host}/posters/assets/img/products/Food/Cold_Cuts/Cold_Cuts_3.jpg
+            - ${host}/posters/assets/img/products/Food/Cold_Cuts/Cold_Cuts_4.jpg
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_1.jpg            
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_2.jpg            
+            - ${host}/posters/assets/img/cartSliderFooter.png
+            - ${host}/posters/assets/img/glyphicons-halflings.png
+            
+        - Xhr:
+            Name : getProductOfTopCategory
+            Request:
+                Url: ${host}/posters/getProductOfTopCategory
+                Method : POST
+                Parameters :
+                    - categoryId : "2"
+                    - page : 2
+            Response :
+                Httpcode : "200"
+                Validate :
+                    - productName :
+                        XPath : /json/products[1]/id
+                        Matches : "43"
+                    - productExistance :
+                        XPath : /json/products[2]
+                    
+            Subrequests :
+                - Static :
+                    - ${host}/posters/assets/img/products/Food/Grillables/Grillables_3.jpg
+                    - ${host}/posters/assets/img/products/Food/Grillables/Grillables_6.jpg
+                    - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg
+                    - ${host}/posters/assets/img/products/Food/Sweets/Sweets_2.jpg
+                    - ${host}/posters/assets/img/products/Food/Sweets/Sweets_6.jpg
+                    - ${host}/posters/assets/img/products/Food/Sweets/Sweets_7.jpg
+                
+- Action :
+    Name : Select Product    
+    Request :
+        Url : ${host}/posters/productDetail/Dining
+        Parameters :
+            - categoryId : "2"  
+            - productId : "51"  
+    Response :
+        Httpcode : "200"
+        Validate :
+            - Product Title :
+                 XPath : id('titleProductName')
+                 Matches : German Apple Pie      
+            - Radio Buttons :
+                 XPath : id('selectFinish')   
+    Subrequests :
+        - Static :
+            - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
+            - ${host}/posters/assets/css/bootstrap-responsive-2.0.4.css
+            - ${host}/posters/assets/css/cartSlider.css
+            - ${host}/posters/assets/js/jquery-1.9.1.min.js
+            - ${host}/posters/assets/js/bootstrap-2.3.1.min.js
+            - ${host}/posters/assets/js/bootstrap-paginator-0.5.js
+            - ${host}/posters/assets/js/customCartSlider.js
+            - ${host}/posters/assets/js/custom.js
+            - ${host}/posters/assets/img/xceptanceLogo.png
+            - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg
+            - ${host}/posters/assets/img/cartSliderFooter.png
+            - ${host}/posters/assets/img/glyphicons-halflings.png
+        - Xhr :
+            Name : updatePrice
+            Request :
+                Url : ${host}/posters/updatePrice
+                Method : POST
+                Parameters :
+                    - size : 64 x 48 in
+                    - productId : "51"
+            Response :
+                Validate :
+                    - Check Price :
+                        XPath : /json/newPrice
+                        Matches : 35.45$
+        - Xhr :
+            Name : Add Product To Cart
+            Request :
+                Url : ${host}/posters/getCartElementSlider
+            Response :
+                Validate :
+                    - Validate something :
+                        XPath : /json/currency
+                        Matches : $
+        - Static :
+            - ${host}/posters/assets/img/loader.gif
+                          
+        - Xhr :
+            Name : Add To Cart Slider
+            Request :
+                Url:  ${host}/posters/addToCartSlider
+                Parameters :
+                    - productId : "51"
+                    - finish : gloss
+                    - size : 64 x 48 in                      
+            Response :
+                Validate :
+                    - validate Product finish :
+                        XPath : /json/product/finish
+                        Matches : gloss
+                    - validate product Count :
+                        XPath : /json/product/productCount
+                        Matches : "1"   
+                
+- Action :
+    Name : Go To Cart
+    Request :
+        Url : ${host}/posters/cart
+    Response :
+        Validate :
+            - Validate content title :
+                XPath : id('productName0')
+                Matches : German Apple Pie
+    Subrequests :
+        - Static :
+            - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
+            - ${host}/posters/assets/css/bootstrap-responsive-2.0.4.css
+            - ${host}/posters/assets/css/cartSlider.css
+            - ${host}/posters/assets/js/jquery-1.9.1.min.js
+            - ${host}/posters/assets/js/bootstrap-2.3.1.min.js
+            - ${host}/posters/assets/js/bootstrap-paginator-0.5.js
+            - ${host}/posters/assets/js/customCartSlider.js
+            - ${host}/posters/assets/js/custom.js
+            - ${host}/posters/assets/img/xceptanceLogo.png
+            - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg
+            - ${host}/posters/assets/img/cartSliderFooter.png
+            - ${host}/posters/assets/img/glyphicons-halflings.png
+
+- Action :
+    Name : Go To Checkout
+    Request :
+        Url : ${host}/posters/checkout
+
+- Action :
+    Name : Enter Shipping address
+    Request :
+        Url : ${host}/posters/enterShippingAddress
+    Response :
+        Validate :
+            - Validate content title :
+                XPath : id('titleDelAddr')
+                Matches : Select or enter a shipping address
+    Subrequests :
+        - Static :
+            - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
+            - ${host}/posters/assets/css/bootstrap-responsive-2.0.4.css
+            - ${host}/posters/assets/css/cartSlider.css
+            - ${host}/posters/assets/js/jquery-1.9.1.min.js
+            - ${host}/posters/assets/js/bootstrap-2.3.1.min.js
+            - ${host}/posters/assets/js/bootstrap-paginator-0.5.js
+            - ${host}/posters/assets/js/customCartSlider.js
+            - ${host}/posters/assets/js/custom.js
+            - ${host}/posters/assets/img/xceptanceLogo.png
+            - ${host}/posters/assets/img/cartSliderFooter.png
+            - ${host}/posters/assets/img/glyphicons-halflings.png
+
+- Action : 
+    Name : Shipping
+    Request : 
+        Url : ${hostsec}/posters/shippingAddressCompleted
+        Method : POST
+        Parameters :
+            - fullName : "${DATA.getFirstName(false)} ${DATA.getLastName(false)}"
+            - company : "Acme Inc"
+            - addressLine : "123 Rocky Rd"
+            - city : ${DATA.getTown(false)}
+            - state : California
+            - zip : ${RANDOM.Number(5)}
+            - country : "United States"
+            - billEqualShipp : "Yes"
+            - btnAddDelAddr :          
+- Action :
+    Name : Payment Complete
+    Request :
+        Url: ${hostsec}/posters/paymentMethodCompleted
+        Method : POST
+        Encoded : "false"
+        Parameters :
+            - creditCardNumber : "4111111111111111"
+            - name : Dagobert Duck
+            - expirationDateMonth : "01"
+            - expirationDateYear : "2017"
+            - btnAddPayment :
+
+- Action :
+    Name : Checkout Overview
+    Request :
+        Url : ${hostsec}/posters/checkoutOverview        
+    Response :
+        Validate :
+            - Validate Title :
+                XPath : id('titleOrderOverview')
+                Matches : Order Overview               

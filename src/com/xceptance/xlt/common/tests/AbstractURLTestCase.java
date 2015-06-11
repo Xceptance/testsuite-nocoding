@@ -61,6 +61,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         setupURLActionList();
         setupURLActionExecutableFactory();
         setupURLActionRequestBuilder();
+        setupURLActionResponseHandler();
     }
 
     private void loadXltProperties()
@@ -78,7 +79,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         this.login = getProperty("login", getProperty("com.xceptance.xlt.auth.userName"));
         this.password = getProperty("password",
                                     getProperty("com.xceptance.xlt.auth.password"));
-    
+
     }
 
     private void loadDataDirectory()
@@ -88,7 +89,7 @@ public class AbstractURLTestCase extends AbstractTestCase
                                                  "config" + File.separatorChar + "data");
         if (dataDirectory != null)
         {
-            this.dataDirectory = dataDirectory + File.separatorChar;
+            this.dataDirectory = dataDirectory;
         }
         else
         {
@@ -145,6 +146,11 @@ public class AbstractURLTestCase extends AbstractTestCase
     private void setupURLActionRequestBuilder()
     {
         this.requestBuilder = new URLActionDataRequestBuilder();
+    }
+
+    private void setupURLActionResponseHandler()
+    {
+        this.responseHandler = new URLActionDataResponseHandler();
     }
 
     /**

@@ -27,7 +27,7 @@ public class URLActionDataExecutableFactoryBuilder
     }
 
     public URLActionDataExecutableFactoryBuilder(final XltProperties properties,
-                                             final String mode)
+                                                 final String mode)
     {
         setMode(mode);
         setProperties(properties);
@@ -87,7 +87,7 @@ public class URLActionDataExecutableFactoryBuilder
 
     private LightWeightPageActionFactory createLightWeightPageActionFactory()
     {
-        return new LightWeightPageActionFactory();
+        return new LightWeightPageActionFactory(properties);
     }
 
     private boolean isPermittedMode(final String item)

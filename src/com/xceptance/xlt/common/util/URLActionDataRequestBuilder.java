@@ -7,7 +7,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.http.auth.Credentials;
+
+import com.gargoylesoftware.htmlunit.FormEncodingType;
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
@@ -19,13 +23,16 @@ public class URLActionDataRequestBuilder
 {
     public URLActionDataRequestBuilder()
     {
-        XltLogger.runTimeLogger.info("Creating new Instance");
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     public WebRequest buildRequest(final URLActionData action)
     {
         ParameterUtils.isNotNull(action, "URLAction");
-        
+
+        XltLogger.runTimeLogger.debug("Building WebRequest for action: '"
+                                      + action.getName() + "'");
+
         final WebRequest resultRequest;
 
         try
@@ -37,19 +44,21 @@ public class URLActionDataRequestBuilder
             throw new IllegalArgumentException("Failed to create WebRequest for action: "
                                                + action.getName() + e.getMessage(), e);
         }
-
+        logWebRequest(resultRequest);
         return resultRequest;
     }
-    private WebRequest createWebRequestFromURLAction(final URLActionData action) throws MalformedURLException, UnsupportedEncodingException{
-        
+
+    private WebRequest createWebRequestFromURLAction(final URLActionData action)
+        throws MalformedURLException, UnsupportedEncodingException
+    {
+
         final WebRequest resultRequest;
-        
+
         resultRequest = createWebRequestFromUrl(action.getUrl());
         fillWebRequestWithMethod(resultRequest, action.getMethod());
         if (action.hasBody())
         {
-            fillWebRequestWithBody(resultRequest, action.getBody(),
-                                   action.encodeBody());
+            fillWebRequestWithBody(resultRequest, action.getBody(), action.encodeBody());
         }
         fillWebRequestWithHeaders(resultRequest, action.getHeaders());
         fillWebRequestWithCookies(resultRequest, action.getCookies());
@@ -57,13 +66,28 @@ public class URLActionDataRequestBuilder
                                      action.encodeParameters(), action.getMethod());
         return resultRequest;
     }
-    
+
     public WebRequest buildXhrRequest(final URLActionData action, final URL refererUrl)
     {
-        final WebRequest resultXhrRequest = buildRequest(action);
+        XltLogger.runTimeLogger.debug("Building XhrWebRequest for action: "
+                                      + action.getName());
+
+        final WebRequest resultXhrRequest;
+
+        try
+        {
+            resultXhrRequest = createWebRequestFromURLAction(action);
+        }
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException("Failed to create WebRequest for action: "
+                                               + action.getName() + e.getMessage(), e);
+        }
+
         resultXhrRequest.setAdditionalHeader("X-Requested-With", "XMLHttpRequest");
         resultXhrRequest.setAdditionalHeader("Referer", refererUrl.toExternalForm());
 
+        logWebRequest(resultXhrRequest);
         return resultXhrRequest;
     }
 
@@ -87,7 +111,7 @@ public class URLActionDataRequestBuilder
             String cookieString = "";
             for (final NameValuePair cookie : cookies)
             {
-                cookieString += cookie.getName() + "=" + cookie.getValue() + ";";
+                cookieString = cookieString + cookie.getName() + "=" + cookie.getValue() + ";";
             }
             request.setAdditionalHeader("Cookie", cookieString);
         }
@@ -129,7 +153,8 @@ public class URLActionDataRequestBuilder
     {
         if (!parameters.isEmpty())
         {
-            List<NameValuePair> resultParameters = new ArrayList<NameValuePair>(parameters);
+            List<NameValuePair> resultParameters = new ArrayList<NameValuePair>(
+                                                                                parameters);
             if (encodeParameters)
             {
                 resultParameters = encodeRequestParameters(resultParameters);
@@ -196,6 +221,7 @@ public class URLActionDataRequestBuilder
         final String encodedBody = URLEncoder.encode(body, "UTF-8");
         return encodedBody;
     }
+
     private List<NameValuePair> encodeRequestParameters(final List<NameValuePair> parameters)
         throws UnsupportedEncodingException
     {
@@ -217,6 +243,7 @@ public class URLActionDataRequestBuilder
         }
         return encodedParameters;
     }
+
     private List<NameValuePair> decodeRequestParameters(final List<NameValuePair> parameters)
         throws UnsupportedEncodingException
     {
@@ -237,5 +264,73 @@ public class URLActionDataRequestBuilder
 
         }
         return decodedParameters;
+    }
+
+    private void logWebRequest(final WebRequest request)
+    {
+        XltLogger.runTimeLogger.debug("------------Webrequest------------");
+        final String url = request.getUrl().toString();
+        if (url != null)
+        {
+            XltLogger.runTimeLogger.debug("URL: " + url);
+        }
+        final HttpMethod method = request.getHttpMethod();
+        if (method != null)
+        {
+            XltLogger.runTimeLogger.debug("Method : " + method);
+        }
+        final String charSet = request.getCharset();
+        if (charSet != null)
+        {
+            XltLogger.runTimeLogger.debug("Chraset: " + charSet);
+        }
+        final String proxy = request.getProxyHost();
+        if (proxy != null)
+        {
+            XltLogger.runTimeLogger.debug("Proxy: " + proxy);
+        }
+        final String body = request.getRequestBody();
+        if (body != null)
+        {
+            XltLogger.runTimeLogger.debug("Body: " + body);
+        }
+        final FormEncodingType encoding = request.getEncodingType();
+        if (encoding != null)
+        {
+            final String encodingString = encoding.toString();
+            XltLogger.runTimeLogger.debug("Encoding: " + encodingString);
+        }
+        final URL originalUrl = request.getOriginalURL();
+        if (originalUrl != null)
+        {
+            final String originalUrlString = originalUrl.toString();
+            XltLogger.runTimeLogger.debug("OriginalUrl: " + originalUrlString);
+        }
+        final List<NameValuePair> parameters = request.getRequestParameters();
+        if (!(parameters == null) && !(parameters.isEmpty()))
+        {
+            XltLogger.runTimeLogger.debug("Parameters: ");
+            for (final NameValuePair parameter : parameters)
+            {
+                XltLogger.runTimeLogger.debug("\t" + parameter.getName() + " = "
+                                   + parameter.getValue());
+            }
+        }
+        final Map<String, String> headers = request.getAdditionalHeaders();
+        if (!(headers == null))
+        {
+            XltLogger.runTimeLogger.debug("Headers: ");
+            for (final Map.Entry<String, String> entry : headers.entrySet())
+            {
+                XltLogger.runTimeLogger.debug("\t" + entry.getKey() + " : " + entry.getValue());
+            }
+        }
+
+        final Credentials credentials = request.getCredentials();
+        if (credentials != null)
+        {
+            XltLogger.runTimeLogger.debug("Credentials: " + credentials.toString());
+        }
+       
     }
 }

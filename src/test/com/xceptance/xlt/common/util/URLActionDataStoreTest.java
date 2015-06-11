@@ -3,25 +3,34 @@ package test.com.xceptance.xlt.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.URLActionDataStore;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionStoreTest
+public class URLActionDataStoreTest
 {
 
-    ParameterInterpreter interpreter;
+    private ParameterInterpreter interpreter;
+
+    private XltProperties properties;
+
+    private GeneralDataProvider dataProvider;
 
     List<String> selectionModes;
 
     List<URLActionDataStore> stores;
 
-    @BeforeClass
+    @Before
     public void setup()
     {
-        interpreter = new ParameterInterpreter(null);
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
+        
         selectionModes = new ArrayList<String>();
 
         selectionModes.addAll(URLActionDataStore.PERMITTEDSELECTIONMODE);

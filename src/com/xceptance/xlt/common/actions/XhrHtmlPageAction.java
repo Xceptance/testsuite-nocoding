@@ -2,14 +2,16 @@ package com.xceptance.xlt.common.actions;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.xceptance.xlt.common.util.URLActionDataResult;
+import com.xceptance.xlt.common.util.URLActionExecutableResult;
 
 public class XhrHtmlPageAction extends HtmlPageAction
 {
+    private WebResponse xhrResponse;
+    
     public XhrHtmlPageAction(final HtmlPageAction previousAction,
-                          final String name,
-                          final WebRequest webRequest,
-                          final Downloader downloader)
+                             final String name,
+                             final WebRequest webRequest,
+                             final Downloader downloader)
     {
         super(previousAction, name, webRequest, downloader);
     }
@@ -19,15 +21,22 @@ public class XhrHtmlPageAction extends HtmlPageAction
         super(name, webRequest);
 
     }
-    
+
     @Override
     protected void execute() throws Exception
     {
-        final WebResponse xhrResponse = getWebClient().loadWebResponse(this.webRequest);
-        result = new URLActionDataResult(xhrResponse);
+        this.xhrResponse = getWebClient().loadWebResponse(this.webRequest);
     }
+
     @Override
-    public URLActionDataResult getResult(){
+    protected void postValidate() throws Exception
+    {
+        result = new URLActionExecutableResult(xhrResponse);
+    }
+
+    @Override
+    public URLActionExecutableResult getResult()
+    {
         return this.result;
     }
 }

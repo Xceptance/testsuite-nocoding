@@ -718,6 +718,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             fillURLActionBuilderWithEncodeBodyData(rawRequest);
             fillURLActionBuilderWithMethodData(rawRequest);
             fillURLActionBuilderWithParameterData(rawRequest);
+            fillURLActionBuilderWithCookieData(rawRequest);
             fillURLActionBuilderWithXhrData(rawRequest);
             fillURLActionBuilderWithUrlData(rawRequest);
         }
@@ -782,6 +783,30 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             else
             {
                 ParameterUtils.doThrow(PARAMETERS, Reason.UNSUPPORTED_TYPE);
+            }
+        }
+    }
+    private void fillURLActionBuilderWithCookieData(final LinkedHashMap<String, Object> rawRequest)
+    {
+        final Object cookiesObject = rawRequest.get(COOKIES);
+        if (cookiesObject != null)
+        {
+            if (cookiesObject instanceof ArrayList)
+            {
+                final List<Object> objectList = (ArrayList) cookiesObject;
+                final List<NameValuePair> newList = new ArrayList<NameValuePair>();
+                for (final Object object : objectList)
+                {
+                    ParameterUtils.isLinkedHashMapParam(object, COOKIES);
+                    final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
+                    final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
+                    newList.add(nvp);
+                }
+                actionBuilder.setCookies(newList);
+            }
+            else
+            {
+                ParameterUtils.doThrow(COOKIES, Reason.UNSUPPORTED_TYPE);
             }
         }
     }

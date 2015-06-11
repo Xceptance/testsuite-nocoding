@@ -6,12 +6,17 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.URLActionDataValidation;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionValidationTest
+public class URLActionDataValidationTest
 {
     ParameterInterpreter interpreter;
+    private XltProperties properties;
+
+    private GeneralDataProvider dataProvider;
 
     List<String> selectionModes;
 
@@ -22,7 +27,10 @@ public class URLActionValidationTest
     @Before
     public void setup()
     {
-        interpreter = new ParameterInterpreter(null);
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
+        
         selectionModes = new ArrayList<String>();
         validationModes = new ArrayList<String>();
 
@@ -103,7 +111,6 @@ public class URLActionValidationTest
                                                                        URLActionDataValidation.MATCHES,
                                                                        null, interpreter);
 
-        validation.outline();
 
     }
 
@@ -115,6 +122,5 @@ public class URLActionValidationTest
                                                                        URLActionDataValidation.XPATH,
                                                                        "something", "x", null,
                                                                        interpreter);
-        validation.outline();
     }
 }

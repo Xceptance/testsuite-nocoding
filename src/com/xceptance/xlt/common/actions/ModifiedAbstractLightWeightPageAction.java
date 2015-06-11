@@ -6,7 +6,6 @@ import java.net.URL;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.common.util.ParameterCheckUtils;
-import com.xceptance.xlt.api.actions.AbstractLightWeightPageAction;
 import com.xceptance.xlt.api.actions.AbstractWebAction;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
@@ -20,7 +19,7 @@ public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebA
 
     private URL url;
 
-    protected ModifiedAbstractLightWeightPageAction(final AbstractLightWeightPageAction previousAction,
+    protected ModifiedAbstractLightWeightPageAction(final ModifiedAbstractLightWeightPageAction previousAction,
                                                     final String timerName)
     {
         super(previousAction, timerName);
@@ -29,7 +28,7 @@ public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebA
     {
         this(null, timerName);
     }
-    
+   
     @Override
     public ModifiedAbstractLightWeightPageAction getPreviousAction()
     {

@@ -3,40 +3,28 @@
 #########################
 	Do Today / Tomorrow
 -------------------------
--URLActionData
-- 	Rename
 - 	Questions: Credentials
-- 	update 'DID'
-- 	standartize 'Commmits'
--	ParameterUtils, check message
--	Add Error Messages + Log Messages
 - 	Update Description @GitHUb
 - 	Catch null's @ constructors
--	Test YAMLBasedURLActionBuilderList
--	Finish YAMLBasedURLActionBuilderList
-
+- 	Problem with previousAction in factory
 #########################
 	Do Soon
 -------------------------
-- catch all NullPaointer!!!!
-- CHelc for @Nullable FUnctions
-- Logmessagers for URLActionBuilder
-- allow more datatypes in *.yml	
-- standartize logging messages
-- standartize error / exception messages
-- extend bsh interpreter
-- implement encoded parameters
-- data provider 
-- junit start test of another class
-- ask for properties
-
+- Add @Nullable Anno
+- Expand ParameterInterpreter
+- WebClient Configurator
+- Start Test From another Class
+- DI
+- Rework Parameter Utils
+- Catch exception in Actions!!!!
 ##########################
 	Plan To Do
 --------------------------
+- Stoore -> List, HashMap, Array Extension?
 - Java doc
--switch for static content downloader
-	-all / no content
-	-filtered content (css. img, js)
+- switch for static content downloader
+- all / no content
+- filtered content (css. img, js)
 -switch to select running mode (lightweight, dom)
 -paramter body
 

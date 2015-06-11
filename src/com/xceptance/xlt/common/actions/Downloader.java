@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.StaticContentDownloader;
 import com.xceptance.xlt.engine.XltWebClient;
@@ -54,6 +55,7 @@ public class Downloader
     {
         ParameterUtils.isNotNull(url, "URL");
         urls.add(url);
+        XltLogger.runTimeLogger.debug("Adding Static Request: " + url);
     }
 
     public void loadRequests() throws Exception

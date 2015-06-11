@@ -62,7 +62,7 @@ public class ParameterInterpreter extends Interpreter
     public ParameterInterpreter(final XltProperties properties, final GeneralDataProvider dataProvider)
     {
         super();
-        XltLogger.runTimeLogger.debug("Creating new ParameterInterpreter");
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         try
         {
             this.set("NOW", new ParameterInterpreterNow());

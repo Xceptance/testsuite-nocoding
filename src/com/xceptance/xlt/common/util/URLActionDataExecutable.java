@@ -4,8 +4,8 @@ import java.net.URL;
 
 public interface URLActionDataExecutable
 {
-    public URLActionDataResult getResult();
-    public void executeURLAction();
+    public URLActionExecutableResult getResult();
+    public void executeAction();
     public void addStaticRequest(final URL url);
     public URL getUrl();
 }

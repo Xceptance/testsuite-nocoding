@@ -80,7 +80,7 @@ public class URLActionData
                      final String url,
                      final ParameterInterpreter interpreter)
     {
-        XltLogger.runTimeLogger.info("Start creating new URLAction ");
+        XltLogger.runTimeLogger.debug("Ceating new Instance ");
         setName(name);
         setUrl(url);
         setType(TYPE_ACTION); // default
@@ -165,7 +165,7 @@ public class URLActionData
         if (httpResponceCode != null)
         {
             this.httpResponceCode = httpResponceCode;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("HttpResponceCode",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("HttpResponceCode",
                                                                  httpResponceCode));
         }
     }
@@ -175,7 +175,7 @@ public class URLActionData
         if (httpResponceCode != null)
         {
             this.httpResponceCode = httpResponceCode.toString();
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("HttpResponceCode",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("HttpResponceCode",
                                                                  this.httpResponceCode));
         }
     }
@@ -184,7 +184,7 @@ public class URLActionData
     {
         this.url = (url != null) ? url
                                 : (String) throwIllegalArgumentException("'Url' cannot be null");
-        XltLogger.runTimeLogger.info(getSetTagToValueMessage("URL", this.url));
+        XltLogger.runTimeLogger.debug(getSetTagToValueMessage("URL", this.url));
     }
 
     public void setMethod(final String method)
@@ -192,7 +192,7 @@ public class URLActionData
         if (method != null)
         {
             this.method = method;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("Method", this.method));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Method", this.method));
         }
     }
 
@@ -201,7 +201,7 @@ public class URLActionData
         if (encoded != null)
         {
             this.encodeParameters = encoded;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedParameters",
                                                                  this.encodeParameters));
         }
     }
@@ -211,7 +211,7 @@ public class URLActionData
         if (encoded != null)
         {
             this.encodeParameters = encoded.toString();
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedParameters",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedParameters",
                                                                  this.encodeParameters));
         }
     }
@@ -220,7 +220,7 @@ public class URLActionData
         if (encoded != null)
         {
             this.encodeBody = encoded;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedBody",
                                                                  this.encodeBody));
         }
     }
@@ -230,7 +230,7 @@ public class URLActionData
         if (encoded != null)
         {
             this.encodeBody = encoded.toString();
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("encodedBody",
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedBody",
                                                                  this.encodeBody));
         }
     }
@@ -240,7 +240,7 @@ public class URLActionData
         if (type != null)
         {
             this.type = type;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("Type", this.type));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Type", this.type));
         }
     }
 
@@ -248,7 +248,7 @@ public class URLActionData
     {
         this.name = ((name != null) ? name
                                    : (String) throwIllegalArgumentException("Name' cannot be null"));
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set Action 'Name' to \"{0}\"",
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set Action 'Name' to \"{0}\"",
                                                           this.name));
 
     }
@@ -258,7 +258,7 @@ public class URLActionData
 
         this.interpreter = (interpreter != null) ? interpreter
                                                 : (ParameterInterpreter) throwIllegalArgumentException(" 'ParameterInterpreter' cannot be null");
-        XltLogger.runTimeLogger.info(getSetNewTagMessage("interpreter"));
+        XltLogger.runTimeLogger.debug(getSetNewTagMessage("interpreter"));
 
     }
 
@@ -267,7 +267,7 @@ public class URLActionData
         if (validations != null)
         {
             this.validations = validations;
-            XltLogger.runTimeLogger.info(getSetNewTagMessage("validations"));
+            XltLogger.runTimeLogger.debug(getSetNewTagMessage("validations"));
         }
     }
 
@@ -276,7 +276,7 @@ public class URLActionData
         if (headers != null)
         {
             this.headers = headers;
-            XltLogger.runTimeLogger.info(getSetNewTagMessage("headers"));
+            XltLogger.runTimeLogger.debug(getSetNewTagMessage("headers"));
         }
     }
 
@@ -285,7 +285,7 @@ public class URLActionData
         if (store != null)
         {
             this.store = store;
-            XltLogger.runTimeLogger.info(getSetNewTagMessage("store"));
+            XltLogger.runTimeLogger.debug(getSetNewTagMessage("store"));
         }
     }
 
@@ -294,7 +294,7 @@ public class URLActionData
         if (parameters != null)
         {
             this.parameters = parameters;
-            XltLogger.runTimeLogger.info(getSetNewTagMessage("parameters"));
+            XltLogger.runTimeLogger.debug(getSetNewTagMessage("parameters"));
         }
     }
 
@@ -303,7 +303,7 @@ public class URLActionData
         if (cookies != null)
         {
             this.cookies = cookies;
-            XltLogger.runTimeLogger.info(getSetNewTagMessage("cookies"));
+            XltLogger.runTimeLogger.debug(getSetNewTagMessage("cookies"));
         }
     }
 
@@ -312,7 +312,7 @@ public class URLActionData
         if (body != null)
         {
             this.body = body;
-            XltLogger.runTimeLogger.info(getSetTagToValueMessage("body", this.body));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("body", this.body));
         }
     }
 
@@ -486,8 +486,8 @@ public class URLActionData
 
     public Boolean encodeBody()
     {
-        Boolean result = false; // default
-        if (this.body != null)
+        Boolean result = true; // default
+        if (this.encodeBody != null)
         {
             final String dynamicEncoded = interpreter.processDynamicData(this.encodeBody);
             if ("true".equals(dynamicEncoded))
@@ -605,7 +605,7 @@ public class URLActionData
         if (nvp != null)
         {
             parameters.add(nvp);
-            XltLogger.runTimeLogger.info(getAddedToTag("Parameter"));
+            XltLogger.runTimeLogger.debug(getAddedToTag("Parameter"));
         }
     }
 

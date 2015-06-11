@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.xceptance.xlt.api.util.XltLogger;
@@ -38,12 +37,12 @@ public class URLActionDataStore
         PERMITTEDSELECTIONMODE.add(COOKIE);
     }
 
-    public URLActionDataStore(@NonNull final String name,
-                          @NonNull final String selectionMode,
-                          @NonNull final String selectionContent,
-                          @NonNull final ParameterInterpreter interpreter)
+    public URLActionDataStore(final String name,
+                              final String selectionMode,
+                              final String selectionContent,
+                              final ParameterInterpreter interpreter)
     {
-        XltLogger.runTimeLogger.info("Creating new Store Item");
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         setName(name);
         setSelectionMode(selectionMode);
         setSelectionContent(selectionContent);
@@ -66,30 +65,31 @@ public class URLActionDataStore
     {
         this.interpreter = (interpreter != null) ? interpreter
                                                 : (ParameterInterpreter) throwIllegalArgumentException(getTagCannotBeNullMessage("ParameterInterpreter"));
-        XltLogger.runTimeLogger.info("Set 'ParameterInterpreter'");
-        
+        XltLogger.runTimeLogger.debug("Set 'ParameterInterpreter'");
+
     }
 
     public void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = (selectionContent != null) ? selectionContent
                                                           : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Selection Content"));
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set 'Selection Content': \"{0}\"", selectionContent));
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Selection Content': \"{0}\"",
+                                                          selectionContent));
     }
 
     public void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = (selectionMode != null) ? selectionMode
                                                     : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Selection Mode"));
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set 'Selection Mode': \"{0}\"", selectionMode));
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Selection Mode': \"{0}\"",
+                                                          selectionMode));
     }
 
     public void setName(final String name)
     {
         this.name = (name != null) ? name
                                   : (String) throwIllegalArgumentException("\"Name\" cannot be null");
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set 'Name' to \"{0}\"",
-                                                          name));
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Name' to \"{0}\"", name));
     }
 
     public String getName()
@@ -102,12 +102,13 @@ public class URLActionDataStore
         final String dynamicSelectionMode = interpreter.processDynamicData(this.selectionMode);
         if (!isPermittedSelectionMode(dynamicSelectionMode))
         {
-            throw new IllegalArgumentException(getIllegalValueForTagMessage(dynamicSelectionMode,
+            throw new IllegalArgumentException(
+                                               getIllegalValueForTagMessage(dynamicSelectionMode,
                                                                             "Selection Mode"));
         }
         return dynamicSelectionMode;
     }
-    
+
     @Nullable
     public String getSelectionContent()
     {

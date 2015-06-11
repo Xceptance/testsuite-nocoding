@@ -4,13 +4,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.URLActionDataValidation;
 import com.xceptance.xlt.common.util.URLActionDataValidationBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionValidationBuilderTest
+public class URLActionDataValidationBuilderTest
 {
     ParameterInterpreter interpreter;
+    private XltProperties properties;
+
+    private GeneralDataProvider dataProvider;
     String name;
     String selectionMode;
     String selectionContent;
@@ -26,7 +31,10 @@ public class URLActionValidationBuilderTest
         validationMode = "Matches";
         validationContent = "someText";
         validationBuilder = new URLActionDataValidationBuilder();
-        interpreter = new ParameterInterpreter(null);
+        
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
     }
     @Test
     public void testGettersAndSetters(){

@@ -3,9 +3,10 @@ package com.xceptance.xlt.common.actions;
 import java.net.URL;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.URLActionDataExecutable;
-import com.xceptance.xlt.common.util.URLActionDataResult;
+import com.xceptance.xlt.common.util.URLActionExecutableResult;
 
 public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements URLActionDataExecutable
 {
@@ -13,7 +14,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
 
     protected WebRequest webRequest;
     
-    protected URLActionDataResult result;
+    protected URLActionExecutableResult result;
 
     public HtmlPageAction(final HtmlPageAction previousAction,
                           final String name,
@@ -23,12 +24,14 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
         super(previousAction, name);
         setDownloader(downloader);
         setWebRequest(webRequest);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     public HtmlPageAction(final String name, final WebRequest webRequest)
     {
         super(null, name);
         setWebRequest(webRequest);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     public void setDownloader(final Downloader downloader)
@@ -48,36 +51,35 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     protected void execute() throws Exception
     {
         loadPage(this.webRequest);
-        this.result = new URLActionDataResult(getHtmlPage());
     }
 
     @Override
     protected void postValidate() throws Exception
     {
-        //
+        this.result = new URLActionExecutableResult(getHtmlPage());
     }
 
     @Override
     public void preValidate() throws Exception
     {
-        //
 
     }
 
     @Override
-    public URLActionDataResult getResult()
+    public URLActionExecutableResult getResult()
     {
         return this.result;
     }
     @Override
-    public void executeURLAction(){
+    public void executeAction(){
         try
         {
+            XltLogger.runTimeLogger.debug("Executing Action");
             this.run();
         }
         catch (final Throwable e)
         {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
         }
     }
 

@@ -1,17 +1,23 @@
 package com.xceptance.xlt.common.actions;
 
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.xceptance.xlt.common.util.ParameterUtils;
+import java.net.URL;
 
-public class LightWeightPageAction extends ModifiedAbstractHtmlPageAction
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.util.ParameterUtils;
+import com.xceptance.xlt.common.util.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.URLActionExecutableResult;
+
+public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutable
 {
 
     protected Downloader downloader;
 
     protected WebRequest webRequest;
     
+    protected URLActionExecutableResult result;
     
-    protected LightWeightPageAction(final ModifiedAbstractHtmlPageAction previousAction,
+    public LightWeightPageAction(final LightWeightPageAction previousAction,
                                     final String name,
                                     final WebRequest webRequest,
                                     final Downloader downloader)
@@ -19,13 +25,15 @@ public class LightWeightPageAction extends ModifiedAbstractHtmlPageAction
         super(previousAction, name);
         setWebRequest(webRequest);
         setDownloader(downloader);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
 
     }
-    protected LightWeightPageAction(final String name,
+    public LightWeightPageAction(final String name,
                                     final WebRequest webRequest)
     {
         super(null, name);
         setWebRequest(webRequest);
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     
     }
     public void setDownloader(final Downloader downloader)
@@ -51,19 +59,48 @@ public class LightWeightPageAction extends ModifiedAbstractHtmlPageAction
     @Override
     protected void postValidate() throws Exception
     {
-        // TODO Auto-generated method stub
-
+        this.result = new URLActionExecutableResult(getLightWeightPage());
     }
 
     @Override
     public void preValidate() throws Exception
     {
-        // TODO Auto-generated method stub
 
     }
     public void addRequest(final String url)
     {
         downloader.addRequest(url);
+    }
+    @Override
+    public URLActionExecutableResult getResult()
+    {
+        return this.result;
+        
+    }
+    @Override
+    public void executeAction()
+    {
+        try
+        {
+            XltLogger.runTimeLogger.debug("Executing Action");
+            this.run();
+        }
+        catch (final Throwable e)
+        {
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
+        }
+        
+    }
+    @Override
+    public void addStaticRequest(final URL url)
+    {
+        this.downloader.addRequest(url.toString());
+        
+    }
+    @Override
+    public URL getUrl()
+    {
+        return this.webRequest.getUrl();
     }
 
 }

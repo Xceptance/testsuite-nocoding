@@ -29,7 +29,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
     @Override
     public URLActionDataExecutable createPageAction(final String name,
-                                                final WebRequest request)
+                                                    final WebRequest request)
     {
 
         HtmlPageAction action;
@@ -66,14 +66,15 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
     @Override
     public URLActionDataExecutable createXhrPageAction(final String name,
-                                                   final WebRequest request)
+                                                       final WebRequest request)
     {
         if (previousAction == null)
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");
         }
         final XhrHtmlPageAction xhrAction = new XhrHtmlPageAction(previousAction, name,
-                                                            request, createDownloader());    
+                                                                  request,
+                                                                  createDownloader());
         previousAction = xhrAction;
 
         return xhrAction;

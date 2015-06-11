@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.xceptance.xlt.api.util.XltLogger;
@@ -58,14 +57,14 @@ public class URLActionDataValidation
 
     }
 
-    public URLActionDataValidation(@NonNull final String name,
-                               @NonNull final String selectionMode,
+    public URLActionDataValidation(final String name,
+                               final String selectionMode,
                                final String selectionContent,
-                               @NonNull final String validationMode,
+                               final String validationMode,
                                final String validationContent,
-                               @NonNull final ParameterInterpreter interpreter)
+                               final ParameterInterpreter interpreter)
     {
-        XltLogger.runTimeLogger.info("Creating new Validation Item");
+        XltLogger.runTimeLogger.debug("Creating new Validation Item");
         setName(name);
         setSelectionMode(selectionMode);
         setSelectionContent(selectionContent);
@@ -96,39 +95,39 @@ public class URLActionDataValidation
     {
         this.interpreter = (interpreter != null) ? interpreter
                                                 : (ParameterInterpreter) throwIllegalArgumentException(getTagCannotBeNullMessage("Parameter Interpreter"));
-        XltLogger.runTimeLogger.info(getSetNewTagMessage("Interpreter"));
+        XltLogger.runTimeLogger.debug(getSetNewTagMessage("Interpreter"));
     }
 
     private void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = (selectionMode != null) ? selectionMode
                                                     : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Selection Mode"));
-        XltLogger.runTimeLogger.info(getSetTagToValueMessage("Selection Mode", selectionMode));
+        XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Selection Mode", selectionMode));
     }
 
     private void setValidationContent(final String validationContent)
     {
         this.validationContent = validationContent;
-        XltLogger.runTimeLogger.info(getSetTagToValueMessage("Validation Content", validationContent));
+        XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Validation Content", validationContent));
     }
 
     private void setValidationMode(final String validationMode)
     {
         this.validationMode = (validationMode != null) ? validationMode
                                                       : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Validation Mode"));
-        XltLogger.runTimeLogger.info(getSetTagToValueMessage("Validation Mode", validationMode));
+        XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Validation Mode", validationMode));
     }
 
     private void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = selectionContent;
-        XltLogger.runTimeLogger.info(getSetTagToValueMessage("Selection Content", selectionContent));
+        XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Selection Content", selectionContent));
     }
 
     private void setName(final String name)
     {
         this.name = name != null ? name : (String) throwIllegalArgumentException("Validation name cannot be null");
-        XltLogger.runTimeLogger.info(MessageFormat.format("Set Validation 'Name' to \"{0}\"", name));
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set Validation 'Name' to \"{0}\"", name));
     }
 
     public String getName()

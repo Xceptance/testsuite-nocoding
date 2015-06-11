@@ -1,0 +1,48 @@
+- Action :
+    Name : TestAction
+    Request : 
+        Url : http://www.xceptance.com
+        Method : POST
+        Parameters : 
+            - p1 : "&&&$§"
+            - p2 : "&&&/$"
+        Headers : 
+            - header_1 : a   
+            - header_2 : value_2
+            - header_3 : value_3
+        Cookies :
+            - cookie_1 : bla
+            - cookie_2 : vla
+            
+        Body : "%&$§$"
+                              
+    Response :
+        Httpcode : 200
+        Validate :
+            - validation_name_1 :
+                XPath : value
+            - validation_name_2 :
+                XPath : value
+                Matches : value
+            - validation_name_3 :
+                XPath : value
+                Count : value
+            - validation_name_3 :
+                RegExp : value
+                Matches : value
+            - validation_name_4 :
+                Header : header_element
+            - validation_name_5 :
+                Header : header_element_2
+                Matches : header_element_2_content
+            - validation_name_6 :
+                Header : header_element_3
+                Count : header_element_3_content
+                
+    Store :
+        - variable :
+            XPath : path
+        - variable_2 :
+            Regexp : path
+        - variable_3 :
+            Header : header

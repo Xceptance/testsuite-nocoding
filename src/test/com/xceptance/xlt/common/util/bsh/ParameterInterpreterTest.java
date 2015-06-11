@@ -23,6 +23,8 @@ import org.junit.Test;
 import bsh.EvalError;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 /**
@@ -31,11 +33,15 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class ParameterInterpreterTest
 {
     private ParameterInterpreter interpreter;
+    private XltProperties properties;
+    private GeneralDataProvider dataProvider;
 
     @Before
     public void setup()
     {
-        interpreter = new ParameterInterpreter(null);
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
     }
 
     @Test
@@ -123,12 +129,6 @@ public class ParameterInterpreterTest
         Assert.assertEquals("C", interpreter.processDynamicData("${c}"));
         Assert.assertEquals("D", interpreter.processDynamicData("${d}"));
         Assert.assertEquals("CD", interpreter.processDynamicData("${c}${d}"));
-    }
-
-    @Test
-    public void dateTest(){
-        System.err.println(interpreter.processDynamicData("${DATE.toString()}"));
-        System.err.println(interpreter.processDynamicData("${RANDOM.DigitString(18)}"));
     }
     // ----------------------------------------------------------------------------------------
     /* Error handling */
