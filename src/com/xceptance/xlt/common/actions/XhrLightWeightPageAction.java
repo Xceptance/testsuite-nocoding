@@ -3,6 +3,7 @@ package com.xceptance.xlt.common.actions;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 public class XhrLightWeightPageAction extends LightWeightPageAction
 {
@@ -11,24 +12,29 @@ public class XhrLightWeightPageAction extends LightWeightPageAction
     public XhrLightWeightPageAction(final LightWeightPageAction previousAction,
                                     final String name,
                                     final WebRequest webRequest,
-                                    final Downloader downloader)
+                                    final Downloader downloader,
+                                    final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(previousAction, name, webRequest, downloader);
+        super(previousAction, name, webRequest, downloader,resultFactory);
     }
 
-    public XhrLightWeightPageAction(final String name, final WebRequest webRequest)
+    public XhrLightWeightPageAction(final String name,
+                                    final WebRequest webRequest,
+                                    final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(name, webRequest);
+        super(name, webRequest, resultFactory);
     }
+
     @Override
     protected void execute() throws Exception
     {
         this.xhrResponse = getWebClient().loadWebResponse(this.webRequest);
     }
+
     @Override
     protected void postValidate() throws Exception
     {
-        result = new URLActionDataExecutableResult(xhrResponse);
+        this.result = this.resultFactory.getResult(this.xhrResponse);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.xceptance.xlt.common.actions.Downloader;
 import com.xceptance.xlt.common.actions.HtmlPageAction;
 import com.xceptance.xlt.common.actions.XhrHtmlPageAction;
 import com.xceptance.xlt.common.util.ParameterUtils;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 import com.xceptance.xlt.engine.XltWebClient;
 
 public class HtmlPageActionFactory extends URLActionDataExecutableFactory
@@ -15,10 +16,13 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
     private HtmlPageAction previousAction;
 
+    private final URLActionDataExecutableResultFactory resultFactory;
+
     public HtmlPageActionFactory(final XltProperties properties)
     {
         super();
         setProperties(properties);
+        this.resultFactory = new URLActionDataExecutableResultFactory();
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
@@ -29,7 +33,8 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
     }
 
     @Override
-    public URLActionDataExecutable createPageAction(final String name,
+    public URLActionDataExecutable createPageAction(
+                                                    final String name,
                                                     final WebRequest request)
     {
 
@@ -37,14 +42,18 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
         if (this.previousAction == null)
         {
-            action = new HtmlPageAction(name, request);
+            action = new HtmlPageAction(name, request, resultFactory);
             previousAction = action;
             action.setDownloader(createDownloader());
 
         }
         else
         {
-            action = new HtmlPageAction(previousAction, name, request, createDownloader());
+            action = new HtmlPageAction(previousAction,
+                                        name,
+                                        request,
+                                        createDownloader(),
+                                        resultFactory);
         }
         this.previousAction = action;
         return action;
@@ -53,29 +62,33 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
     private Downloader createDownloader()
     {
-        final Boolean userAgentUID = properties.getProperty("userAgent.UID", false);
+        final Boolean userAgentUID = properties.getProperty("userAgent.UID",
+                                                            false);
         final int threadCount = properties.getProperty("com.xceptance.xlt.staticContent.downloadThreads",
                                                        1);
 
-        final Downloader downloader = new Downloader(
-                                                     (XltWebClient) previousAction.getWebClient(),
-                                                     threadCount, userAgentUID);
+        final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(),
+                                                     threadCount,
+                                                     userAgentUID);
 
         return downloader;
 
     }
 
     @Override
-    public URLActionDataExecutable createXhrPageAction(final String name,
+    public URLActionDataExecutable createXhrPageAction(
+                                                       final String name,
                                                        final WebRequest request)
     {
         if (previousAction == null)
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");
         }
-        final XhrHtmlPageAction xhrAction = new XhrHtmlPageAction(previousAction, name,
+        final XhrHtmlPageAction xhrAction = new XhrHtmlPageAction(previousAction,
+                                                                  name,
                                                                   request,
-                                                                  createDownloader());
+                                                                  createDownloader(),
+                                                                  resultFactory);
         previousAction = xhrAction;
 
         return xhrAction;

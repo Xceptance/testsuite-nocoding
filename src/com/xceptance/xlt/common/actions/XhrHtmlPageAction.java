@@ -3,22 +3,26 @@ package com.xceptance.xlt.common.actions;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 public class XhrHtmlPageAction extends HtmlPageAction
 {
     private WebResponse xhrResponse;
-    
+
     public XhrHtmlPageAction(final HtmlPageAction previousAction,
                              final String name,
                              final WebRequest webRequest,
-                             final Downloader downloader)
+                             final Downloader downloader,
+                             final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(previousAction, name, webRequest, downloader);
+        super(previousAction, name, webRequest, downloader, resultFactory);
     }
 
-    public XhrHtmlPageAction(final String name, final WebRequest webRequest)
+    public XhrHtmlPageAction(final String name,
+                             final WebRequest webRequest,
+                             final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(name, webRequest);
+        super(name, webRequest, resultFactory);
 
     }
 
@@ -31,7 +35,7 @@ public class XhrHtmlPageAction extends HtmlPageAction
     @Override
     protected void postValidate() throws Exception
     {
-        result = new URLActionDataExecutableResult(xhrResponse);
+        this.result = this.resultFactory.getResult(this.xhrResponse);
     }
 
     @Override

@@ -129,6 +129,7 @@ public class ParameterInterpreterTest
         Assert.assertEquals("C", interpreter.processDynamicData("${c}"));
         Assert.assertEquals("D", interpreter.processDynamicData("${d}"));
         Assert.assertEquals("CD", interpreter.processDynamicData("${c}${d}"));
+        Assert.assertEquals("C", interpreter.processDynamicData("${c}"));
     }
     // ----------------------------------------------------------------------------------------
     /* Error handling */

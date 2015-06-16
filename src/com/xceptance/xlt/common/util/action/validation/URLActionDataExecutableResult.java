@@ -75,7 +75,7 @@ public class URLActionDataExecutableResult
         return this.webResponse;
     }
 
-    public int getStatusCode()
+    public int getHttpResponseCode()
     {
         return webResponse.getStatusCode();
     }

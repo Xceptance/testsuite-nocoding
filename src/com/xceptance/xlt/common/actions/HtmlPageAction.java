@@ -7,30 +7,46 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
-public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements URLActionDataExecutable
+public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
+    implements URLActionDataExecutable
 {
     protected Downloader downloader;
 
     protected WebRequest webRequest;
-    
+
     protected URLActionDataExecutableResult result;
+
+    protected URLActionDataExecutableResultFactory resultFactory;
 
     public HtmlPageAction(final HtmlPageAction previousAction,
                           final String name,
                           final WebRequest webRequest,
-                          final Downloader downloader)
+                          final Downloader downloader,
+                          final URLActionDataExecutableResultFactory resultFactory)
     {
         super(previousAction, name);
         setDownloader(downloader);
         setWebRequest(webRequest);
+        setResultFactory(resultFactory);
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    public HtmlPageAction(final String name, final WebRequest webRequest)
+    private void setResultFactory(
+                                  final URLActionDataExecutableResultFactory resultFactory)
+    {
+        ParameterUtils.isNotNull(resultFactory, "URLActionDataExecutableResultFactory");
+        this.resultFactory = resultFactory;
+    }
+
+    public HtmlPageAction(final String name,
+                          final WebRequest webRequest,
+                          final URLActionDataExecutableResultFactory resultFactory)
     {
         super(null, name);
         setWebRequest(webRequest);
+        setResultFactory(resultFactory);
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
@@ -56,7 +72,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = new URLActionDataExecutableResult(getHtmlPage());
+        this.result = resultFactory.getResult(getHtmlPage());
     }
 
     @Override
@@ -70,8 +86,10 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     {
         return this.result;
     }
+
     @Override
-    public void executeAction(){
+    public void executeAction()
+    {
         try
         {
             XltLogger.runTimeLogger.debug("Executing Action");
@@ -79,7 +97,9 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
         }
         catch (final Throwable e)
         {
-            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to execute Action: "
+                                               + getTimerName() + " - "
+                                               + e.getMessage(), e);
         }
     }
 
@@ -87,7 +107,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     public void addStaticRequest(final URL url)
     {
         this.downloader.addRequest(url.toString());
-        //UGLY -> change
+        // UGLY -> change
     }
 
     @Override
@@ -95,10 +115,5 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     {
         return this.webRequest.getUrl();
     }
-    
-    
-    
-    
-    
-    
+
 }

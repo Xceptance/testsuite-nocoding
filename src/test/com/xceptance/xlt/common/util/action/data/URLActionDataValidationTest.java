@@ -58,7 +58,7 @@ public class URLActionDataValidationTest
         }
     }
     @Test(expected = IllegalArgumentException.class)
-    public void wrongSetupName()
+    public void illegalSetupName()
     {
         @SuppressWarnings({
                 "unused", "null"
@@ -68,7 +68,7 @@ public class URLActionDataValidationTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void wrongSetupSelectionMode()
+    public void illegalSetupSelectionMode()
     {
         @SuppressWarnings({
                 "null", "unused"
@@ -79,7 +79,7 @@ public class URLActionDataValidationTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void wrongSetupValidationMode()
+    public void illegalSetupValidationMode()
     {
         @SuppressWarnings({
                 "null", "unused"
@@ -91,7 +91,7 @@ public class URLActionDataValidationTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void wrongInterpreter()
+    public void illegalInterpreter()
     {
         @SuppressWarnings({
                 "null", "unused"
@@ -104,23 +104,25 @@ public class URLActionDataValidationTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void wrongSelectionMode()
+    public void illegalSelectionMode()
     {
         @SuppressWarnings("null")
         final URLActionDataValidation validation = new URLActionDataValidation("name", "x", "something",
                                                                        URLActionDataValidation.MATCHES,
                                                                        null, interpreter);
+        final String selectionMode = validation.getSelectionMode();
 
 
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void wrongValidationMode()
+    public void illegalValidationMode()
     {
         @SuppressWarnings("null")
         final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                        URLActionDataValidation.XPATH,
                                                                        "something", "x", null,
                                                                        interpreter);
+        final String validationMode = validation.getValidationMode();
     }
 }

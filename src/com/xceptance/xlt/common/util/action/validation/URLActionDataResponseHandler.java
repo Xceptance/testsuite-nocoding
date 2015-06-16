@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.junit.Assert;
 
-import com.gargoylesoftware.htmlunit.WebResponse;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
@@ -28,78 +25,58 @@ public class URLActionDataResponseHandler
         XltLogger.runTimeLogger.debug("Handling Response for URLActionData: "
                                       + action.getName());
 
-        if (result.isHtmlPage())
-        {
-            handleHtmlPage(action, result.getHtmlPage());
-        }
-        else if (result.isLightWeightPage())
-        {
-            handleLightWeightPage(action, result.getLightHtmlPage());
-        }
-        else if (result.isWebResponse())
-        {
-            handleWebResponse(action, result.getResponse());
-        }
-        else
-        {
-            throw new IllegalArgumentException("No valid Respone Type available");
-        }
-
     }
 
-    private void handleHtmlPage(final URLActionData action, final HtmlPage htmlPage)
+    private void handleResponse(final URLActionData action,
+                                final URLActionDataExecutableResult result)
     {
-        final WebResponse response = htmlPage.getWebResponse();
-        validateResponseCode(response, action.getHttpResponseCode());
-        final List<URLActionDataValidation> validations = action.getValidations();
-        for (final URLActionDataValidation validation : validations)
-        {
-            final String selectionMode = validation.getSelectionMode();
-            switch (selectionMode)
-            {
-                case URLActionDataValidation.XPATH:
-                    break;
-                case URLActionDataValidation.REGEXP:
-                    break;
-                case URLActionDataValidation.HEADER:
-                    break;
-                case URLActionDataValidation.COOKIE:
-                    break;
-                default:
-                    throw new IllegalArgumentException("SelectionMode: " + selectionMode
-                                                       + " is not supported");
-            }
+        validateResponseCode(action, result);
+        handleStore(action, result);
+        handleValidations(action, result);
+    }
 
-        }
+    private void handleStore(final URLActionData action,
+                             final URLActionDataExecutableResult result)
+    {
         final List<URLActionDataStore> store = action.getStore();
         for (final URLActionDataStore storeItem : store)
         {
-
+            handleStoreItem(storeItem, result);
         }
     }
 
-    private void validateHtmlPageByXPath(final HtmlPage page,
-                                         final URLActionDataValidation validation)
+    private void handleStoreItem(final URLActionDataStore storeItem,
+                                 final URLActionDataExecutableResult result)
     {
-        
+        final String selectionMode = storeItem.getSelectionMode();
+        final String selectionContent = storeItem.getSelectionContent();
+        switch (selectionMode)
+        {
+            case URLActionDataStore.XPATH:
+                result.getByXPath(selectionContent);
+                break;
+            case URLActionDataStore.REGEXP:
+                result.getByRegEx(selectionContent);
+                break;
+            case URLActionDataStore.HEADER:
+                result.getHeaderByName(selectionContent);
+                break;
+            default:
+                break;
+        }
     }
 
-    private void handleLightWeightPage(final URLActionData action,
-                                       final LightWeightPage lightPage)
+    private void handleValidations(final URLActionData action,
+                                   final URLActionDataExecutableResult result)
     {
-        final WebResponse response = lightPage.getWebResponse();
-        validateResponseCode(response, action.getHttpResponseCode());
+        final List<URLActionDataValidation> validations = action.getValidations();
     }
 
-    private void handleWebResponse(final URLActionData action, final WebResponse response)
+    private void validateResponseCode(final URLActionData action,
+                                      final URLActionDataExecutableResult result)
     {
-        validateResponseCode(response, action.getHttpResponseCode());
-    }
-
-    private void validateResponseCode(final WebResponse response,
-                                      final int expectedResponseCode)
-    {
-        final int responseCode = response.getStatusCode();
-        Assert.assertEquals(expectedResponseCode, responseCode);
+        final int expextedResponseCode = action.getHttpResponseCode();
+        final int actualResponseCode = result.getHttpResponseCode();
+        Assert.assertEquals(expextedResponseCode, actualResponseCode);
     }
 }

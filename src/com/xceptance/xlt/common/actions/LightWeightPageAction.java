@@ -7,6 +7,7 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutable
 {
@@ -17,24 +18,36 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
     
     protected URLActionDataExecutableResult result;
     
+    protected URLActionDataExecutableResultFactory resultFactory;
+    
     public LightWeightPageAction(final LightWeightPageAction previousAction,
                                     final String name,
                                     final WebRequest webRequest,
-                                    final Downloader downloader)
+                                    final Downloader downloader,
+                                    final URLActionDataExecutableResultFactory resultFactory)
     {
         super(previousAction, name);
         setWebRequest(webRequest);
         setDownloader(downloader);
+        setResultFactory(resultFactory);
         XltLogger.runTimeLogger.debug("Creating new Instance");
 
     }
     public LightWeightPageAction(final String name,
-                                    final WebRequest webRequest)
+                                    final WebRequest webRequest,
+                                    final URLActionDataExecutableResultFactory resultFactory)
     {
         super(null, name);
         setWebRequest(webRequest);
+        setResultFactory(resultFactory);
         XltLogger.runTimeLogger.debug("Creating new Instance");
     
+    }
+    private void setResultFactory(
+                                  final URLActionDataExecutableResultFactory resultFactory)
+    {
+        ParameterUtils.isNotNull(resultFactory, "URLActionDataExecutableResultFactory");
+        this.resultFactory = resultFactory;
     }
     public void setDownloader(final Downloader downloader)
     {
@@ -59,7 +72,7 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = new URLActionDataExecutableResult(getLightWeightPage());
+        this.result = this.resultFactory.getResult(getLightWeightPage());
     }
 
     @Override

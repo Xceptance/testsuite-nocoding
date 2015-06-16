@@ -52,13 +52,15 @@ public class URLActionDataStore
     public void outlineRaw()
     {
         System.err.println("\t\t" + this.name);
-        System.err.println("\t\t\t" + this.selectionMode + " : " + this.selectionContent);
+        System.err.println("\t\t\t" + this.selectionMode + " : "
+                           + this.selectionContent);
     }
 
     public void outline()
     {
         System.err.println("\t\t" + getName());
-        System.err.println("\t\t\t" + getSelectionMode() + " : " + getSelectionContent());
+        System.err.println("\t\t\t" + getSelectionMode() + " : "
+                           + getSelectionContent());
     }
 
     private void setParameterInterpreter(final ParameterInterpreter interpreter)
@@ -74,7 +76,7 @@ public class URLActionDataStore
         this.selectionContent = (selectionContent != null) ? selectionContent
                                                           : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Selection Content"));
         XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Selection Content': \"{0}\"",
-                                                          selectionContent));
+                                                           selectionContent));
     }
 
     public void setSelectionMode(final String selectionMode)
@@ -82,14 +84,15 @@ public class URLActionDataStore
         this.selectionMode = (selectionMode != null) ? selectionMode
                                                     : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Selection Mode"));
         XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Selection Mode': \"{0}\"",
-                                                          selectionMode));
+                                                           selectionMode));
     }
 
     public void setName(final String name)
     {
         this.name = (name != null) ? name
                                   : (String) throwIllegalArgumentException("\"Name\" cannot be null");
-        XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Name' to \"{0}\"", name));
+        XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Name' to \"{0}\"",
+                                                           name));
     }
 
     public String getName()
@@ -102,8 +105,7 @@ public class URLActionDataStore
         final String dynamicSelectionMode = interpreter.processDynamicData(this.selectionMode);
         if (!isPermittedSelectionMode(dynamicSelectionMode))
         {
-            throw new IllegalArgumentException(
-                                               getIllegalValueForTagMessage(dynamicSelectionMode,
+            throw new IllegalArgumentException(getIllegalValueForTagMessage(dynamicSelectionMode,
                                                                             "Selection Mode"));
         }
         return dynamicSelectionMode;
@@ -113,6 +115,11 @@ public class URLActionDataStore
     public String getSelectionContent()
     {
         return interpreter.processDynamicData(this.selectionContent);
+    }
+
+    public ParameterInterpreter getInterpreter()
+    {
+        return this.interpreter;
     }
 
     public boolean isPermittedSelectionMode(final String s)
@@ -128,14 +135,18 @@ public class URLActionDataStore
     private String getTagCannotBeNullMessage(final String tag)
     {
         final String message = MessageFormat.format("Store: \"{0}\", tag \"{1}\"  cannot be NULL",
-                                                    this.name, tag);
+                                                    this.name,
+                                                    tag);
         return message;
     }
 
-    private String getIllegalValueForTagMessage(final String value, final String tag)
+    private String getIllegalValueForTagMessage(final String value,
+                                                final String tag)
     {
         final String message = MessageFormat.format("Store: \"{0}\", Illegal value: \"{1}\" for tag \"{2}\"",
-                                                    this.name, value, tag);
+                                                    this.name,
+                                                    value,
+                                                    tag);
         return message;
     }
 }
