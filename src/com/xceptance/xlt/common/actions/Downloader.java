@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
-import com.xceptance.xlt.common.util.StaticContentDownloader;
 import com.xceptance.xlt.engine.XltWebClient;
 
 public class Downloader

@@ -2,7 +2,7 @@ package com.xceptance.xlt.common.actions;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.xceptance.xlt.common.util.URLActionExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 
 public class XhrLightWeightPageAction extends LightWeightPageAction
 {
@@ -28,11 +28,11 @@ public class XhrLightWeightPageAction extends LightWeightPageAction
     @Override
     protected void postValidate() throws Exception
     {
-        result = new URLActionExecutableResult(xhrResponse);
+        result = new URLActionDataExecutableResult(xhrResponse);
     }
 
     @Override
-    public URLActionExecutableResult getResult()
+    public URLActionDataExecutableResult getResult()
     {
         return this.result;
     }

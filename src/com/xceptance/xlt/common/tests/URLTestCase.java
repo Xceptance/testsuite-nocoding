@@ -3,8 +3,8 @@ package com.xceptance.xlt.common.tests;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.xceptance.xlt.common.util.URLActionData;
-import com.xceptance.xlt.common.util.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
 
 public class URLTestCase extends AbstractURLTestCase
 {

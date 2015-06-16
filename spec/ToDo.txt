@@ -3,6 +3,7 @@
 #########################
 	Do Today / Tomorrow
 -------------------------
+-	Log for JSON Parser
 - 	Questions: Credentials
 - 	Update Description @GitHUb
 - 	Catch null's @ constructors

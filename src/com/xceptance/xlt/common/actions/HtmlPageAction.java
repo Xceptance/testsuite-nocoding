@@ -5,8 +5,8 @@ import java.net.URL;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
-import com.xceptance.xlt.common.util.URLActionDataExecutable;
-import com.xceptance.xlt.common.util.URLActionExecutableResult;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 
 public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements URLActionDataExecutable
 {
@@ -14,7 +14,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
 
     protected WebRequest webRequest;
     
-    protected URLActionExecutableResult result;
+    protected URLActionDataExecutableResult result;
 
     public HtmlPageAction(final HtmlPageAction previousAction,
                           final String name,
@@ -56,7 +56,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = new URLActionExecutableResult(getHtmlPage());
+        this.result = new URLActionDataExecutableResult(getHtmlPage());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     }
 
     @Override
-    public URLActionExecutableResult getResult()
+    public URLActionDataExecutableResult getResult()
     {
         return this.result;
     }

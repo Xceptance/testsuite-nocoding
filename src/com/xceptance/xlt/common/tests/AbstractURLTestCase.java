@@ -11,12 +11,12 @@ import com.xceptance.xlt.api.tests.AbstractTestCase;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.XltConstants;
-import com.xceptance.xlt.common.util.URLActionData;
-import com.xceptance.xlt.common.util.URLActionDataExecutableFactory;
-import com.xceptance.xlt.common.util.URLActionDataExecutableFactoryBuilder;
-import com.xceptance.xlt.common.util.URLActionDataListFacade;
-import com.xceptance.xlt.common.util.URLActionDataRequestBuilder;
-import com.xceptance.xlt.common.util.URLActionDataResponseHandler;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
+import com.xceptance.xlt.common.util.action.data.URLActionDataListFacade;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactory;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactoryBuilder;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataRequestBuilder;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class AbstractURLTestCase extends AbstractTestCase

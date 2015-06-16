@@ -5,8 +5,8 @@ import java.net.URL;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
-import com.xceptance.xlt.common.util.URLActionDataExecutable;
-import com.xceptance.xlt.common.util.URLActionExecutableResult;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 
 public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutable
 {
@@ -15,7 +15,7 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
 
     protected WebRequest webRequest;
     
-    protected URLActionExecutableResult result;
+    protected URLActionDataExecutableResult result;
     
     public LightWeightPageAction(final LightWeightPageAction previousAction,
                                     final String name,
@@ -59,7 +59,7 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = new URLActionExecutableResult(getLightWeightPage());
+        this.result = new URLActionDataExecutableResult(getLightWeightPage());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
         downloader.addRequest(url);
     }
     @Override
-    public URLActionExecutableResult getResult()
+    public URLActionDataExecutableResult getResult()
     {
         return this.result;
         
