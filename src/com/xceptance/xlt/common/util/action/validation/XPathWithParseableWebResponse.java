@@ -10,9 +10,10 @@ import java.util.List;
 import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
 public class XPathWithParseableWebResponse implements XPathGetable
@@ -33,6 +34,7 @@ public class XPathWithParseableWebResponse implements XPathGetable
 
     public XPathWithParseableWebResponse(final WebResponse webResponse)
     {
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         setWebResponse(webResponse);
     }
 
@@ -74,18 +76,20 @@ public class XPathWithParseableWebResponse implements XPathGetable
             throw new IllegalArgumentException("Failed to fetch Elements: "
                                                + e.getMessage(), e);
         }
-        final List<HtmlElement> htmlElements = getHtmlElementListByXPath(xPath);
+        final List<DomNode> htmlElements = getHtmlElementListByXPath(xPath);
         final List<String> resultList = getStringListFromHtmlElementList(htmlElements);
         return resultList;
     }
 
     private List<String> getStringListFromHtmlElementList(
-                                                          final List<HtmlElement> htmlElements)
+                                                          final List<DomNode> htmlElements)
     {
         final List<String> resultList = new ArrayList<String>();
-        for (final HtmlElement element : htmlElements)
+        for (final DomNode element : htmlElements)
         {
-            resultList.add(element.asText());
+            final String elementAsString = element.asText();
+            XltLogger.runTimeLogger.debug("Found Element: " + elementAsString);
+            resultList.add(elementAsString);
             /*
              * Problem with images ect.
              */
@@ -101,16 +105,20 @@ public class XPathWithParseableWebResponse implements XPathGetable
         }
     }
 
-    private List<HtmlElement> getHtmlElementListByXPath(final String xPath)
+    private List<DomNode> getHtmlElementListByXPath(final String xPath)
     {
-        final List<HtmlElement> htmlElements = (List<HtmlElement>) htmlPage.getByXPath(xPath);
-
-        return (htmlElements != null ? htmlElements
-                                    : Collections.<HtmlElement> emptyList());
+        XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
+        List<DomNode> htmlElements = (List<DomNode>) htmlPage.getByXPath(xPath);
+        if(htmlElements == null){
+            XltLogger.runTimeLogger.debug("No Elements found!");
+            htmlElements = Collections.<DomNode> emptyList();
+        }
+        return htmlElements;
     }
 
     private void createHtmlPageFromWebResponse() throws IOException
     {
+        XltLogger.runTimeLogger.debug("Creating HtmlPage from WebResponse");
         final URL url = webResponse.getWebRequest().getUrl();
         final StringWebResponse response = new StringWebResponse(webResponse.getContentAsString(),
                                                                  url);

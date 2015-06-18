@@ -17,6 +17,8 @@ import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFac
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactoryBuilder;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataRequestBuilder;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataStoreResponseHandler;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataValidationResponseHandler;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class AbstractURLTestCase extends AbstractTestCase
@@ -37,6 +39,10 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected URLActionDataListFacade urlActionListFacade;
 
     protected URLActionDataResponseHandler responseHandler;
+
+    protected URLActionDataStoreResponseHandler storeHandler;
+
+    protected URLActionDataValidationResponseHandler validationHandler;
 
     protected URLActionDataRequestBuilder requestBuilder;
 
@@ -76,7 +82,8 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void loadCredentials()
     {
-        this.login = getProperty("login", getProperty("com.xceptance.xlt.auth.userName"));
+        this.login = getProperty("login",
+                                 getProperty("com.xceptance.xlt.auth.userName"));
         this.password = getProperty("password",
                                     getProperty("com.xceptance.xlt.auth.password"));
 
@@ -86,7 +93,8 @@ public class AbstractURLTestCase extends AbstractTestCase
     {
         final String dataDirectory = getProperty(XltConstants.XLT_PACKAGE_PATH
                                                      + ".data.directory",
-                                                 "config" + File.separatorChar + "data");
+                                                 "config" + File.separatorChar
+                                                     + "data");
         if (dataDirectory != null)
         {
             this.dataDirectory = dataDirectory;
@@ -126,19 +134,20 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupParameterInterpreter()
     {
-        this.interpreter = new ParameterInterpreter(this.properties, this.dataProvider);
+        this.interpreter = new ParameterInterpreter(this.properties,
+                                                    this.dataProvider);
     }
 
     private void setupURLActionList()
     {
-        urlActionListFacade = new URLActionDataListFacade(this.filePath, this.interpreter);
+        urlActionListFacade = new URLActionDataListFacade(this.filePath,
+                                                          this.interpreter);
         this.actions = urlActionListFacade.buildUrlActions();
     }
 
     private void setupURLActionExecutableFactory()
     {
-        final URLActionDataExecutableFactoryBuilder factoryBuilder = new URLActionDataExecutableFactoryBuilder(
-                                                                                                               this.properties,
+        final URLActionDataExecutableFactoryBuilder factoryBuilder = new URLActionDataExecutableFactoryBuilder(this.properties,
                                                                                                                this.mode);
         this.executableFactory = factoryBuilder.buildFactory();
     }
@@ -150,7 +159,10 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupURLActionResponseHandler()
     {
-        this.responseHandler = new URLActionDataResponseHandler();
+        this.storeHandler = new URLActionDataStoreResponseHandler();
+        this.validationHandler = new URLActionDataValidationResponseHandler();
+        this.responseHandler = new URLActionDataResponseHandler(this.storeHandler,
+                                                                this.validationHandler);
     }
 
     /**
@@ -174,8 +186,8 @@ public class AbstractURLTestCase extends AbstractTestCase
         final XltProperties xltProperties = XltProperties.getInstance();
 
         // 1. use the current user name as prefix
-        final String userNameQualifiedKey = Session.getCurrent().getUserName() + "."
-                                            + bareKey;
+        final String userNameQualifiedKey = Session.getCurrent().getUserName()
+                                            + "." + bareKey;
         if (xltProperties.containsKey(userNameQualifiedKey))
         {
             effectiveKey = userNameQualifiedKey;

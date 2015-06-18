@@ -11,7 +11,14 @@
 #########################
 	Do Soon
 -------------------------
+- Problems WIth HtmlElemetns and DOmText, which is not supported
+- Set ALL WebResponse attributes to allow more customiuation and standartization
+- what does the WebClient add to the WebRequest?
 - Add @Nullable Anno
+- Problem with parameter encoding: what does html unit do?
+	HtmlUnit encodes by default URL parameters if not encoded
+	But what about body & post parameters?
+	
 - Expand ParameterInterpreter
 - WebClient Configurator
 - Start Test From another Class

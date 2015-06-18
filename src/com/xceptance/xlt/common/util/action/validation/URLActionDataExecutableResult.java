@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
 public class URLActionDataExecutableResult
@@ -18,6 +19,7 @@ public class URLActionDataExecutableResult
     public URLActionDataExecutableResult(final WebResponse webResponse,
                                          final XPathGetable xPathGetable)
     {
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         setWebResponse(webResponse);
         setXPathGetable(xPathGetable);
     }
@@ -51,15 +53,15 @@ public class URLActionDataExecutableResult
         return resultList;
     }
 
-    public List<NameValuePair> getHeaderByName(final String headerName)
+    public List<String> getHeaderByName(final String headerName)
     {
-        final List<NameValuePair> resultList = new ArrayList<NameValuePair>();
+        final List<String> resultList = new ArrayList<String>();
         final List<NameValuePair> headers = this.webResponse.getResponseHeaders();
         for (final NameValuePair header : headers)
         {
             if (header.getName().equals(headerName))
             {
-                resultList.add(header);
+                resultList.add(header.getValue());
             }
         }
         return resultList;

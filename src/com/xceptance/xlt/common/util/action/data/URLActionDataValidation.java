@@ -29,7 +29,7 @@ public class URLActionDataValidation
 
     public static final String XPATH = "XPath";
 
-    public static final String REGEXP = "RegExp";
+    public static final String REGEXP = "RegEx";
 
     public static final String TEXT = "Text";
 
@@ -54,7 +54,6 @@ public class URLActionDataValidation
         PERMITTEDVALIDATIONMODE.add(MATCHES);
         PERMITTEDVALIDATIONMODE.add(COUNT);
         PERMITTEDVALIDATIONMODE.add(EXISTS);
-
     }
 
     public URLActionDataValidation(final String name,

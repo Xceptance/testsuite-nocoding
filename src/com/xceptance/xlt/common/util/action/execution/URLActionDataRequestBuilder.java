@@ -44,7 +44,9 @@ public class URLActionDataRequestBuilder
         catch (final Exception e)
         {
             throw new IllegalArgumentException("Failed to create WebRequest for action: "
-                                               + action.getName() + e.getMessage(), e);
+                                                   + action.getName()
+                                                   + e.getMessage(),
+                                               e);
         }
         logWebRequest(resultRequest);
         return resultRequest;
@@ -60,35 +62,63 @@ public class URLActionDataRequestBuilder
         fillWebRequestWithMethod(resultRequest, action.getMethod());
         if (action.hasBody())
         {
-            fillWebRequestWithBody(resultRequest, action.getBody(), action.encodeBody());
+            fillWebRequestWithBody(resultRequest,
+                                   action.getBody(),
+                                   action.encodeBody());
         }
         fillWebRequestWithHeaders(resultRequest, action.getHeaders());
         fillWebRequestWithCookies(resultRequest, action.getCookies());
-        fillWebRequestWithParameters(resultRequest, action.getParameters(),
-                                     action.encodeParameters(), action.getMethod());
+        fillWebRequestWithParameters(resultRequest,
+                                     action.getParameters(),
+                                     action.encodeParameters(),
+                                     action.getMethod());
         return resultRequest;
     }
 
-    public WebRequest buildXhrRequest(final URLActionData action, final URL refererUrl)
+    public WebRequest buildXhrRequest(final URLActionData action,
+                                      final URL refererUrl)
     {
         XltLogger.runTimeLogger.debug("Building XhrWebRequest for action: "
                                       + action.getName());
 
-        final WebRequest resultXhrRequest;
-
+        WebRequest resultXhrRequest = null;
         try
         {
-            resultXhrRequest = createWebRequestFromURLAction(action);
+            resultXhrRequest = buildXhrRequestFromURLActionData(action,
+                                                                refererUrl);
         }
         catch (final Exception e)
         {
             throw new IllegalArgumentException("Failed to create WebRequest for action: "
-                                               + action.getName() + e.getMessage(), e);
+                                                   + action.getName()
+                                                   + e.getMessage(),
+                                               e);
         }
+        return resultXhrRequest;
+    }
 
-        resultXhrRequest.setAdditionalHeader("X-Requested-With", "XMLHttpRequest");
-        resultXhrRequest.setAdditionalHeader("Referer", refererUrl.toExternalForm());
-
+    private WebRequest buildXhrRequestFromURLActionData(final URLActionData action,
+                                                        final URL refererUrl)
+        throws UnsupportedEncodingException, MalformedURLException
+    {
+        final WebRequest resultXhrRequest = createWebRequestFromUrl(action.getUrl());
+        fillWebRequestWithMethod(resultXhrRequest, action.getMethod());
+        if (action.hasBody())
+        {
+            fillWebRequestWithBody(resultXhrRequest,
+                                   action.getBody(),
+                                   action.encodeBody());
+        }
+        fillWebRequestWithHeaders(resultXhrRequest, action.getHeaders());
+        resultXhrRequest.setAdditionalHeader("X-Requested-With",
+                                             "XMLHttpRequest");
+        resultXhrRequest.setAdditionalHeader("Referer",
+                                             refererUrl.toExternalForm());
+        fillWebRequestWithCookies(resultXhrRequest, action.getCookies());
+        fillWebRequestWithParameters(resultXhrRequest,
+                                     action.getParameters(),
+                                     action.encodeParameters(),
+                                     action.getMethod());
         logWebRequest(resultXhrRequest);
         return resultXhrRequest;
     }
@@ -113,7 +143,8 @@ public class URLActionDataRequestBuilder
             String cookieString = "";
             for (final NameValuePair cookie : cookies)
             {
-                cookieString = cookieString + cookie.getName() + "=" + cookie.getValue() + ";";
+                cookieString = cookieString + cookie.getName() + "="
+                               + cookie.getValue() + ";";
             }
             request.setAdditionalHeader("Cookie", cookieString);
         }
@@ -155,13 +186,13 @@ public class URLActionDataRequestBuilder
     {
         if (!parameters.isEmpty())
         {
-            List<NameValuePair> resultParameters = new ArrayList<NameValuePair>(
-                                                                                parameters);
+            List<NameValuePair> resultParameters = new ArrayList<NameValuePair>(parameters);
             if (encodeParameters)
             {
                 resultParameters = encodeRequestParameters(resultParameters);
             }
-            if (!httpMethod.equals(HttpMethod.POST) || request.getRequestBody() != null)
+            if (!httpMethod.equals(HttpMethod.POST)
+                || request.getRequestBody() != null)
             {
                 addParametersToUrl(request, resultParameters);
             }
@@ -314,8 +345,8 @@ public class URLActionDataRequestBuilder
             XltLogger.runTimeLogger.debug("Parameters: ");
             for (final NameValuePair parameter : parameters)
             {
-                XltLogger.runTimeLogger.debug("\t" + parameter.getName() + " = "
-                                   + parameter.getValue());
+                XltLogger.runTimeLogger.debug("\t" + parameter.getName()
+                                              + " = " + parameter.getValue());
             }
         }
         final Map<String, String> headers = request.getAdditionalHeaders();
@@ -324,15 +355,17 @@ public class URLActionDataRequestBuilder
             XltLogger.runTimeLogger.debug("Headers: ");
             for (final Map.Entry<String, String> entry : headers.entrySet())
             {
-                XltLogger.runTimeLogger.debug("\t" + entry.getKey() + " : " + entry.getValue());
+                XltLogger.runTimeLogger.debug("\t" + entry.getKey() + " : "
+                                              + entry.getValue());
             }
         }
 
         final Credentials credentials = request.getCredentials();
         if (credentials != null)
         {
-            XltLogger.runTimeLogger.debug("Credentials: " + credentials.toString());
+            XltLogger.runTimeLogger.debug("Credentials: "
+                                          + credentials.toString());
         }
-       
+
     }
 }

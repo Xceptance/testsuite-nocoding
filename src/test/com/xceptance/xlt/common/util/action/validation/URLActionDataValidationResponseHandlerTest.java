@@ -1,0 +1,172 @@
+package test.com.xceptance.xlt.common.util.action.validation;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.xceptance.xlt.api.data.GeneralDataProvider;
+import com.xceptance.xlt.api.util.XltProperties;
+import com.xceptance.xlt.common.util.MockObjects;
+import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataValidationResponseHandler;
+import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
+import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
+
+public class URLActionDataValidationResponseHandlerTest
+{
+    private URLActionDataValidationResponseHandler validationHandler;
+
+    private MockObjects mockObjects;
+
+    private ParameterInterpreter interpreter;
+
+    private final String regexString = "href=\"[\\s\\S]*?\"";
+
+    private final String regexStringText = "href=\"/en/\"";
+    
+    private final String regexStringMatches = "href=\"/en/\"";
+
+    private XltProperties properties;
+
+    private GeneralDataProvider dataProvider;
+
+    private URLActionDataExecutableResult result;
+
+    private XPathWithHtmlPage xpwh;
+
+    private URLActionDataValidation validationExists;
+
+    private URLActionDataValidation validationCount;
+
+    private URLActionDataValidation validationText;
+
+    private URLActionDataValidation validationMatches;
+    
+    private URLActionDataValidation validationExistsMalicious;
+
+    private URLActionDataValidation validationCountMalicious;
+
+    private URLActionDataValidation validationTextMalicious;
+
+    private URLActionDataValidation validationMatchesMalicious;
+
+    @Before
+    public void setup()
+    {
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
+        mockObjects = new MockObjects();
+        mockObjects.load();
+        xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
+        result = new URLActionDataExecutableResult(mockObjects.getResponse(),
+                                                   xpwh);
+
+        validationExists = new URLActionDataValidation("exists",
+                                                       URLActionDataValidation.REGEXP,
+                                                       regexString,
+                                                       URLActionDataValidation.EXISTS,
+                                                       null,
+                                                       interpreter);
+        validationCount = new URLActionDataValidation("count",
+                                                       URLActionDataValidation.REGEXP,
+                                                       regexString,
+                                                       URLActionDataValidation.COUNT,
+                                                       "47",
+                                                       interpreter);
+        validationText = new URLActionDataValidation("text",
+                                                      URLActionDataValidation.REGEXP,
+                                                      regexString,
+                                                      URLActionDataValidation.TEXT,
+                                                      regexStringText,
+                                                      interpreter);
+        
+        validationMatches = new URLActionDataValidation("matches",
+                                                     URLActionDataValidation.REGEXP,
+                                                     regexString,
+                                                     URLActionDataValidation.MATCHES,
+                                                     regexString,
+                                                     interpreter);
+        
+        validationExistsMalicious = new URLActionDataValidation("exists",
+                                                       URLActionDataValidation.REGEXP,
+                                                       "malicious",
+                                                       URLActionDataValidation.EXISTS,
+                                                       null,
+                                                       interpreter);
+        validationCountMalicious = new URLActionDataValidation("count",
+                                                       URLActionDataValidation.REGEXP,
+                                                       regexString,
+                                                       URLActionDataValidation.COUNT,
+                                                       "5",
+                                                       interpreter);
+        validationTextMalicious = new URLActionDataValidation("text",
+                                                      URLActionDataValidation.REGEXP,
+                                                      regexString,
+                                                      URLActionDataValidation.TEXT,
+                                                      regexString,
+                                                      interpreter);
+        
+        validationMatchesMalicious = new URLActionDataValidation("matches",
+                                                     URLActionDataValidation.REGEXP,
+                                                     regexString,
+                                                     URLActionDataValidation.MATCHES,
+                                                     "[\\s]",
+                                                     interpreter);
+    }
+
+    @Test
+    public void testConstructor()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+    }
+    @Test
+    public void testExists()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationExists, result);
+    }
+    @Test
+    public void testCount()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationCount, result);
+    }
+    @Test
+    public void testText()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationText, result);
+    }
+    @Test
+    public void testMatches()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationMatches, result);
+    }
+    @Test(expected = AssertionError.class)
+    public void testExistsMalicious()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationExistsMalicious, result);
+    }
+    @Test(expected = AssertionError.class)
+    public void testCountMalicious()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationCountMalicious, result);
+    }
+    @Test(expected = AssertionError.class)
+    public void testTextMalicious()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationTextMalicious, result);
+    }
+    @Test(expected = AssertionError.class)
+    public void testMatchesMalicious()
+    {
+        validationHandler = new URLActionDataValidationResponseHandler();
+        validationHandler.validate(validationMatchesMalicious, result);
+    }
+    
+}

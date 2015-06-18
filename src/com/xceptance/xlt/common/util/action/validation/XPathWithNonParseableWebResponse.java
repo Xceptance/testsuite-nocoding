@@ -1,21 +1,29 @@
 package com.xceptance.xlt.common.util.action.validation;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.util.ConcreteNodeList;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
 public class XPathWithNonParseableWebResponse implements XPathGetable
@@ -24,7 +32,7 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
 
     private XPath xPath;
 
-    private InputSource xmlInputSource;
+    private Document xmlInputSource;
 
     static final HashMap<String, String> SUPPORTEDHEADERCONTENTTYPES = new HashMap<String, String>();
 
@@ -44,6 +52,7 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
 
     public XPathWithNonParseableWebResponse(final WebResponse webResponse)
     {
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         setWebResponse(webResponse);
     }
 
@@ -83,7 +92,8 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
     }
 
     private List<String> getByXPathFromInputSource(final String xPath)
-        throws XPathExpressionException
+        throws XPathExpressionException, ParserConfigurationException,
+        SAXException, IOException
     {
         loadContentFromWebResponseIfNecessary();
         final NodeList nodeList = createNodeListByXPathFromInputSource(xPath);
@@ -92,12 +102,14 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
     }
 
     private void loadContentFromWebResponseIfNecessary()
+        throws ParserConfigurationException, SAXException, IOException
     {
         loadXMLSourceFromWebResponseIfNecessary();
         createXPathIfNecessary();
     }
 
     private void loadXMLSourceFromWebResponseIfNecessary()
+        throws ParserConfigurationException, SAXException, IOException
     {
         if (this.xmlInputSource == null)
         {
@@ -126,22 +138,35 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
     }
 
     private NodeList createNodeListByXPathFromInputSource(final String xPath)
-        throws XPathExpressionException
+
     {
-        final NodeList list = (NodeList) this.xPath.evaluate(xPath,
-                                                             this.xmlInputSource,
-                                                             XPathConstants.NODESET);
+        XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
+        NodeList list = new ConcreteNodeList();
+        try
+        {
+            list = (NodeList) this.xPath.compile(xPath)
+                                        .evaluate(this.xmlInputSource,
+                                                  XPathConstants.NODESET);
+        }
+        catch (final Exception e)
+        {
+            XltLogger.runTimeLogger.debug("Failed to get Elements: "
+                                          + e.getMessage());
+        }
         return list;
     }
 
     private void createXPath()
     {
+        XltLogger.runTimeLogger.debug("Creating new XPath");
         final XPathFactory xpathFactory = XPathFactory.newInstance();
         this.xPath = xpathFactory.newXPath();
     }
 
     private void createXMLSourceFromWebResponseContent()
+        throws ParserConfigurationException, SAXException, IOException
     {
+        XltLogger.runTimeLogger.debug("Loading content from WebResponse");
         final String contentType = getContentTypeFromWebResponse();
 
         final String bodyContent = this.webResponse.getContentAsString();
@@ -168,18 +193,35 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
 
     }
 
-    private InputSource createXMLSourceFromJson(final String json)
+    private Document createXMLSourceFromJson(final String json)
+        throws ParserConfigurationException, SAXException, IOException
     {
+        XltLogger.runTimeLogger.debug("Converting Json Content to XML");
         String xmlString;
         xmlString = org.json.XML.toString(new JSONObject(json));
-
         xmlString = "<json>" + xmlString + "</json>";
-        return new InputSource(new StringReader(xmlString));
+        System.err.println(xmlString);
+
+        final Document document = createDocumentFromXmlString(xmlString);
+
+        return document;
     }
 
-    private InputSource createXMLSourceFromXML(final String xml)
+    private Document createDocumentFromXmlString(final String xmlString)
+        throws SAXException, IOException, ParserConfigurationException
     {
-        return new InputSource(new StringReader(xml));
+        final InputSource source = new InputSource(new StringReader(xmlString));
+        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder db = dbf.newDocumentBuilder();
+        final Document document = db.parse(source);
+        return document;
+    }
+
+    private Document createXMLSourceFromXML(final String xmlString) throws SAXException, IOException, ParserConfigurationException
+    {
+        XltLogger.runTimeLogger.debug("Loading XML Content");
+        final Document document = createDocumentFromXmlString(xmlString);
+        return document;
     }
 
     private boolean isXPathable(final String contentType)

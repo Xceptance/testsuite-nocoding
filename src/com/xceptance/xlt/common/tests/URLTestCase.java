@@ -18,9 +18,9 @@ public class URLTestCase extends AbstractURLTestCase
         if (!actions.isEmpty())
         {
             handleFirstAction();
-
             for (final URLActionData action : actions)
             {
+                action.outline();
                 if (action.isAction())
                 {
                     handleAction(action);

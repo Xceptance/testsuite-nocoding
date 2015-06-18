@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
 public class XPathWithHtmlPage implements XPathGetable
@@ -14,6 +15,7 @@ public class XPathWithHtmlPage implements XPathGetable
 
     public XPathWithHtmlPage(final HtmlPage htmlPage)
     {
+        XltLogger.runTimeLogger.debug("Creating new Instance");
         setHtmlPage(htmlPage);
     }
 
@@ -26,25 +28,28 @@ public class XPathWithHtmlPage implements XPathGetable
     @Override
     public List<String> getByXPath(final String xPath)
     {
-        final List<HtmlElement> htmlElements = getHtmlElementListByXPath(xPath);
+        final List<DomNode> htmlElements = getHtmlElementListByXPath(xPath);
 
         final List<String> resultList = new ArrayList<String>();
-        for (final HtmlElement element : htmlElements)
+        for (final DomNode element : htmlElements)
         {
-            resultList.add(element.asText());
-           /*
-            * Problem with images ect.
-            */
+            final String elementAsString = element.asText();
+            XltLogger.runTimeLogger.debug("Found Element: " + "\"" + elementAsString + "\"");
+            resultList.add(elementAsString);
         }
         return resultList;
     }
 
-    private List<HtmlElement> getHtmlElementListByXPath(final String xPath)
+    private List<DomNode> getHtmlElementListByXPath(final String xPath)
     {
-        final List<HtmlElement> htmlElements = (List<HtmlElement>) htmlPage.getByXPath(xPath);
-
-        return (htmlElements != null ? htmlElements
-                                    : Collections.<HtmlElement> emptyList());
+        XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
+        List<DomNode> htmlElements = (List<DomNode>) this.htmlPage.getByXPath(xPath);
+        if (htmlElements == null)
+        {
+            XltLogger.runTimeLogger.debug("No Elements found!");
+            htmlElements = Collections.<DomNode> emptyList();
+        }
+        return htmlElements;
     }
 
 }

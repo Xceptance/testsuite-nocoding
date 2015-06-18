@@ -5,6 +5,7 @@ import java.util.List;
 import bsh.EvalError;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
@@ -12,12 +13,13 @@ public class URLActionDataStoreResponseHandler
 {
     public URLActionDataStoreResponseHandler()
     {
-
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     public void handleStore(final URLActionDataStore storeItem,
                             final URLActionDataExecutableResult result)
     {
+        XltLogger.runTimeLogger.debug("Handling StoreItem");
         try
         {
             handleStoreItem(storeItem, result);
@@ -79,10 +81,10 @@ public class URLActionDataStoreResponseHandler
                                        final URLActionDataExecutableResult result)
         throws EvalError
     {
-        final List<NameValuePair> headers = result.getHeaderByName(storeItem.getSelectionContent());
+        final List<String> headers = result.getHeaderByName(storeItem.getSelectionContent());
         if (!(headers.isEmpty()))
         {
-            storeContentInterpreter(storeItem, headers.get(0).getValue());
+            storeContentInterpreter(storeItem, headers.get(0));
         }
     }
 
