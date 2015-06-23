@@ -88,6 +88,7 @@ public class ParameterInterpreter extends Interpreter
         final String value = nvp.getValue();
         if (name != null && value != null)
         {
+            System.err.println(addVariableMessage(name, value)); 
             XltLogger.runTimeLogger.debug(addVariableMessage(name, value));
             this.set(name, value);
         }

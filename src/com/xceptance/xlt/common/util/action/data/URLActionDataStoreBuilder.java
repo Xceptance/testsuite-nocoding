@@ -38,6 +38,7 @@ public class URLActionDataStoreBuilder
         this.selectionMode = null;
         this.selectionContent = null;
         this.interpreter = null;
+        XltLogger.runTimeLogger.debug("Resetting values");
     }
 
     public String getName()
@@ -48,7 +49,7 @@ public class URLActionDataStoreBuilder
     public void setName(final String name)
     {
         this.name = name;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("name", name));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("name", name));
     }
 
     public String getSelectionMode()
@@ -59,7 +60,7 @@ public class URLActionDataStoreBuilder
     public void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = selectionMode;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("selectionMode", selectionMode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionMode", selectionMode));
     }
 
     public String getSelectionContent()
@@ -70,7 +71,7 @@ public class URLActionDataStoreBuilder
     public void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = selectionContent;
-        XltLogger.runTimeLogger.info(infoSetTagToValue("selectionContent", selectionContent));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionContent", selectionContent));
     }
 
     public ParameterInterpreter getInterpreter()
@@ -81,7 +82,7 @@ public class URLActionDataStoreBuilder
     public void setInterpreter(final ParameterInterpreter interpreter)
     {
         this.interpreter = interpreter;
-        XltLogger.runTimeLogger.info(infoSetTag("interpreter"));
+        XltLogger.runTimeLogger.debug(infoSetTag("interpreter"));
     }
     private String infoSetTagToValue(final String tag, final String value)
     {

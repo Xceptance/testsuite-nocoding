@@ -78,15 +78,15 @@
                 Cookie : y
                 Matches : z
                 
-    Store :
-        - variable :
-            XPath : path
-        - variable_2 :
-            Regexp : path
-        - variable_3 :
-            Header : header
-        - variable_4 :
-            Cookie : cookie
+    	Store :
+      	  - variable :
+      	      XPath : path
+     	   - variable_2 :
+     	       Regexp : path
+    	    - variable_3 :
+     	       Header : header
+     	   - variable_4 :
+     	       Cookie : cookie
     Subrequests :
         - Xhr :
             Name : ...

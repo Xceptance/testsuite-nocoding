@@ -20,7 +20,6 @@ public class URLTestCase extends AbstractURLTestCase
             handleFirstAction();
             for (final URLActionData action : actions)
             {
-                action.outline();
                 if (action.isAction())
                 {
                     handleAction(action);
@@ -33,6 +32,7 @@ public class URLTestCase extends AbstractURLTestCase
                 {
                     handleStaticAction(action);
                 }
+                action.outline();
             }
             handleLastAction();
         }
@@ -96,11 +96,12 @@ public class URLTestCase extends AbstractURLTestCase
 
     private void handleAction(final URLActionData action)
     {
+        executePreviousExecutable();
+        handleResponse();
+        
         final WebRequest request = createActionWebRequest(action);
         final URLActionDataExecutable executable = createExecutableFromAction(action,
                                                                               request);
-        executePreviousExecutable();
-        handleResponse();
         setPreviousURLAction(action);
         setPreviousExecutable(executable);
     }

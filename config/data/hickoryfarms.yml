@@ -1,0 +1,19 @@
+- Action :
+    Name : Open Homepage
+    Request :
+        Url : "http://www.hickoryfarms.com/"
+    Response :
+        Validate :
+            - Something :
+                XPath : "//*[@id='main']/div[3]/div[2]/div/h1"
+                Text : "Find Specialty Foods & Gourmet Food Gift Ideas"
+                
+- Action :
+    Name : Go To Register
+    Request :
+        Url : "https://www.hickoryfarms.com/register"
+    Response :
+        Validate :
+            - Create Account Title :
+                XPath : "//*[@id='primary']/h1"
+                Text : "Create Account"

@@ -107,7 +107,7 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void loadFilePath()
     {
-        final String filePath = getProperty("com.xceptance.xlt.common.tests.TURL.filename");
+        final String filePath = getProperty("com.xceptance.xlt.common.tests.filename");
         if (filePath != null)
         {
             this.filePath = dataDirectory + File.separatorChar + filePath;

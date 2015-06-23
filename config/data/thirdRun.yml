@@ -186,7 +186,7 @@
     Response :
         Validate :
             - Validate Title :
-                XPath : "//*[@id='formAddPayment']/fieldset/legend"
+                XPath : //*[@id='formAddPayment']/fieldset/legend
                 Text : Add a new credit card
         
 - Action :

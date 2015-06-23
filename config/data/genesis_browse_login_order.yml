@@ -1,0 +1,212 @@
+- Store :
+    - email : a@s.de
+    - firstName : a
+    - lastName : s
+    - password : "12345678"
+    - address : fuso
+    - url : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
+    - urlsec : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
+    - logoutUrl : https://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site/en_US/Login-Logout
+
+- Action :
+    Name : Open Homepage
+    Request :
+        Url : ${url}/home
+    Response :
+        Validate :
+            - Header Promotion :
+                XPath : "//*[@id='wrapper']/div[1]/div[2]/strong"
+                Text : FREE 2-Day SHIPPING
+                
+- Action :
+    Name : Navigate to Category
+    Request :
+        Url : ${url}/electronics/digital%20cameras/
+    Response :
+        Validate:
+            - Validate Category:
+                XPath : "//*[@id='main']/div[2]/a[2]/text()"
+                Text : Digital Cameras
+            - Validate arbitrary Header : 
+                Header : Pragma
+    Subrequests:
+        - Xhr :
+            Name : Change Product Paging Options to 24
+            Request :
+                Url : ${url}/electronics/digital%20cameras/
+                Encode-Parameters : false
+                Parameters :
+                    - sz : 24
+                    - format : ajax
+            Response :
+                Validate:
+                    - Validate Product Count Number :
+                        XPath : "//*[@id='primary']/div[2]/div[3]/div/text()"
+                        Matches: "Showing[\\s]*1[\\s]-[\\s]24[\\s]of[\\s]*[\\d]*[\\s]Results"
+                    - Validate Product Count :
+                        XPath : "//*[@id='search-result-items']/li"
+                        Count : 24 
+        - Xhr :                      
+            Name : Navigate to Page 2
+            Request :
+                Url : ${url}/electronics/digital%20cameras/
+                Parameters :
+                    - sz : 24
+                    - start : 24
+                    - format : ajax
+            Response :
+                Validate :
+                    - Validate Product Count :
+                        XPath : "//*[@id='search-result-items']/li"
+                        Count : 3
+                    - Validate Existance of product to buy :
+                        XPath : "//*[@id='cdu7oiaag1poQaaadmXsMZPb8t']/div[2]/a"
+                        Matches : "Sony Cyber-shot® T77 Digital Point and Shoot Camera"
+                
+- Action :
+    Name : Go to product
+    Request :
+        Url : ${url}/electronics/digital%20cameras/sony-cybershot-t77.html
+    Response :
+        Validate :  
+            - Validate Name :
+                XPath : "//*[@id='pdpMain']/div[2]/h1"
+                Text : "Sony Cyber-shot® T77 Digital Point and Shoot Camera"
+            - Validate Price : 
+                XPath : "//*[@id='product-content']/div[4]/span"
+                Text : "$129.99"                               
+    Subrequests :
+        - Xhr :
+            Name : Add product to cart
+            Request :
+                Method : POST
+                Url : http://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site/en_US/Cart-AddProduct?format=ajax                 
+                Encode-Parameters : false
+                Parameters : 
+                    - dwopt_sony-cybershot-t77_digitalCameraWarranty : "001"
+                    - Quantity : 1
+                    - uuid :
+                    - cartAction : update
+                    - pid : sony-cybershot-t77
+                    
+- Action :
+    Name : View Cart
+    Request :
+        Url : ${url}/cart
+    Response :
+        Validate :
+            - Validate product Existance :
+                XPath : "//*[@id='cart-table']/tbody/tr/td[2]/div[1]/div[1]/a"
+                Text : "Sony Cyber-shot® T77 Digital Point and Shoot Camera"
+            - Validate Estimeted Total Sum :
+                XPath : "//*[@id='cart-items-form']/fieldset/div/div[1]/table/tbody/tr[4]/td[2]"
+                Text : "$144.88"
+        Store :
+            - checkoutLink :
+                XPath : "//*[@id='checkout-form']/@action" 
+              
+                
+- Action :
+    Name : Go to Checkout
+    Request :
+        Url : ${checkoutLink}
+        Method : POST
+        Encode-Parameters : false
+        Parameters :
+            - dwfrm_cart_checkoutCart : Checkout
+    Response :
+        Validate :
+            - Validate Email form :
+                XPath : "//*[@id='dwfrm_login']/fieldset/div[1]/label/span[2]"
+                Text : Email Address
+            - Validate Pasword form :
+                XPath : "//*[@id='dwfrm_login']/fieldset/div[3]/button"
+                Matches : Login   
+        Store :
+            - loginUrl :
+                XPath : "//*[@id='dwfrm_login']/@action"
+            - secureKey :
+                XPath : "//*[@id='dwfrm_login']/fieldset/input/@value"
+                
+- Action :
+    Name : Login
+    Request :
+        Url : ${loginUrl}
+        Method : POST
+        Encode-Parameters : false
+        Parameters :
+            - dwfrm_login_username_d0spoqcvwyml : ${email}
+            - dwfrm_login_password : ${password}
+            - dwfrm_login_login : Login
+            - dwfrm_login_securekey : ${secureKey}
+            
+- Action :
+    Name : Go to shipping address form
+    Request :
+        Url : ${url}/shipping
+    Response :
+        Validate :
+            - Validate Price :
+                XPath : "//*[@id='secondary']/div[4]/table/tbody/tr[4]/td[2]"
+                Text : "$144.88"
+            - Validate form title :
+                XPath : "//*[@id='dwfrm_singleshipping_shippingAddress']/fieldset[1]/legend"
+                Matches : "Select or Enter a Shipping Address"
+            - Validate form :
+                XPath : "//*[@id='dwfrm_singleshipping_shippingAddress']/fieldset[1]/div[1]/label/span[2]"
+                Text: "First Name"
+                
+        Store:
+            - linkShipping :
+                XPath : "//*[@id='dwfrm_singleshipping_shippingAddress']/@action"
+            - secureKeyShipping : 
+                XPath : "//*[@id='dwfrm_singleshipping_shippingAddress']/fieldset[2]/input/@value"
+                
+- Action :
+    Name : Send Shipping data
+    Request :
+        Url : ${linkShipping}
+        Method : POST
+        Encode-Paramters : false
+        Parameters :
+            - dwfrm_singleshipping_shippingAddress_addressFields_firstName : ${firstName}
+            - dwfrm_singleshipping_shippingAddress_addressFields_lastName : ${lastName}
+            - dwfrm_singleshipping_shippingAddress_addressFields_address1 : ${address}
+            - dwfrm_singleshipping_shippingAddress_addressFields_address2 : ${address}
+            - dwfrm_singleshipping_shippingAddress_addressFields_country : DE
+            - dwfrm_singleshipping_shippingAddress_addressFields_states_state : OTHER
+            - dwfrm_singleshipping_shippingAddress_addressFields_city : jena
+            - dwfrm_singleshipping_shippingAddress_addressFields_postal : 07747
+            - dwfrm_singleshipping_shippingAddress_addressFields_phone : 333-333-3333
+            - dwfrm_singleshipping_shippingAddress_isGift : false
+            - dwfrm_singleshipping_shippingAddress_giftMessage :
+            - dwfrm_singleshipping_shippingAddress_shippingMethodID : "001"
+            - dwfrm_singleshipping_shippingAddress_save : "Continue >"
+            - dwfrm_singleshipping_securekey : ${secureKeyShipping} 
+    Response :
+        Validate :
+            - Validate Price:
+                XPath : "//*[@id='secondary']/div[4]/table/tbody/tr[4]/td[2]"
+                Text : "$151.78"
+                
+        Store :
+            - billingUrl :
+                XPath : "//*[@id='dwfrm_billing']/@action"
+            - secureKeyBilling :
+                XPath : "//*[@id='dwfrm_billing']/fieldset[2]/input/@value"
+                
+
+           
+    
+    
+                
+            
+       
+                
+            
+            
+                   
+                    
+
+
+                              

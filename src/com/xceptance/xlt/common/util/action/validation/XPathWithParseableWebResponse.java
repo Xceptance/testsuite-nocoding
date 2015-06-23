@@ -87,7 +87,7 @@ public class XPathWithParseableWebResponse implements XPathGetable
         final List<String> resultList = new ArrayList<String>();
         for (final DomNode element : htmlElements)
         {
-            final String elementAsString = element.asText();
+            final String elementAsString = element.getTextContent();
             XltLogger.runTimeLogger.debug("Found Element: " + elementAsString);
             resultList.add(elementAsString);
             /*

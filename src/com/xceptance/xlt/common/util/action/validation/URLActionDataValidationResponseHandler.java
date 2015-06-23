@@ -114,7 +114,7 @@ public class URLActionDataValidationResponseHandler
         final String matcherString = resultSelection.get(0);
         final String patternString = validation.getValidationContent();
         XltLogger.runTimeLogger.debug("Validating MATECHES: " + matcherString
-                                      + " = " + patternString);
+                                      + " matches " + patternString);
         final Pattern pattern = Pattern.compile(patternString);
         final Matcher matcher = pattern.matcher(matcherString);
         Assert.assertTrue(matcher.find());

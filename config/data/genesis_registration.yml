@@ -1,0 +1,81 @@
+- Store :
+    - email : ${DATA.getEmail()}
+    - firstName : ${DATA.getFirstName(false)}
+    - lastName : ${DATA.getLastName(false)}
+    - password : ${RANDOM.DigitString(8)}
+    - url : http://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site
+    - urlsec : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
+    - logoutUrl : https://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site/en_US/Login-Logout
+    
+- Action :
+    Name : Open Homepage
+    Request :
+        Url : ${url}
+    Response :
+        Validate :
+            - Validate Menu:
+                XPath: "//*[@id='navigation']/ul[1]/li[1]/a"
+                Matches : New Arrivals
+                
+- Action :
+    Name : Open registration form
+    Request :
+        Url : ${urlsec}/register
+    Response :
+        Validate :
+            - Validate Something :
+                XPath : "//*[@id='primary']/h1"
+                Matches : "Create Account"
+            - Validate Something else :
+                XPath : "//*[@id='RegistrationForm']/fieldset[1]/div[2]/label/span[2]"
+                Matches : "Last Name"
+                
+        Store :
+            - securekey :
+                XPath : "//*[@id='RegistrationForm']/fieldset[2]/input/@value"  
+            - registrationUrl :
+                XPath : "//*[@id='RegistrationForm']/@action"
+                
+- Action :
+    Name : Registration
+    Request :
+        Url : ${registrationUrl}
+        Method : POST
+        Encode-Parameters: false
+        Parameters :
+            - dwfrm_profile_customer_firstname : ${firstName}
+            - dwfrm_profile_customer_lastname : ${lastName}
+            - dwfrm_profile_customer_email : ${email}
+            - dwfrm_profile_customer_emailconfirm : ${email}
+            - dwfrm_profile_login_password : ${password}
+            - dwfrm_profile_login_passwordconfirm : ${password}
+            - dwfrm_profile_customer_addtoemaillist: true
+            - dwfrm_profile_confirm : Apply
+            - dwfrm_profile_securekey : ${securekey}
+ 
+- Action :
+    Name : Accout Settings
+    Request : 
+        Url : ${urlsec}/account
+        Parameters :
+            - resgistration : true
+    Response :
+        Validate :
+            - Validate Name :
+                XPath : "//*[@id='primary']/h1"
+                Matches :  "My[\\s]Account[\\s]\\|[\\s]${firstName}[\\s\\S]*(Logout)?" 
+                
+- Action :
+    Name : Logout
+    Request :
+        Url : ${logoutUrl}
+
+- Action :
+    Name : a
+    Request :
+        Url : ${urlsec}/account   
+    Response :
+        Validate :
+            - Validate Title :
+                XPath : "//*[@id='primary']/h1"
+                Text :  My Account Login           

@@ -53,7 +53,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     private static final String METHOD = "Method";
 
     private static final String ENCODEPARAMETERS = "Encode-Parameters";
-    
+
     private static final String ENCODEBODY = "Encode-Body";
 
     private static final String XHR = "Xhr";
@@ -79,16 +79,16 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     private List<String> d_static = new ArrayList<String>();
 
     public YAMLBasedURLActionDataListBuilder(final String filePath,
-                                         final ParameterInterpreter interpreter,
-                                         final URLActionDataBuilder actionBuilder,
-                                         final URLActionDataValidationBuilder validationBuilder,
-                                         final URLActionDataStoreBuilder storeBuilder)
+                                             final ParameterInterpreter interpreter,
+                                             final URLActionDataBuilder actionBuilder,
+                                             final URLActionDataValidationBuilder validationBuilder,
+                                             final URLActionDataStoreBuilder storeBuilder)
     {
         super(filePath, interpreter, actionBuilder);
 
         setStoreBuilder(storeBuilder);
         setValidationBuilder(validationBuilder);
-        
+
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
@@ -143,7 +143,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             final Object o = loadParsedYamlObject();
             if (o != null)
             {
-                ParameterUtils.isArrayList(o, "YAML-Data",
+                ParameterUtils.isArrayList(o,
+                                           "YAML-Data",
                                            "See the no-coding syntax sepecification!");
                 resultList = (List<Object>) o;
                 XltLogger.runTimeLogger.info(MessageFormat.format("Loading YAML data from file: \"{0}\" ",
@@ -177,8 +178,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         XltLogger.runTimeLogger.info("Start building URLAction list");
         for (final Object listObject : dataList)
         {
-            ParameterUtils.isLinkedHashMap(listObject, "YAML - List",
-                                           SEESPEC);
+            ParameterUtils.isLinkedHashMap(listObject, "YAML - List", SEESPEC);
             final LinkedHashMap<String, Object> listItem = (LinkedHashMap<String, Object>) listObject;
             handleListItem(listItem);
         }
@@ -188,9 +188,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     private void handleListItem(final LinkedHashMap<String, Object> listItem)
     {
         final String tagName = determineTagName(listItem);
-        
+
         XltLogger.runTimeLogger.debug("Handling tag: " + tagName);
-        
+
         switch (tagName)
         {
             case ACTION:
@@ -352,6 +352,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
         }
     }
+
     private void setDefaultEncodeBody(final LinkedHashMap<String, Object> encodedItem)
     {
         final Object encodedObject = encodedItem.get(ENCODEBODY);
@@ -423,7 +424,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(PARAMETERS, parameters, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(PARAMETERS,
+                                       parameters,
+                                       Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (parametersObject instanceof ArrayList)
@@ -457,7 +460,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(COOKIES, cookies, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(COOKIES,
+                                       cookies,
+                                       Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (cookiesObject instanceof ArrayList)
@@ -493,7 +498,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(HEADERS, headers, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(HEADERS,
+                                       headers,
+                                       Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (headersObject instanceof ArrayList)
@@ -527,7 +534,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(STATIC, staticString, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(STATIC,
+                                       staticString,
+                                       Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (staticObject instanceof ArrayList)
@@ -560,7 +569,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(STORE, storeString, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(STORE,
+                                       storeString,
+                                       Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (storeObject instanceof ArrayList)
@@ -572,10 +583,11 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
                 ParameterUtils.isLinkedHashMapParam(object, STORE);
                 final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                 final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
-                System.err.println(nvp.getName() + " : " + nvp.getValue());
+                final NameValuePair nvp2 = new NameValuePair(interpreter.processDynamicData(nvp.getName()),
+                                                             interpreter.processDynamicData(nvp.getValue()));
                 try
                 {
-                    this.interpreter.set(nvp);
+                    this.interpreter.set(nvp2);
                 }
                 catch (final EvalError e)
                 {
@@ -787,6 +799,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
         }
     }
+
     private void fillURLActionBuilderWithCookieData(final LinkedHashMap<String, Object> rawRequest)
     {
         final Object cookiesObject = rawRequest.get(COOKIES);
@@ -881,10 +894,12 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(ENCODEPARAMETERS,
+                                       Reason.UNSUPPORTED_TYPE);
             }
         }
     }
+
     private void fillURLActionBuilderWithEncodeBodyData(final LinkedHashMap<String, Object> rawRequest)
     {
         final Object encodedObject = rawRequest.get(ENCODEBODY);
@@ -973,13 +988,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Object rawValidateSubObject = rawValidationItem.get(validationName);
         if (rawValidateSubObject != null)
         {
-            ParameterUtils.isLinkedHashMap(rawValidateSubObject, validationName, "");
+            ParameterUtils.isLinkedHashMap(rawValidateSubObject,
+                                           validationName,
+                                           "");
             final LinkedHashMap<String, Object> validateListSubItem = (LinkedHashMap<String, Object>) rawValidateSubObject;
             fillURLActionValidationBuilderWithDataFromLinkedHashMap(validateListSubItem);
         }
         else
         {
-            ParameterUtils.doThrow(VALIDATION, validationName, Reason.UNCOMPLETE);
+            ParameterUtils.doThrow(VALIDATION,
+                                   validationName,
+                                   Reason.UNCOMPLETE);
         }
     }
 
@@ -1018,7 +1037,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             final List<Object> storeObjects = (List<Object>) storeObject;
             for (final Object storeObjectsItem : storeObjects)
             {
-                ParameterUtils.isLinkedHashMap(storeObjectsItem, VALIDATION, "");
+                ParameterUtils.isLinkedHashMap(storeObjectsItem, STORE, "");
                 final LinkedHashMap<String, Object> storeItem = (LinkedHashMap<String, Object>) storeObjectsItem;
 
                 fillURLActionStoreBuilder(storeItem);
@@ -1031,7 +1050,6 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionStoreBuilder(final LinkedHashMap<String, Object> storeItem)
     {
-
         storeBuilder.reset();
 
         final String storeName = getNameOfFirstElementFromLinkedHashMap(storeItem);
@@ -1070,9 +1088,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Set<?> entrySet = lhm.entrySet();
         final Iterator<?> it = entrySet.iterator();
         final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
-        final String key = entry.getKey() != null ? entry.getKey().toString() : null;
-        final String value = entry.getValue() != null ? entry.getValue().toString()
-                                                     : null;
+        final String key = entry.getKey() != null ? entry.getKey().toString()
+                                                 : null;
+        final String value = entry.getValue() != null ? entry.getValue()
+                                                             .toString() : null;
         final NameValuePair nvp = new NameValuePair(key, value);
         return nvp;
     }
@@ -1085,9 +1104,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final String name = entry.getKey().toString();
         return name;
     }
-  
+
     static private final String SPECIFICATION = "YAMLSyntaxSpecification.txt";
-    static private final String SEESPEC = "See " + SPECIFICATION + " for the correct Syntax!";
-        
+
+    static private final String SEESPEC = "See " + SPECIFICATION
+                                          + " for the correct Syntax!";
 
 }

@@ -1,0 +1,29 @@
+- Store :
+    - baseurl : https://www.adidas.de
+    
+- Action :
+    Name : Open Homepage
+    Request :
+        Url : ${baseurl}
+    Response :
+        Validatate :
+            - Product Recommendation :
+                XPath : "//*[@id='hp-slot-3']/div/div[1]/h3"
+                Matches : "Das könnte dir auch gefallen"
+        
+- Action :
+    Name : load Registraction HTML Content
+    Request :
+        Url : https://cp.adidas.de/web/eCom/de_DE/loadcreateaccount
+    Response :
+        Validate :
+            - Form Title Personal Data :
+                XPath : "//*[@id='form']/fieldset/div[1]/div/h2"
+                Text : "Persönliche Daten"
+            - Form Title Login Information :
+                XPath : "//*[@id='form']/fieldset/div[2]/div/h2"
+                Text : "Anmeldeinformationen" 
+            
+                
+        
+        
