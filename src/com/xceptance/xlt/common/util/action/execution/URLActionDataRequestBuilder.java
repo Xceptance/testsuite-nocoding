@@ -148,6 +148,7 @@ public class URLActionDataRequestBuilder
                                + cookie.getValue() + ";";
             }
             request.setAdditionalHeader("Cookie", cookieString);
+            System.err.println(cookieString);
         }
     }
 

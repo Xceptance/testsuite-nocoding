@@ -18,50 +18,181 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.validators.HttpResponseCodeValidator;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * <p>
+ * Data Container which holds all necessary information to create and validate a single <b>http request</b>.
+ * </p>
+ * <ul>
+ * <li>Supports automatic & dynamic parameter interpretation via {@link ParameterInterpreter}. <br>
+ * </li>
+ * <li>Attributes are of type String to allow parameter interpretation.</li>
+ * <li>Defaults common used http request values, if not set explicitly.</li>
+ * <li>Holds a list of {@link #validations response validations}.</li>
+ * <li>Holds a list of {@link #store variables} which should be taken out of the response for dynamic parameter
+ * interpretation.</li>
+ * </ul>
+ * 
+ * @author Matthias Mitterreiter
+ */
+
 public class URLActionData
 {
 
+    /**
+     * http request name
+     */
     private String name;
 
+    /**
+     * <p>
+     * Type of request. <br>
+     * Default: {@link #TYPE_ACTION 'A'}. <br>
+     * </p>
+     * See {@link #PERMITTEDTYPES permitted request types}.
+     */
     private String type;
 
+    /**
+     * Url used for the request. <br>
+     * May be completed with {@link #parameters query parameters}.
+     */
     private String url;
 
+    /**
+     * <p>
+     * http request method. <br>
+     * Default : 'GET'. <br>
+     * </p>
+     * See {@link #PERMITTEDMETHODS permitted methods}.
+     */
     private String method;
 
+    /**
+     * <p>
+     * Boolean value. <br>
+     * Default: 'false'. <br>
+     * </p>
+     * <p>
+     * Allows further encoding of request {@link #parameters} with the declared {@link #encodingType encoding type}.
+     * </p>
+     */
     private String encodeParameters;
 
+    /**
+     * <p>
+     * Boolean value. <br>
+     * Default: 'false'. <br>
+     * </p>
+     * <p>
+     * Allows further encoding of request {@link #body} with the declared {@link #encodingType encoding type}.
+     * </p>
+     */
     private String encodeBody;
 
+    /**
+     * Expected HttpResponseCode. <br>
+     * Default : '200'.
+     */
     private String httpResponceCode;
 
+    /**
+     * <p>
+     * Request Body.
+     * </p>
+     * May be {@link #encodeBody encoded}.
+     */
     private String body;
 
+    /**
+     * Not implemented yet
+     */
+    private String encodingType;
+
+    /**
+     * Holds data to validate the http response.
+     */
     private List<URLActionDataValidation> validations = Collections.emptyList();
 
+    /**
+     * Holds the data, which should be taken out of the http response for dynamic parameter interpretation.
+     */
     private List<URLActionDataStore> store = Collections.emptyList();
 
+    /**
+     * Request parameters. <br>
+     * Depends on the {@link #method method}, whether they are GET or POST parameters.
+     */
     private List<NameValuePair> parameters = Collections.emptyList();
 
+    /**
+     * Additional data for the "Cookie" request header field. <br>
+     * Not implemented yet.
+     */
     private List<NameValuePair> cookies = Collections.emptyList();
 
+    /**
+     * Request headers.
+     */
     private List<NameValuePair> headers = Collections.emptyList();
 
+    /**
+     * {@link ParameterInterpreter}
+     */
     private ParameterInterpreter interpreter;
 
+    /**
+     * Permitted types of requests:
+     * <ul>
+     * <li> {@link #TYPE_ACTION Action}</li>
+     * <li> {@link #TYPE_STATIC Static action}</li>
+     * <li> {@link #TYPE_XHR Xhr action}</li>
+     * <ul>
+     */
     public final static Set<String> PERMITTEDTYPES = new HashSet<String>();
 
+    /**
+     * Supported request methods:
+     * <ul>
+     * <li> {@link #METHOD_GET GET}</li>
+     * <li> {@link #METHOD_POST POST}</li>
+     * <li> {@link #METHOD_PUT PUT}</li>
+     * <li> {@link #METHOD_DELETE DELETE}</li>
+     * <li> {@link #METHOD_HEAD HEAD}</li>
+     * <li> {@link #METHOD_TRACE TRACE}</li>
+     * <li> {@link #METHOD_OPTIONS OPTIONS}</li>
+     * <li> {@link #METHOD_CONNECT CONNECT}</li>
+     * <ul>
+     */
     public final static Set<String> PERMITTEDMETHODS = new HashSet<String>();
 
+    /**
+     * Type for a general Http Request.
+     */
     public static final String TYPE_ACTION = "A";
 
+    /**
+     * Type for a Http requests, that loads static content. <br> 
+     */
     public static final String TYPE_STATIC = "S";
 
+    /**
+     * Type for a XMLHttpRequest
+     */
     public static final String TYPE_XHR = "Xhr";
 
     public static final String METHOD_POST = "POST";
 
     public static final String METHOD_GET = "GET";
+
+    public static final String METHOD_PUT = "PUT";
+
+    public static final String METHOD_DELETE = "DELETE";
+
+    public static final String METHOD_HEAD = "HEAD";
+
+    public static final String METHOD_TRACE = "TRACE";
+
+    public static final String METHOD_OPTIONS = "OPTIONS";
 
     static
     {
@@ -71,26 +202,43 @@ public class URLActionData
 
         PERMITTEDMETHODS.add(METHOD_GET);
         PERMITTEDMETHODS.add(METHOD_POST);
+        PERMITTEDMETHODS.add(METHOD_DELETE);
+        PERMITTEDMETHODS.add(METHOD_PUT);
+        PERMITTEDMETHODS.add(METHOD_HEAD);
+        PERMITTEDMETHODS.add(METHOD_TRACE);
+        PERMITTEDMETHODS.add(METHOD_OPTIONS);
     }
 
-    /*
-     * @Parameters: Minimal parameters to create a legit URLAction
+    /**
+     * Takes the minimal set of parameters that are necessary to crate a http request. <br>
+     * Defaults rest of the attributes. <br>
+     * 
+     * @param name
+     *            : {@link #name}
+     * @param url
+     *            : {@link #url}
+     * @param interpreter
+     *            : {@link #interpreter}
      */
     public URLActionData(final String name,
-                     final String url,
-                     final ParameterInterpreter interpreter)
+                         final String url,
+                         final ParameterInterpreter interpreter)
     {
         XltLogger.runTimeLogger.debug("Ceating new Instance ");
         setName(name);
         setUrl(url);
         setType(TYPE_ACTION); // default
         setMethod(METHOD_GET); // default
-        setEncodeParameters("true"); // default
-        setEncodeBody("true"); //default
-        setHttpResponceCode("200"); //default
+        setEncodeParameters("false"); // default
+        setEncodeBody("false"); // default
+        setHttpResponceCode("200"); // default
         setInterpreter(interpreter);
     }
 
+    /**
+     * For debugging purpose. <br>
+     * err-streams the attributes of the object. <br>
+     */
     public void outline()
     {
         try
@@ -101,9 +249,11 @@ public class URLActionData
             System.err.println("\t" + "Is Xhr: " + isXHRAction());
             System.err.println("\t" + "Method: " + getMethod());
             System.err.println("\t" + "URL: " + getUrl().toString());
-            System.err.println("\t" + "Encode-Parameters: " + encodeParameters());
+            System.err.println("\t" + "Encode-Parameters: "
+                               + encodeParameters());
             System.err.println("\t" + "Encode-Body: " + encodeBody());
-            System.err.println("\t" + "HttpCode: "
+            System.err.println("\t"
+                               + "HttpCode: "
                                + getResponseCodeValidator().getHttpResponseCode());
             if (body != null)
             {
@@ -115,7 +265,8 @@ public class URLActionData
                 System.err.println("\t" + "Parameters: ");
                 for (final NameValuePair nvp : parameters)
                 {
-                    System.err.println("\t\t" + nvp.getName() + " : " + nvp.getValue());
+                    System.err.println("\t\t" + nvp.getName() + " : "
+                                       + nvp.getValue());
                 }
             }
             if (!headers.isEmpty())
@@ -124,7 +275,8 @@ public class URLActionData
                 final List<NameValuePair> headers = getHeaders();
                 for (final NameValuePair nvp : headers)
                 {
-                    System.err.println("\t\t" + nvp.getName() + " : " + nvp.getValue());
+                    System.err.println("\t\t" + nvp.getName() + " : "
+                                       + nvp.getValue());
                 }
             }
             if (!cookies.isEmpty())
@@ -133,7 +285,8 @@ public class URLActionData
                 final List<NameValuePair> cookies = getCookies();
                 for (final NameValuePair nvp : cookies)
                 {
-                    System.err.println("\t\t" + nvp.getName() + " : " + nvp.getValue());
+                    System.err.println("\t\t" + nvp.getName() + " : "
+                                       + nvp.getValue());
                 }
             }
             if (!validations.isEmpty())
@@ -160,26 +313,42 @@ public class URLActionData
 
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param httpResponceCode
+     */
     public void setHttpResponceCode(final String httpResponceCode)
     {
         if (httpResponceCode != null)
         {
             this.httpResponceCode = httpResponceCode;
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("HttpResponceCode",
-                                                                 httpResponceCode));
+                                                                  httpResponceCode));
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param httpResponceCode
+     */
     public void setHttpResponceCode(final Integer httpResponceCode)
     {
         if (httpResponceCode != null)
         {
             this.httpResponceCode = httpResponceCode.toString();
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("HttpResponceCode",
-                                                                 this.httpResponceCode));
+                                                                  this.httpResponceCode));
         }
     }
 
+    /**
+     * Sets if NOT null, otherwise THROWS.
+     * 
+     * @throws IllegalArgumentException
+     * @param url
+     */
     public void setUrl(final String url)
     {
         this.url = (url != null) ? url
@@ -187,43 +356,71 @@ public class URLActionData
         XltLogger.runTimeLogger.debug(getSetTagToValueMessage("URL", this.url));
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param method
+     */
     public void setMethod(final String method)
     {
         if (method != null)
         {
             this.method = method;
-            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Method", this.method));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Method",
+                                                                  this.method));
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param encoded
+     */
     public void setEncodeParameters(final String encoded)
     {
         if (encoded != null)
         {
             this.encodeParameters = encoded;
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedParameters",
-                                                                 this.encodeParameters));
+                                                                  this.encodeParameters));
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param encoded
+     */
     public void setEncodeParameters(final Boolean encoded)
     {
         if (encoded != null)
         {
             this.encodeParameters = encoded.toString();
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedParameters",
-                                                                 this.encodeParameters));
+                                                                  this.encodeParameters));
         }
     }
+
+    /**
+     * Sets if NOT null.
+     * 
+     * @param encoded
+     */
     public void setEncodeBody(final String encoded)
     {
         if (encoded != null)
         {
             this.encodeBody = encoded;
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedBody",
-                                                                 this.encodeBody));
+                                                                  this.encodeBody));
         }
     }
+
+    /**
+     * Sets if NOT null.
+     * 
+     * @param encoded
+     */
 
     public void setEncodeBody(final Boolean encoded)
     {
@@ -231,28 +428,46 @@ public class URLActionData
         {
             this.encodeBody = encoded.toString();
             XltLogger.runTimeLogger.debug(getSetTagToValueMessage("encodedBody",
-                                                                 this.encodeBody));
+                                                                  this.encodeBody));
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * 
+     * @param type
+     */
     public void setType(final String type)
     {
         if (type != null)
         {
             this.type = type;
-            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Type", this.type));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Type",
+                                                                  this.type));
         }
     }
 
+    /**
+     * Sets if NOT null, otherwise THROWS.
+     * 
+     * @param name
+     * @throws IllegalArgumentException
+     */
     public void setName(final String name)
     {
         this.name = ((name != null) ? name
                                    : (String) throwIllegalArgumentException("Name' cannot be null"));
         XltLogger.runTimeLogger.debug(MessageFormat.format("Set Action 'Name' to \"{0}\"",
-                                                          this.name));
+                                                           this.name));
 
     }
 
+    /**
+     * Sets if NOT null, otherwise THROWS.
+     * 
+     * @param interpreter
+     * @throws IllegalArgumentException
+     */
     private void setInterpreter(final ParameterInterpreter interpreter)
     {
 
@@ -262,6 +477,10 @@ public class URLActionData
 
     }
 
+    /**
+     * Sets if NOT null.
+     * @param validations
+     */
     public void setValidations(final List<URLActionDataValidation> validations)
     {
         if (validations != null)
@@ -271,6 +490,10 @@ public class URLActionData
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * @param headers
+     */
     public void setHeaders(final List<NameValuePair> headers)
     {
         if (headers != null)
@@ -279,7 +502,10 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("headers"));
         }
     }
-
+    /**
+     * Sets if NOT null.
+     * @param store
+     */
     public void setStore(final List<URLActionDataStore> store)
     {
         if (store != null)
@@ -289,6 +515,10 @@ public class URLActionData
         }
     }
 
+    /**
+     * Sets if NOT null.
+     * @param parameters
+     */
     public void setParameters(final List<NameValuePair> parameters)
     {
         if (parameters != null)
@@ -297,7 +527,10 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("parameters"));
         }
     }
-
+    /**
+     * Sets if NOT null.
+     * @param cookies
+     */
     public void setCookies(final List<NameValuePair> cookies)
     {
         if (cookies != null)
@@ -306,22 +539,32 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("cookies"));
         }
     }
-
+    /**
+     * Sets if NOT null.
+     * @param body
+     */
     public void setBody(final String body)
     {
         if (body != null)
         {
             this.body = body;
-            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("body", this.body));
+            XltLogger.runTimeLogger.debug(getSetTagToValueMessage("body",
+                                                                  this.body));
         }
     }
 
+    
     @Nullable
     public String getBody()
     {
         return interpreter.processDynamicData(this.body);
     }
 
+    /**
+     * 
+     * @return {@link #type type of request}. <br>
+     *  if type is unknown, returns {@link #TYPE_ACTION}. 
+     */
     public String getType()
     {
         String result;
@@ -339,7 +582,10 @@ public class URLActionData
         }
         return result;
     }
-
+    
+    /**
+     * @throws IllegalArguementException if {@link #url} is malformed.  
+     */
     public URL getUrl()
     {
         try
@@ -348,7 +594,9 @@ public class URLActionData
         }
         catch (final MalformedURLException e)
         {
-            throw new IllegalArgumentException("Malformed URL for action" + getName() + ": " + e.getMessage(), e);
+            throw new IllegalArgumentException("Malformed URL for action"
+                                               + getName() + ": "
+                                               + e.getMessage(), e);
         }
     }
 
@@ -360,18 +608,22 @@ public class URLActionData
     public HttpResponseCodeValidator getResponseCodeValidator()
     {
         final String dynmaicResponseCode = interpreter.processDynamicData(this.httpResponceCode);
-        final HttpResponseCodeValidator result = StringUtils.isNotBlank(dynmaicResponseCode) ? new HttpResponseCodeValidator(
-                                                                                                                             Integer.parseInt(dynmaicResponseCode))
+        final HttpResponseCodeValidator result = StringUtils.isNotBlank(dynmaicResponseCode) ? new HttpResponseCodeValidator(Integer.parseInt(dynmaicResponseCode))
                                                                                             : HttpResponseCodeValidator.getInstance();
         return result;
     }
+
     public Integer getHttpResponseCode()
     {
         final String dynmaicResponseCode = interpreter.processDynamicData(this.httpResponceCode);
-        final Integer resultInteger = dynmaicResponseCode != null ? Integer.parseInt(dynmaicResponseCode) : 200;
+        final Integer resultInteger = dynmaicResponseCode != null ? Integer.parseInt(dynmaicResponseCode)
+                                                                 : 200;
         return resultInteger;
     }
 
+    /**
+     * @returns {@link #method} 
+     */
     public HttpMethod getMethod()
     {
         HttpMethod result = HttpMethod.GET;
@@ -386,20 +638,34 @@ public class URLActionData
     private HttpMethod selectMethodFromDynamicData(final String dynamicMethod)
     {
         HttpMethod result;
-        if (dynamicMethod.equals(METHOD_GET))
+        switch (dynamicMethod)
         {
-            result = HttpMethod.GET;
-        }
-        else if (dynamicMethod.equals(METHOD_POST))
-        {
-            result = HttpMethod.POST;
-        }
-        else
-        {
-            XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicMethod,
-                                                                          "HttpResponseCode",
-                                                                          METHOD_GET));
-            result = HttpMethod.GET;
+            case METHOD_GET:
+                result = HttpMethod.GET;
+                break;
+            case METHOD_POST:
+                result = HttpMethod.POST;
+                break;
+            case METHOD_PUT:
+                result = HttpMethod.PUT;
+                break;
+            case METHOD_DELETE:
+                result = HttpMethod.DELETE;
+                break;
+            case METHOD_HEAD:
+                result = HttpMethod.HEAD;
+                break;
+            case METHOD_TRACE:
+                result = HttpMethod.TRACE;
+                break;
+            case METHOD_OPTIONS:
+                result = HttpMethod.OPTIONS;
+                break;
+            default:
+                XltLogger.runTimeLogger.warn(getIllegalValueOfTagDefaultingTo(dynamicMethod,
+                                                                              "HttpResponseCode",
+                                                                              METHOD_GET));
+                result = HttpMethod.GET;
         }
         return result;
     }
@@ -426,12 +692,17 @@ public class URLActionData
 
     }
 
+    /**
+     * Sends nvp through the {@link #interpreter Parameter Interpreter}.
+     */
     private NameValuePair getDynamicPair(final NameValuePair pair)
     {
         String name = pair.getName();
-        name = name != null ? interpreter.processDynamicData(pair.getName()) : name;
+        name = name != null ? interpreter.processDynamicData(pair.getName())
+                           : name;
         String value = pair.getValue();
-        value = value != null ? interpreter.processDynamicData(pair.getValue()) : value;
+        value = value != null ? interpreter.processDynamicData(pair.getValue())
+                             : value;
         return new NameValuePair(name, value);
     }
 
@@ -466,7 +737,6 @@ public class URLActionData
     {
         return interpreter;
     }
-
 
     public Boolean encodeParameters()
     {
@@ -514,7 +784,7 @@ public class URLActionData
         }
         return result;
     }
-    
+
     public boolean isStaticContent()
     {
         Boolean result = false; // default
@@ -523,7 +793,8 @@ public class URLActionData
         {
             result = true;
         }
-        else if (TYPE_XHR.equals(dynamicType) || TYPE_ACTION.equals(dynamicType))
+        else if (TYPE_XHR.equals(dynamicType)
+                 || TYPE_ACTION.equals(dynamicType))
         {
             result = false;
         }
@@ -545,7 +816,8 @@ public class URLActionData
         {
             result = true;
         }
-        else if (TYPE_ACTION.equals(dynamicType) || TYPE_STATIC.equals(dynamicType))
+        else if (TYPE_ACTION.equals(dynamicType)
+                 || TYPE_STATIC.equals(dynamicType))
         {
             result = false;
         }
@@ -568,7 +840,8 @@ public class URLActionData
         {
             result = true;
         }
-        else if (TYPE_XHR.equals(dynamicType) || TYPE_STATIC.equals(dynamicType))
+        else if (TYPE_XHR.equals(dynamicType)
+                 || TYPE_STATIC.equals(dynamicType))
         {
             result = false;
         }
@@ -623,21 +896,25 @@ public class URLActionData
     private String getSetTagToValueMessage(final String tag, final String value)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Set \"{1}\" to value: \"{2}\"",
-                                                    this.name, tag, value);
+                                                    this.name,
+                                                    tag,
+                                                    value);
         return message;
     }
 
     private String getAddedToTag(final String tag)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Added new \"{1}\"",
-                                                    this.name, tag);
+                                                    this.name,
+                                                    tag);
         return message;
     }
 
     private String getSetNewTagMessage(final String tag)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Set new \"{1}\"",
-                                                    this.name, tag);
+                                                    this.name,
+                                                    tag);
         return message;
     }
 
@@ -646,7 +923,10 @@ public class URLActionData
                                                     final String defaultValue)
     {
         final String message = MessageFormat.format(" Action: \"{0}\",  Unsupported value \"{1}\" for \"{2}\", defaulting to \"{3}\"",
-                                                    this.name, value, tag, defaultValue);
+                                                    this.name,
+                                                    value,
+                                                    tag,
+                                                    defaultValue);
         return message;
     }
 }

@@ -23,11 +23,6 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class AbstractURLTestCase extends AbstractTestCase
 {
-
-    protected String login;
-
-    protected String password;
-
     protected String dataDirectory;
 
     protected String filePath;
@@ -59,15 +54,15 @@ public class AbstractURLTestCase extends AbstractTestCase
     {
         loadXltProperties();
         loadGeneralDataProvider();
-        loadCredentials();
         loadDataDirectory();
         loadFilePath();
         loadMode();
         setupParameterInterpreter();
-        setupURLActionList();
+        setupURLActionListFacade();
         setupURLActionExecutableFactory();
         setupURLActionRequestBuilder();
         setupURLActionResponseHandler();
+        setupURLActionList();
     }
 
     private void loadXltProperties()
@@ -78,15 +73,6 @@ public class AbstractURLTestCase extends AbstractTestCase
     private void loadGeneralDataProvider()
     {
         this.dataProvider = GeneralDataProvider.getInstance();
-    }
-
-    private void loadCredentials()
-    {
-        this.login = getProperty("login",
-                                 getProperty("com.xceptance.xlt.auth.userName"));
-        this.password = getProperty("password",
-                                    getProperty("com.xceptance.xlt.auth.password"));
-
     }
 
     private void loadDataDirectory()
@@ -108,6 +94,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     private void loadFilePath()
     {
         final String filePath = getProperty("com.xceptance.xlt.common.tests.filename");
+        
         if (filePath != null)
         {
             this.filePath = dataDirectory + File.separatorChar + filePath;
@@ -138,11 +125,10 @@ public class AbstractURLTestCase extends AbstractTestCase
                                                     this.dataProvider);
     }
 
-    private void setupURLActionList()
+    private void setupURLActionListFacade()
     {
         urlActionListFacade = new URLActionDataListFacade(this.filePath,
                                                           this.interpreter);
-        this.actions = urlActionListFacade.buildUrlActions();
     }
 
     private void setupURLActionExecutableFactory()
@@ -163,6 +149,20 @@ public class AbstractURLTestCase extends AbstractTestCase
         this.validationHandler = new URLActionDataValidationResponseHandler();
         this.responseHandler = new URLActionDataResponseHandler(this.storeHandler,
                                                                 this.validationHandler);
+    }
+
+    private void setupURLActionList()
+    {
+        try
+        {
+            this.actions = urlActionListFacade.buildUrlActions();
+        }
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException("Failed to read DATA from File: "
+                                                   + e.getMessage(),
+                                               e);
+        }
     }
 
     /**

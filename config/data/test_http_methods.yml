@@ -1,0 +1,47 @@
+- Store :   
+    - url : http://posttestserver.com/post.php
+    
+- Action :
+    Name : POST
+    Request :
+        Url : ${url}
+        Method : POST
+        
+- Action :
+    Name : GET
+    Request :
+        Url : ${url}
+        Method : GET
+
+- Action :
+    Name : PUT
+    Request :
+        Url : ${url}
+        Method : PUT
+
+- Action :
+    Name : DELETE
+    Request :
+        Url : ${url}
+        Method : DELETE
+
+- Action :
+    Name : HEAD
+    Request :
+        Url : http://www.google.de
+        Method : HEAD   
+        
+- Action :
+    Name : TRACE
+    Request :
+        Url : ${url}
+        Method : TRACE
+    Response :
+        Httpcode : 405
+- Action :
+    Name : OPTIONS
+    Request :
+        Url : ${url}
+        Method : OPTIONS
+        
+    

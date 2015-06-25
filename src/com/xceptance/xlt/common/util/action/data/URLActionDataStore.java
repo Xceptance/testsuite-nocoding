@@ -23,7 +23,7 @@ public class URLActionDataStore
 
     public static final String XPATH = "XPath";
 
-    public static final String REGEXP = "RegExp";
+    public static final String REGEXP = "RegEx";
 
     public static final String HEADER = "Header";
 

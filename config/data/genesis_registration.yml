@@ -1,8 +1,8 @@
 - Store :
-    - email : ${DATA.getEmail()}
-    - firstName : ${DATA.getFirstName(false)}
-    - lastName : ${DATA.getLastName(false)}
-    - password : ${RANDOM.DigitString(8)}
+    - email : b@c.de
+    - firstName : b
+    - lastName : c
+    - password : 12345678
     - url : http://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site
     - urlsec : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
     - logoutUrl : https://dev01.lab04b.dw.demandware.net/on/demandware.store/Sites-SiteGenesis-Site/en_US/Login-Logout

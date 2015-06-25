@@ -38,7 +38,7 @@ because the source is free and licensed under the Apache License V2.0.
 * Static content can be handled automatically or specified manually.
 * Does not disable any XLT features.
 
-## Open Issues
+##  Issues
 Problem  | Status
 ------------- | -------------
 The WebClient must be configurated with properties (js, static content, credentials ...)  | open
@@ -49,8 +49,14 @@ Parameter encoding is messy | open
 Rework log system | open
 Rework exception handling (creation, execution, validation) | open
 Rework class naming | open
-Document automated header setting
+Document automated header setting | open
 Rework "Matches" Validation mode | open
+Firebug Xpath problem | open
+find out about getEffectiveKey | open
+documentatio about supported filetypes | open
+support more http methods |open
+testcase mapping | open
+support encoding type | open
 
 ## Planed
 Item  | Status
@@ -60,8 +66,14 @@ documentation | planed
 Expand ParameterInterpreter with js support | open
 Implement recursive ParamterInterpreter | open
 Expand DataProvider with a set of valid data multibles | open
-CLassed Overview
+CLassed Overview | open
 
+
+## Documentation, Error Handling, Logging
+
+Class | Docu| Error Handling | Logging
+----|----|----|----
+URLActionData | -[x] | -[x] | -[x]
 
 
 

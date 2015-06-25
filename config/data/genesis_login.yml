@@ -1,7 +1,7 @@
 - Store :
-    - email : a@s.de
-    - firstName : a
-    - lastName : s
+    - email : b@c.de
+    - firstName : b
+    - lastName : c
     - password : "12345678"
     - url : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
     - urlsec : https://dev01.lab04b.dw.demandware.net/s/SiteGenesis
