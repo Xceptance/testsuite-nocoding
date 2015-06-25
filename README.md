@@ -42,23 +42,22 @@ because the source is free and licensed under the Apache License V2.0.
 
 ##  Most Wanted 
 
-The following is an unordered lsit of the most hurting issues and should be resolved fast in order to ensure the functionality of the test-suite.
+The following is an unordered list of the most hurting issues and should be resolved fast in order to ensure the functionality of the test-suite.
 
 Issue  |  Type | Status
 ------------- | :-------------: | :-------------:
 The WebClient must be configurated with properties (js, static content, credentials ...).  | :question: | :x:
 Data from the files don't overwrite the properties. | :beetle: | :x:
-HtmlAttributes and Textfields arre not validatable | :beetle: | :x:
-CSV file Loader does not work | :ghost: | :x:
+HtmlAttributes and Textfields are not validatable. | :beetle: | :white_check_mark:
+CSV file Loader does not work. (because not implemented) | :ghost: | :x:
 Parameter encoding is messy. | :poop: | :x:
-Functional and supporting logystem  | :ghost: | :x:
+Functional and supporting logystem ?  | :ghost: | :x:
 Expressive and functional exception handling (creation, execution, validation). | :ghost: | :x:
 Are naming conventions expressive? | :question: | :x:
-Write the documentation about automated request header setting | :ghost: | :x:
+Default request header setting. | :ghost: | :x:
 The "Matches" validation mode doesnt work! | :beetle: | :x:
-Firebug delivers helpless "XPath"s. | :beetle: | :x: 
+Firebug delivers helpless "XPath"s. Assimilate! | :beetle: | :x: 
 Unravel the mystery about "getEffectiveKey()". | :ghost: | :x:
-Write the documentation about supported filetypes. | :ghost: | :x:
 Support multiple request methods. |:ghost: | :x:
 Testcase mapping doesn't work. | :beetle: | :x:
 
@@ -67,7 +66,7 @@ Testcase mapping doesn't work. | :beetle: | :x:
 
 :x: ... open, :white_check_mark: ... resolved.
 
-:question: ... open question or unclear behaviour.
+:question: ... open question or unclear behavior.
 
 :beetle: ... [group of insects which are biologically classified in the order Coleoptera](https://en.wikipedia.org/?title=Beetle). Kill it!
 
@@ -96,7 +95,7 @@ Class | Scripted | Tested | Documented| Error Handling | Logging
 ----|:----:|:----:|:----:|:----:|:----:
 AbstractURLTestCase | :white_check_mark: |:x: | :x: | :x: | :x: 
 ConcreteNodeList  | :white_check_mark: | :x: | :x: | :x: | :x: 
-CSVBasedURLActionDataListBuilder  |:white_check_mark: | :x: | :x: | :x: | :x:  
+CSVBasedURLActionDataListBuilder  |:x: | :x: | :x: | :x: | :x:  
 Downloader  |:white_check_mark: | :x: | :x: | :x: | :x:  
 HtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
 HtmlPageActionFactory  | :white_check_mark:| :x: | :x: | :x: | :x:  
@@ -111,14 +110,9 @@ ModifiedRegExUtils  | :white_check_mark:|:x: | :x: | :x: | :x:
 ParameterInterpreter  | :white_check_mark:|:x: | :x: | :x: | :x: 
 ParameterInterpreterNow  | :white_check_mark:| :x: | :x: | :x: | :x: 
 ParameterInterpreterRandom  | :white_check_mark:|:x: | :x: | :x: | :x: 
-ParameterInterpreterRandomTest  |:white_check_mark: | :x: | :x: | :x: | :x: 
 ParameterUtils  |:white_check_mark: | :x: | :x: | :x: | :x: 
-ParameterUtils.Reason  |:white_check_mark: | :x: | :x: | :x: | :x: 
-RegexLab  |:white_check_mark: | :x: | :x: | :x: | :x: 
-RegexTestHarness |:white_check_mark: |:x: | :x: | :x: | :x: 
 StaticContentDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLAction | :white_check_mark:| :x: | :x: | :x: | :x: 
-URLActionData |:white_check_mark: | :x: | :x: | :x: 
+URLActionData |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:
 URLActionDataBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
 URLActionDataExecutable | :white_check_mark:| :x: | :x: | :x: | :x: 
 URLActionDataExecutableFactory | :white_check_mark:|:x: | :x: | :x: | :x: 
