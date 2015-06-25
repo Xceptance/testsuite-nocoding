@@ -25,8 +25,8 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
  * <ul>
  * <li>Supports automatic & dynamic parameter interpretation via {@link ParameterInterpreter}. <br>
  * </li>
- * <li>Attributes are of type String to allow parameter interpretation.</li>
- * <li>Defaults common used http request values, if not set explicitly.</li>
+ * <li>Attributes are of type String to allow parameter interpretation and may be parsed to the intended type when they are accessed.</li>
+ * <li>Defaults common used Http request values, if not set explicitly.</li>
  * <li>Holds a list of {@link #validations response validations}.</li>
  * <li>Holds a list of {@link #store variables} which should be taken out of the response for dynamic parameter
  * interpretation.</li>
@@ -39,7 +39,7 @@ public class URLActionData
 {
 
     /**
-     * http request name
+     * Http request name.
      */
     private String name;
 
@@ -53,14 +53,15 @@ public class URLActionData
     private String type;
 
     /**
-     * Url used for the request. <br>
+     * Intended type: {@link URL} <br>
+     * The url used for the request. <br>
      * May be completed with {@link #parameters query parameters}.
      */
     private String url;
 
     /**
      * <p>
-     * http request method. <br>
+     * Http request method. <br>
      * Default : 'GET'. <br>
      * </p>
      * See {@link #PERMITTEDMETHODS permitted methods}.
@@ -69,7 +70,7 @@ public class URLActionData
 
     /**
      * <p>
-     * Boolean value. <br>
+     * Intended type: Boolean <br>
      * Default: 'false'. <br>
      * </p>
      * <p>
@@ -80,7 +81,7 @@ public class URLActionData
 
     /**
      * <p>
-     * Boolean value. <br>
+     * Intended type: Boolean <br>
      * Default: 'false'. <br>
      * </p>
      * <p>
@@ -90,6 +91,7 @@ public class URLActionData
     private String encodeBody;
 
     /**
+     * Intended type: Integer <br>
      * Expected HttpResponseCode. <br>
      * Default : '200'.
      */
@@ -109,12 +111,12 @@ public class URLActionData
     private String encodingType;
 
     /**
-     * Holds data to validate the http response.
+     * Data to validate the Http response.
      */
     private List<URLActionDataValidation> validations = Collections.emptyList();
 
     /**
-     * Holds the data, which should be taken out of the http response for dynamic parameter interpretation.
+     * Data, which should be taken out of the Http response and stored for dynamic parameter interpretation.
      */
     private List<URLActionDataStore> store = Collections.emptyList();
 
@@ -136,17 +138,22 @@ public class URLActionData
     private List<NameValuePair> headers = Collections.emptyList();
 
     /**
-     * {@link ParameterInterpreter}
+     * {@link ParameterInterpreter}.
      */
     private ParameterInterpreter interpreter;
 
     /**
+     * <p>
      * Permitted types of requests:
      * <ul>
      * <li> {@link #TYPE_ACTION Action}</li>
      * <li> {@link #TYPE_STATIC Static action}</li>
      * <li> {@link #TYPE_XHR Xhr action}</li>
      * <ul>
+     * </p>
+     * <p>
+     * Different types allow a different handling of the request as well as the response.
+     * </p>
      */
     public final static Set<String> PERMITTEDTYPES = new HashSet<String>();
 
@@ -236,8 +243,10 @@ public class URLActionData
     }
 
     /**
+     * <p>
      * For debugging purpose. <br>
      * 'err-streams' the attributes of the object. <br>
+     * </p>
      */
     public void outline()
     {
@@ -451,7 +460,7 @@ public class URLActionData
      * Sets if NOT null, otherwise THROWS.
      * 
      * @param name
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException.
      */
     public void setName(final String name)
     {
@@ -553,7 +562,9 @@ public class URLActionData
         }
     }
 
-    
+    /**
+     * @return {@link #body}, after its dynamic interpretation via {@link #interpreter}.
+     */
     @Nullable
     public String getBody()
     {
@@ -562,8 +573,8 @@ public class URLActionData
 
     /**
      * 
-     * @return {@link #type type of request}. <br>
-     *  if type is unknown, returns {@link #TYPE_ACTION}. 
+     * @return  The {@link #type type of request}. <br>
+     *  if type is unknown, it returns {@link #TYPE_ACTION}. 
      */
     public String getType()
     {
@@ -584,7 +595,8 @@ public class URLActionData
     }
     
     /**
-     * @throws IllegalArguementException if {@link #url} is malformed.  
+     * 
+     * @return {@link #url},  after its dynamic interpretation via {@link #interpreter}.
      */
     public URL getUrl()
     {
@@ -600,11 +612,17 @@ public class URLActionData
         }
     }
 
-    public String getUrlString() throws MalformedURLException
+    /**
+     * @return {@link #url},  after its dynamic interpretation via {@link #interpreter}.
+     */
+    public String getUrlString()
     {
         return getUrl().toString();
     }
 
+    /**
+     * @return {@link #httpResponceCode}, after its dynamic interpretation via {@link #interpreter}.
+     */
     public HttpResponseCodeValidator getResponseCodeValidator()
     {
         final String dynmaicResponseCode = interpreter.processDynamicData(this.httpResponceCode);
@@ -613,6 +631,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return {@link #httpResponceCode}, after its dynamic interpretation via {@link #interpreter}.
+     */
     public Integer getHttpResponseCode()
     {
         final String dynmaicResponseCode = interpreter.processDynamicData(this.httpResponceCode);
@@ -622,7 +643,8 @@ public class URLActionData
     }
 
     /**
-     * @returns {@link #method} 
+     * @returns {@link #method}, after its dynamic interpretation via {@link #interpreter}.
+     * If the value of {@link #method} is unsupported, it gets defaulted to {@link #METHOD_GET GET}.
      */
     public HttpMethod getMethod()
     {
@@ -635,6 +657,12 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * 
+     * @param dynamicMethod
+     * @return {@link #method} after its dynamic interpretation via {@link #interpreter}.
+     * If its value is unsupported, {@link #method} gets defaulted to {@link #METHOD_GET GET}.
+     */
     private HttpMethod selectMethodFromDynamicData(final String dynamicMethod)
     {
         HttpMethod result;
@@ -670,16 +698,26 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return {@link #validations}.
+     */
     public List<URLActionDataValidation> getValidations()
     {
         return this.validations;
     }
 
+    /**
+     * @return {@link #store}.
+     */
     public List<URLActionDataStore> getStore()
     {
         return this.store;
     }
 
+    /**
+     * 
+     * @return {@link #parameters}, after its dynamic interpretation via {@link #interpreter}.
+     */
     public List<NameValuePair> getParameters()
     {
         final List<NameValuePair> result = new ArrayList<NameValuePair>(parameters.size());
@@ -693,7 +731,7 @@ public class URLActionData
     }
 
     /**
-     * Sends nvp through the {@link #interpreter Parameter Interpreter}.
+     * Sends nvp through the {@link #interpreter}.
      */
     private NameValuePair getDynamicPair(final NameValuePair pair)
     {
@@ -706,6 +744,9 @@ public class URLActionData
         return new NameValuePair(name, value);
     }
 
+    /**
+     * @return {@link #cookies}, after its dynamic interpretation via {@link #interpreter}.
+     */
     public List<NameValuePair> getCookies()
     {
         final List<NameValuePair> result = new ArrayList<NameValuePair>(cookies.size());
@@ -717,6 +758,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return {@link #headers}, after its dynamic interpretation via {@link #interpreter}.
+     */
     public List<NameValuePair> getHeaders()
     {
         final List<NameValuePair> result = new ArrayList<NameValuePair>(headers.size());
@@ -728,6 +772,10 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * 
+     * @return {@link #name} after its dynamic interpretation via {@link #interpreter}.
+     */
     public String getName()
     {
         return interpreter.processDynamicData(name);
@@ -738,6 +786,10 @@ public class URLActionData
         return interpreter;
     }
 
+    /**
+     * 
+     * @return value of {@link #encodeParameters} after its dynamic interpretation via {@link #interpreter}.
+     */
     public Boolean encodeParameters()
     {
         Boolean result = false; // default
@@ -760,6 +812,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return value of {@link #encodeBody} after its dynamic interpretation via {@link #interpreter}.
+     */
     public Boolean encodeBody()
     {
         Boolean result = true; // default
@@ -785,6 +840,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return true if {@link #type request} is of type {@link #TYPE_STATIC}.
+     */
     public boolean isStaticContent()
     {
         Boolean result = false; // default
@@ -808,6 +866,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return true if {@link #type request} is of type {@link #TYPE_XHR}.
+     */
     public boolean isXHRAction()
     {
         Boolean result = false; // default
@@ -832,6 +893,9 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * @return true if {@link #type request} is of type {@link #TYPE_ACTION}.
+     */
     public Boolean isAction()
     {
         Boolean result = true; // default
@@ -855,6 +919,10 @@ public class URLActionData
         return result;
     }
 
+    /**
+     * 
+     * @return true if {@link #body} is set.
+     */
     public Boolean hasBody()
     {
         Boolean b = false;
@@ -865,16 +933,29 @@ public class URLActionData
         return b;
     }
 
-    public static boolean isPermittedMethod(final String s)
+    /**
+     * @param s
+     * @return if ({@link #PERMITTEDMETHODS method} is permitted) ? true : false. 
+     */
+    public static boolean isPermittedMethod(final String method)
     {
-        return PERMITTEDMETHODS.contains(s);
+        return PERMITTEDMETHODS.contains(method);
+    }
+    /**
+     * 
+     * @param type
+     * @return if ({@link #PERMITTEDTYPES type} is permitted) ? true : false. 
+     */
+    
+    public static boolean isPermittedType(final String type)
+    {
+        return PERMITTEDTYPES.contains(type);
     }
 
-    public static boolean isPermittedType(final String s)
-    {
-        return PERMITTEDTYPES.contains(s);
-    }
-
+    /**
+     * Add request parameter if NOT null.
+     * @param nvp
+     */
     public void addParameter(final NameValuePair nvp)
     {
         if (parameters.isEmpty() && nvp != null)
@@ -888,11 +969,22 @@ public class URLActionData
         }
     }
 
+    /**
+     * Dirty way of throwing a IllegalArgumentException with the passed message. 
+     * @param message
+     * @return nothing.
+     */
     private Object throwIllegalArgumentException(final String message)
     {
         throw new IllegalArgumentException(message);
     }
 
+    /**
+     * 
+     * @param tag
+     * @param value
+     * @return Formated message.
+     */
     private String getSetTagToValueMessage(final String tag, final String value)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Set \"{1}\" to value: \"{2}\"",
@@ -902,6 +994,11 @@ public class URLActionData
         return message;
     }
 
+    /**
+     * 
+     * @param tag name
+     * @return Formated message.
+     */
     private String getAddedToTag(final String tag)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Added new \"{1}\"",
@@ -910,6 +1007,10 @@ public class URLActionData
         return message;
     }
 
+    /**
+     * @param tag
+     * @return Formated error message.
+     */
     private String getSetNewTagMessage(final String tag)
     {
         final String message = MessageFormat.format("Action: \"{0}\", Set new \"{1}\"",
@@ -918,6 +1019,12 @@ public class URLActionData
         return message;
     }
 
+    /**
+     * @param value
+     * @param tag name
+     * @param defaultValue
+     * @return Formated error message.
+     */
     private String getIllegalValueOfTagDefaultingTo(final String value,
                                                     final String tag,
                                                     final String defaultValue)

@@ -46,26 +46,26 @@ The following is an unordered lsit of the most hurting issues and should be reso
 
 Issue  |  Type | Status
 ------------- | :-------------: | :-------------:
-The WebClient must be configurated with properties (js, static content, credentials ...).  | :question: | :fire:
-Data from the files don't overwrite the properties. | :beetle: | :fire:
-HtmlAttributes and Textfields arre not validatable | :beetle: | :fire:
-CSV file Loader does not work | :ghost: | :fire:
-Parameter encoding is messy. | :poop: | :fire:
-Functional and supporting logystem  | :ghost: | :fire:
-Expressive and functional exception handling (creation, execution, validation). | :ghost: | :fire:
-Are naming conventions expressive? | :question: | :fire:
-Write the documentation about automated request header setting | :ghost: | :fire:
-The "Matches" validation mode doesnt work! | :beetle: | :fire:
-Firebug delivers helpless "XPath"s. | :beetle: | :fire: 
-Unravel the mystery about "getEffectiveKey()". | :ghost: | :fire:
-Write the documentation about supported filetypes. | :ghost: | :fire:
-Support multiple request methods. |:ghost: | :fire:
-Testcase mapping doesn't work. | :beetle: | :fire:
+The WebClient must be configurated with properties (js, static content, credentials ...).  | :question: | :x:
+Data from the files don't overwrite the properties. | :beetle: | :x:
+HtmlAttributes and Textfields arre not validatable | :beetle: | :x:
+CSV file Loader does not work | :ghost: | :x:
+Parameter encoding is messy. | :poop: | :x:
+Functional and supporting logystem  | :ghost: | :x:
+Expressive and functional exception handling (creation, execution, validation). | :ghost: | :x:
+Are naming conventions expressive? | :question: | :x:
+Write the documentation about automated request header setting | :ghost: | :x:
+The "Matches" validation mode doesnt work! | :beetle: | :x:
+Firebug delivers helpless "XPath"s. | :beetle: | :x: 
+Unravel the mystery about "getEffectiveKey()". | :ghost: | :x:
+Write the documentation about supported filetypes. | :ghost: | :x:
+Support multiple request methods. |:ghost: | :x:
+Testcase mapping doesn't work. | :beetle: | :x:
 
 
 #### Symbology
 
-:fire: ... hot, :white_check_mark: ... resolved.
+:x: ... open, :white_check_mark: ... resolved.
 
 :question: ... open question or unclear behaviour.
 
@@ -92,7 +92,7 @@ The following is an unordered list of futuristic features.
 
 The following is a simple overview of the classes and their individual stage of production.
 
-Class | Implemented | Tested | Documented| Error Handling | Logging
+Class | Scripted | Tested | Documented| Error Handling | Logging
 ----|:----:|:----:|:----:|:----:|:----:
 AbstractURLTestCase | :white_check_mark: |:x: | :x: | :x: | :x: 
 ConcreteNodeList  | :white_check_mark: | :x: | :x: | :x: | :x: 
@@ -149,9 +149,6 @@ XPathWithNonParseableWebResponse |:white_check_mark: | :x: | :x: | :x: | :x:
 XPathWithParseableWebResponse | :white_check_mark:| :x: | :x: | :x: | :x: 
 YAMLBasedURLActionBuilder |:white_check_mark: |:x: | :x: | :x: | :x: 
 YAMLBasedURLActionDataListBuilder | :white_check_mark:| :x: | :x: | :x: | :x: 
-YDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
-YSimpleURL | :white_check_mark:| :x: | :x: | :x: | :x: 
-YSimpleURL_XHR |:white_check_mark: | :x: | :x: | :x: | :x: 
 
 #### Symbology
 
