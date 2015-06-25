@@ -28,55 +28,136 @@ because the source is free and licensed under the Apache License V2.0.
 ## Features
 
 * Reads test definitions from files. Supported file types:
-	* CSV (Comma-separated values)
-	* YAML (YAML Ain’t Markup Language)
-* Supports http response validation.
+  * CSV (Comma-separated values)
+  * YAML (YAML Ain’t Markup Language)
+* Supports Http response validation.
 * Allows two modes to define and run tests:
-  * DOM mode : HtmlUnit parses the responses into a DOM
+  * DOM mode : HtmlUnit parses the responses into a DOM (slower)
   * Lightweight mode - no DOM overhead, just plain HTTP and HTTPS traffic, and very low resource consumption.
 * Cookie handling is automatic.
+* Javascript can be executed automatically if wanted.
 * Static content can be handled automatically or specified manually.
 * Does not disable any XLT features.
+* ...
 
-##  Issues
-Problem  | Status
-------------- | -------------
-The WebClient must be configurated with properties (js, static content, credentials ...)  | open
-Data from the files should overwrite the properties | open
-HtmlAttributes and Textfields must be validateable | done
-Implement the CSV file Loader | open
-Parameter encoding is messy | open
-Rework log system | open
-Rework exception handling (creation, execution, validation) | open
-Rework class naming | open
-Document automated header setting | open
-Rework "Matches" Validation mode | open
-Firebug Xpath problem | open
-find out about getEffectiveKey | open
-documentatio about supported filetypes | open
-support more http methods |open
-testcase mapping | open
-support encoding type | open
+##  Most Wanted 
+
+The following is an unordered lsit of the most hurting issues and should be resolved fast in order to ensure the functionality of the test-suite.
+
+Issue  |  Type | Status
+------------- | :-------------: | :-------------:
+The WebClient must be configurated with properties (js, static content, credentials ...).  | :question: | :fire:
+Data from the files don't overwrite the properties. | :beetle: | :fire:
+HtmlAttributes and Textfields arre not validatable | :beetle: | :fire:
+CSV file Loader does not work | :ghost: | :fire:
+Parameter encoding is messy. | :poop: | :fire:
+Functional and supporting logystem  | :ghost: | :fire:
+Expressive and functional exception handling (creation, execution, validation). | :ghost: | :fire:
+Are naming conventions expressive? | :question: | :fire:
+Write the documentation about automated request header setting | :ghost: | :fire:
+The "Matches" validation mode doesnt work! | :beetle: | :fire:
+Firebug delivers helpless "XPath"s. | :beetle: | :fire: 
+Unravel the mystery about "getEffectiveKey()". | :ghost: | :fire:
+Write the documentation about supported filetypes. | :ghost: | :fire:
+Support multiple request methods. |:ghost: | :fire:
+Testcase mapping doesn't work. | :beetle: | :fire:
+
+
+#### Symbology
+
+:fire: ... hot, :white_check_mark: ... resolved.
+
+:question: ... open question or unclear behaviour.
+
+:beetle: ... [group of insects which are biologically classified in the order Coleoptera](https://en.wikipedia.org/?title=Beetle). Kill it!
+
+:ghost: ... fictional creature which is somehow there but isnt!. Must be fully implemented or taken out completely!
+
+:poop: ... self-descriptive.
 
 ## Planed
-Item  | Status
-------------- | -------------
-Support multible request encoding types   | open
-documentation | planed
-Expand ParameterInterpreter with js support | open
-Implement recursive ParamterInterpreter | open
-Expand DataProvider with a set of valid data multibles | open
-CLassed Overview | open
 
+The following is an unordered list of futuristic features.
 
-## Documentation, Error Handling, Logging
-
-Class | Docu| Error Handling | Logging
-----|----|----|----
-URLActionData | -[x] | -[x] | -[x]
+* Support multiple request encoding types.  
+* Custom js execution engine for dynamic parameter creation. 
+* Implement ParamterInterpreter that handles method invocation recursively 
+* Expand the DataProvider with a set of valid data multiples.
+* Wiki with simple tutorials. 
+* Support CSS Path. 
 
 
 
+## Classes
+
+The following is a simple overview of the classes and their individual stage of production.
+
+Class | Implemented | Tested | Documented| Error Handling | Logging
+----|:----:|:----:|:----:|:----:|:----:
+AbstractURLTestCase | :white_check_mark: |:x: | :x: | :x: | :x: 
+ConcreteNodeList  | :white_check_mark: | :x: | :x: | :x: | :x: 
+CSVBasedURLActionDataListBuilder  |:white_check_mark: | :x: | :x: | :x: | :x:  
+Downloader  |:white_check_mark: | :x: | :x: | :x: | :x:  
+HtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
+HtmlPageActionFactory  | :white_check_mark:| :x: | :x: | :x: | :x:  
+LightWeightPageAction  |:white_check_mark: | :x: | :x: | :x: | :x:   
+LightWeightPageActionFactory  | :white_check_mark:| :x: | :x: | :x: | :x: 
+MockObjects  |:white_check_mark: | :x: | :x: | :x: | :x: 
+MockWebResponse  |:white_check_mark: | :x: | :x: | :x: | :x: 
+ModifiedAbstractHtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
+ModifiedAbstractLightWeightPageAction  |:white_check_mark: | :x: | :x: | :x: | :x: 
+ModifiedLWPageUtilities  | :white_check_mark:| :x: | :x: | :x: | :x: 
+ModifiedRegExUtils  | :white_check_mark:|:x: | :x: | :x: | :x: 
+ParameterInterpreter  | :white_check_mark:|:x: | :x: | :x: | :x: 
+ParameterInterpreterNow  | :white_check_mark:| :x: | :x: | :x: | :x: 
+ParameterInterpreterRandom  | :white_check_mark:|:x: | :x: | :x: | :x: 
+ParameterInterpreterRandomTest  |:white_check_mark: | :x: | :x: | :x: | :x: 
+ParameterUtils  |:white_check_mark: | :x: | :x: | :x: | :x: 
+ParameterUtils.Reason  |:white_check_mark: | :x: | :x: | :x: | :x: 
+RegexLab  |:white_check_mark: | :x: | :x: | :x: | :x: 
+RegexTestHarness |:white_check_mark: |:x: | :x: | :x: | :x: 
+StaticContentDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLAction | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionData |:white_check_mark: | :x: | :x: | :x: 
+URLActionDataBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataExecutable | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionDataExecutableFactory | :white_check_mark:|:x: | :x: | :x: | :x: 
+URLActionDataExecutableFactoryBuilder | :white_check_mark:|:x: | :x: | :x: | :x: 
+URLActionDataExecutableResult |:white_check_mark: |:x: | :x: | :x: | :x: 
+URLActionDataExecutableResultFactory |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataListBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataListFacade |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataRequestBuilder | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionDataResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataStore | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionDataStoreBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataStoreResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataValidation |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataValidationBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataValidationResponseHandler | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionStore | :white_check_mark:|:x: | :x: | :x: | :x: 
+URLActionValidation | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLTestCase | :white_check_mark:| :x: | :x: | :x: | :x: 
+UserAgentUtils |:white_check_mark: | :x: | :x: | :x: | :x: 
+XhrHtmlPageAction |:white_check_mark: | :x: | :x: | :x: | :x: 
+XhrLightWeightPageAction |:white_check_mark: | :x: | :x: | :x: | :x: 
+XltMockWebConnection |:white_check_mark: | :x: | :x: | :x: | :x: 
+XPathGetable | :white_check_mark:| :x: | :x: | :x: | :x: 
+XPathWithHtmlPage |:white_check_mark: | :x: | :x: | :x: | :x: 
+XPathWithLightWeightPage | :white_check_mark:| :x: | :x: | :x: | :x: 
+XPathWithNonParseableWebResponse |:white_check_mark: | :x: | :x: | :x: | :x: 
+XPathWithParseableWebResponse | :white_check_mark:| :x: | :x: | :x: | :x: 
+YAMLBasedURLActionBuilder |:white_check_mark: |:x: | :x: | :x: | :x: 
+YAMLBasedURLActionDataListBuilder | :white_check_mark:| :x: | :x: | :x: | :x: 
+YDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
+YSimpleURL | :white_check_mark:| :x: | :x: | :x: | :x: 
+YSimpleURL_XHR |:white_check_mark: | :x: | :x: | :x: | :x: 
+
+#### Symbology
+
+:white_check_mark: ... done.
+
+:x: ... open.
 
 ## Requirements
 
@@ -85,7 +166,7 @@ XLT&reg; is available free of charge for functional and small scale performance 
 If you want to debug or extend the test suite, Ant and Eclipse or any other IDE are helpful.
 
 * Xceptance LoadTest: http://www.xceptance-loadtest.com/
-* JDK 7 (6 might still work, but we have not tested that)
+* JDK 7 
 * Apache Ant v1.7.0 or higher
 * Eclipse or any other Java IDE
 
@@ -135,10 +216,21 @@ Make sure you can share your modifications under the Apache License as well.
 
 ## Used Libraries
 
+### Xlt 
+
+* https://lab.xceptance.de/releases/xlt/latest/apidoc/
+* License : https://lab.xceptance.de/releases/xlt/latest/license.html
+
 ### Beanshell
 
 * http://www.beanshell.org/
 * License LGPL: http://www.gnu.org/copyleft/lesser.html
+
+### Snakeyaml
+* https://bitbucket.org/asomov/snakeyaml
+* License: Apache License V2.0 http://www.apache.org/licenses/
+
+
 
 ### Apache Commons CSV
 

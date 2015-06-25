@@ -237,7 +237,7 @@ public class URLActionData
 
     /**
      * For debugging purpose. <br>
-     * err-streams the attributes of the object. <br>
+     * 'err-streams' the attributes of the object. <br>
      */
     public void outline()
     {
