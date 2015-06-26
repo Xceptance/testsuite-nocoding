@@ -1,0 +1,24 @@
+private void fillURLActionValidationBuilder(final LinkedHashMap<String, Object> rawValidationItem)
+    {
+        validationBuilder.reset();
+
+        final String validationName = getNameOfFirstElementFromLinkedHashMap(rawValidationItem);
+
+        validationBuilder.setName(validationName);
+        validationBuilder.setInterpreter(this.interpreter);
+
+        final Object rawValidateSubObject = rawValidationItem.get(validationName);
+        if (rawValidateSubObject != null)
+        {
+            ParameterUtils.isLinkedHashMap(rawValidateSubObject,
+                                           validationName,
+                                           "");
+            final LinkedHashMap<String, Object> validateListSubItem = (LinkedHashMap<String, Object>) rawValidateSubObject;
+            fillURLActionValidationBuilderWithDataFromLinkedHashMap(validateListSubItem);
+        }
+        else
+        {
+            ParameterUtils.doThrow(VALIDATION,
+                                   validationName,
+                                   Reason.UNCOMPLETE);
+        }

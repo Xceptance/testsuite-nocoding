@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>The true power of regular expressions</title>
+        <link rel="stylesheet" href="/asset/reset.css" />
+        <link rel="stylesheet" href="/asset/main.css" />
+        <link rel="stylesheet" href="/asset/highlight.css" />
+        <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-27300026-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <header>
+            Blog by <strong>nikic</strong>.
+            Find me on <a href="https://github.com/nikic">GitHub</a>,
+            <a href="http://stackoverflow.com/users/385378/nikic">StackOverflow</a>
+            and <a href="http://twitter.com/#!/nikita_ppv">Twitter</a>.
+            Learn more <a href="/aboutMe.html">about me</a>.
+        </header>
+        <section>
+            <section class="post">
+    <header>
+        <a href="/" class="backLink">&laquo; Back to article overview.</a>
+        <h1>The true power of regular expressions</h1>
+        <time datetime="2012-06-15" pubdate>
+            15. June 2012
+        </time>
+    </header>
+    <section>
+        <p>As someone who frequents the <a href="http://stackoverflow.com/questions/tagged/php">PHP tag on StackOverflow</a> I pretty often see questions about how to parse some
+particular aspect of HTML using regular expressions. A common reply to such a question is:</p>
+
+<blockquote>
+  <p>You cannot parse HTML with regular expressions, because HTML isn’t regular. Use an XML parser instead.</p>
+</blockquote>
+
+<p>This statement - in the context of the question - is somewhere between very misleading and outright wrong. What I’ll try
+to demonstrate in this article is how powerful modern regular expressions <em>really</em> are.</p>
+
+<h2 id="what-does-regular-actually-mean">What does “regular” actually mean?</h2>
+
+<p>In the context of <a href="http://en.wikipedia.org/wiki/Formal_language">formal language theory</a>, something is called “regular” when it has a grammar where all production
+rules have one of the following forms:</p>
+
+<pre><code>B -&gt; a
+B -&gt; aC
+B -&gt; ε
+</code></pre>
+
+<p>You can read those <code>-&gt;</code> rules as “The left hand side can be replaced with the right hand side”. So the first rule would
+be “B can be replaced with a”, the second one “B can be replaced with aC” and the third one “B can be replaced with the
+empty string” (<code>ε</code> is the symbol for the empty string).</p>
+
+<p>So what are <code>B</code>, <code>C</code> and <code>a</code>? By convention, uppercase characters denote so called “non-terminals” - symbols which <em>can</em>
+be broken down further - and lowercase characters denote “terminals” - symbols which <em>cannot</em> be broken down any
+further.</p>
+
+<p>All that probably sounds a bit abstract, so let’s look at an example: Defining the natural numbers as a grammar.</p>
+
+<pre><code>N -&gt; 0
+N -&gt; 1
+N -&gt; 2
+N -&gt; 3
+N -&gt; 4
+N -&gt; 5
+N -&gt; 6
+N -&gt; 7
+N -&gt; 8
+N -&gt; 9
+N -&gt; 0N
+N -&gt; 1N
+N -&gt; 2N
+N -&gt; 3N
+N -&gt; 4N
+N -&gt; 5N
+N -&gt; 6N
+N -&gt; 7N
+N -&gt; 8N
+N -&gt; 9N
+</code></pre>
+
+<p>What this grammar says is:</p>
+
+<pre><code>A natural number (N) is
+... one of the digits 0 to 9
+or
+... one of the digits 0 to 9 followed by another natural number (N)
+</code></pre>
+
+<p>In this example the digits 0 to 9 would be terminals (as they can’t be broken down any further) and <code>N</code> would be the
+only non-terminal (as it can be and is broken down further).</p>
+
+<p>If you have another look at the rules and compare them to the definition of a regular grammar from above, you’ll see
+that they meet the criteria: The first ten rules are of the form <code>B -&gt; a</code> and the second ten rules follow the form
+<code>B -&gt; aC</code>. Thus the grammar defining the natural numbers is <em>regular</em>.</p>
+
+<p>Another thing you might notice is that even though the above grammar defines such a simple thing, it is already quite
+bloated. Wouldn’t it be better if we could express the same concept in a more concise manner?</p>
+
+<p>And that’s where regular expressions come in: The above grammar is equivalent to the regex <code>[0-9]+</code> (which is a hell lot
+simpler). And this kind of transformation can be done with <em>any</em> regular grammar: Every regular grammar has a
+corresponding regular expression which defines all its valid strings.</p>
+
+<h2 id="what-can-regular-expressions-match">What can regular expressions match?</h2>
+
+<p>Thus the question arises: Can regular expressions match only regular grammars, or can they also match more? The answer
+to this is both yes <em>and</em> no:</p>
+
+<p>Regular expressions in the formal grammar sense can (pretty much by definition) only parse regular grammars and nothing
+more.</p>
+
+<p>But when programmers talk about “regular expressions” they aren’t talking about formal grammars. They are talking about
+the regular expression <em>derivative</em> which their language implements. And those regex implementations are only very
+slightly related to the original notion of regularity.</p>
+
+<p>Any modern regex flavor can match a <em>lot</em> more than just regular languages. How much exactly, that’s what the rest of
+the article is about.</p>
+
+<p>To keep things simple, I’ll focus on the PCRE regex implementation in the following, simply because I know it best (as
+it’s used by PHP). Most other regex implementations are quite similar though, so most stuff should apply to them too.</p>
+
+<h2 id="the-language-hierarchy">The language hierarchy</h2>
+
+<p>In order to analyze what regular expressions can and cannot match, we first have to look at what other types of
+languages there are. A good starting point for this is the <a href="http://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a>:</p>
+
+<pre><code>Chomsky hierarchy:
+
+/-------------------------------------------\
+|                                           |
+|     Recursively enumerable languages      | Type 0
+|                                           |
+|   /-----------------------------------\   |
+|   |                                   |   |
+|   |    Context-sensitive languages    |   | Type 1
+|   |                                   |   |
+|   |   /---------------------------\   |   |
+|   |   |                           |   |   |
+|   |   |  Context-free languages   |   |   | Type 2
+|   |   |                           |   |   |
+|   |   |   /-------------------\   |   |   |
+|   |   |   | Regular languages |   |   |   | Type 3
+|   |   |   \-------------------/   |   |   |
+|   |   \---------------------------/   |   |
+|   \-----------------------------------/   |
+\-------------------------------------------/
+</code></pre>
+
+<p>As you can see the Chomsky hierarchy divides formal languages into four types:</p>
+
+<p>Regular languages (Type 3) are the least-powerful, followed by the context-free languages (Type 2), the
+context-sensitive languages (Type 1) and at last the all-mighty recursively enumerable languages (Type 0).</p>
+
+<p>The Chomsky hierarchy is a containment hierarchy, so the smaller boxes in the above image are fully contained in the
+larger boxes. For example every regular language is also a context-free language (but <em>not</em> the other way around!)</p>
+
+<p>So, let’s move one step up in that hierarchy: We already know that regular expressions can match any regular language.
+But can they also match context-free languages?</p>
+
+<p>(Reminder: When I say “regular expression” here I obviously mean it in the programmer sense, not the formal language
+theory sense.)</p>
+
+<h2 id="matching-context-free-languages">Matching context-free languages</h2>
+
+<p>The answer to this is <em>yes</em>, they can!</p>
+
+<p>Let’s take the classical example of a context-free language, namely <code>{a^n b^n, n&gt;0}</code>, which means “A number of <code>a</code>
+characters followed by the <em>same</em> number of <code>b</code> characters”. The (PCRE) regex for this language is:</p>
+
+<pre><code>/^(a(?1)?b)$/
+</code></pre>
+
+<p>The regular expression is very simple: <code>(?1)</code> is a reference to the first subpattern, namely <code>(a(?1)?b)</code>. So basically
+you could replace the <code>(?1)</code> by that subpattern, thus forming a recursive dependency:</p>
+
+<pre><code>/^(a(?1)?b)$/
+/^(a(a(?1)?b)?b)$/
+/^(a(a(a(?1)?b)?b)?b)$/
+/^(a(a(a(a(?1)?b)?b)?b)?b)$/
+# and so on
+</code></pre>
+
+<p>From the above expansions it should be clear that this expression can match any string with the same number of <code>a</code>s and
+<code>b</code>s.</p>
+
+<p>Thus regular expressions can match at least some non-regular, context-free grammars. But can they match all? To answer
+that, we first have to look at how context-free grammars are defined.</p>
+
+<p>In a context-free grammar all production rules take the following form:</p>
+
+<pre><code>A -&gt; β
+</code></pre>
+
+<p>Here <code>A</code> once again is a non-terminal symbol and <code>β</code> is an arbitrary string of terminals and non-terminals. Thus every
+production rule of a context-free grammar has a non-terminal on the left hand side and an arbitrary symbol string on
+the right hand side.</p>
+
+<p>As an example, have a look at the following grammar:</p>
+
+<pre><code>function_declaration -&gt; T_FUNCTION is_ref T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
+
+is_ref -&gt; '&amp;'
+is_ref -&gt; ε
+
+parameter_list -&gt; non_empty_parameter_list
+parameter_list -&gt; ε
+
+non_empty_parameter_list -&gt; parameter
+non_empty_parameter_list -&gt; non_empty_parameter_list ',' parameter
+
+// ... ... ...
+</code></pre>
+
+<p>What you see there is an excerpt from the PHP grammar (just a few sample rules). The syntax is slightly different from
+what we used before, but should be easy to understand. One aspect worth mentioning is that the uppercase <code>T_SOMETHING</code>
+names here also are terminal symbols. These symbols which are usually called <em>tokens</em> encode more abstract concepts.
+E.g. <code>T_FUNCTION</code> represents the <code>function</code> keyword and <code>T_STRING</code> is a label token (like <code>getUserById</code> or
+<code>some_other_name</code>).</p>
+
+<p>I’m using this example to show one thing: Context-free grammars are already powerful enough to encode quite complex
+languages. That’s why pretty much all programming languages have a context-free grammar. In particular this also
+includes well-formed HTML.</p>
+
+<p>Now, back to the actual question: Can regular expressions match all context-free grammars? Once again, the answer is
+<em>yes</em>!</p>
+
+<p>This is pretty easy to prove as regular expressions (at least PCRE and similar) provide a syntax very similar to the
+above for constructing grammars:</p>
+
+<pre><code>/
+    (?(DEFINE)
+        (?&lt;addr_spec&gt; (?&amp;local_part) @ (?&amp;domain) )
+        (?&lt;local_part&gt; (?&amp;dot_atom) | (?&amp;quoted_string) | (?&amp;obs_local_part) )
+        (?&lt;domain&gt; (?&amp;dot_atom) | (?&amp;domain_literal) | (?&amp;obs_domain) )
+        (?&lt;domain_literal&gt; (?&amp;CFWS)? \[ (?: (?&amp;FWS)? (?&amp;dtext) )* (?&amp;FWS)? \] (?&amp;CFWS)? )
+        (?&lt;dtext&gt; [\x21-\x5a] | [\x5e-\x7e] | (?&amp;obs_dtext) )
+        (?&lt;quoted_pair&gt; \\ (?: (?&amp;VCHAR) | (?&amp;WSP) ) | (?&amp;obs_qp) )
+        (?&lt;dot_atom&gt; (?&amp;CFWS)? (?&amp;dot_atom_text) (?&amp;CFWS)? )
+        (?&lt;dot_atom_text&gt; (?&amp;atext) (?: \. (?&amp;atext) )* )
+        (?&lt;atext&gt; [a-zA-Z0-9!#$%&amp;'*+/=?^_`{|}~-]+ )
+        (?&lt;atom&gt; (?&amp;CFWS)? (?&amp;atext) (?&amp;CFWS)? )
+        (?&lt;word&gt; (?&amp;atom) | (?&amp;quoted_string) )
+        (?&lt;quoted_string&gt; (?&amp;CFWS)? " (?: (?&amp;FWS)? (?&amp;qcontent) )* (?&amp;FWS)? " (?&amp;CFWS)? )
+        (?&lt;qcontent&gt; (?&amp;qtext) | (?&amp;quoted_pair) )
+        (?&lt;qtext&gt; \x21 | [\x23-\x5b] | [\x5d-\x7e] | (?&amp;obs_qtext) )
+
+        # comments and whitespace
+        (?&lt;FWS&gt; (?: (?&amp;WSP)* \r\n )? (?&amp;WSP)+ | (?&amp;obs_FWS) )
+        (?&lt;CFWS&gt; (?: (?&amp;FWS)? (?&amp;comment) )+ (?&amp;FWS)? | (?&amp;FWS) )
+        (?&lt;comment&gt; \( (?: (?&amp;FWS)? (?&amp;ccontent) )* (?&amp;FWS)? \) )
+        (?&lt;ccontent&gt; (?&amp;ctext) | (?&amp;quoted_pair) | (?&amp;comment) )
+        (?&lt;ctext&gt; [\x21-\x27] | [\x2a-\x5b] | [\x5d-\x7e] | (?&amp;obs_ctext) )
+
+        # obsolete tokens
+        (?&lt;obs_domain&gt; (?&amp;atom) (?: \. (?&amp;atom) )* )
+        (?&lt;obs_local_part&gt; (?&amp;word) (?: \. (?&amp;word) )* )
+        (?&lt;obs_dtext&gt; (?&amp;obs_NO_WS_CTL) | (?&amp;quoted_pair) )
+        (?&lt;obs_qp&gt; \\ (?: \x00 | (?&amp;obs_NO_WS_CTL) | \n | \r ) )
+        (?&lt;obs_FWS&gt; (?&amp;WSP)+ (?: \r\n (?&amp;WSP)+ )* )
+        (?&lt;obs_ctext&gt; (?&amp;obs_NO_WS_CTL) )
+        (?&lt;obs_qtext&gt; (?&amp;obs_NO_WS_CTL) )
+        (?&lt;obs_NO_WS_CTL&gt; [\x01-\x08] | \x0b | \x0c | [\x0e-\x1f] | \x7f )
+
+        # character class definitions
+        (?&lt;VCHAR&gt; [\x21-\x7E] )
+        (?&lt;WSP&gt; [ \t] )
+    )
+    ^(?&amp;addr_spec)$
+/x
+</code></pre>
+
+<p>What you see above is a regular expression for matching email addresses as per <a href="http://tools.ietf.org/html/rfc5322">RFC 5322</a>. It was constructed simply
+by transforming the BNF rules from the RFC into a notation that PCRE understands.</p>
+
+<p>The syntax is quite simple:</p>
+
+<p>All rules definitions are wrapped into a <code>DEFINE</code> assertion, which basically means that all those rules should not be
+directly matched against, they should just be defined. Only the <code>^(?&amp;addr_spec)$</code> part at the end specifies what should
+be matched.</p>
+
+<p>The rule definitions are actually not really “rules” but rather named subpatterns. In the previous <code>(a(?1)?b)</code> example
+the <code>1</code> referenced the first subpattern. With many subpatterns this obviously is impractical, thus they can be named.
+So <code>(?&lt;xyz&gt; ...)</code> defines a pattern with name <code>xyz</code>. <code>(?&amp;xyz)</code> then references it.</p>
+
+<p>Also, pay attention to another fact: The regular expression above uses the <code>x</code> modifier. This instructs the engine to
+ignore whitespace and to allow <code>#</code>-style comments. This way you can nicely format the regex, so that other people can
+actually understand it. (Much unlike <a href="http://www.ex-parrot.com/pdw/Mail-RFC822-Address.html">this</a> RFC 822 email address regex…)</p>
+
+<p>The above syntax thus allows simple mappings from grammars to regular expressions:</p>
+
+<pre><code>A -&gt; B C
+A -&gt; C D
+// becomes
+(?&lt;A&gt; (?&amp;B) (?&amp;C)
+    | (?&amp;C) (?&amp;D)
+)
+</code></pre>
+
+<p>The only catch is: Regular expressions don’t support left recursion. E.g. taking the above definition of a parameter
+list:</p>
+
+<pre><code>non_empty_parameter_list -&gt; parameter
+non_empty_parameter_list -&gt; non_empty_parameter_list ',' parameter
+</code></pre>
+
+<p>You <em>can’t</em> directly convert it into a grammar based regex. The following will not work:</p>
+
+<pre><code>(?&lt;non_empty_parameter_list&gt;
+    (?&amp;parameter)
+  | (?&amp;non_empty_parameter_list) , (?&amp;parameter)
+)
+</code></pre>
+
+<p>The reason is that here <code>non_empty_parameter_list</code> appears as the leftmost part of it’s own rule definition. This is
+called left-recursion and is very common in grammar definitions. The reason is that the LALR(1) parsers which are
+usually used to parse them handle left-recursion much better than right-recursion.</p>
+
+<p>But, no fear, this does not affect the power of regular expressions at all. Every left-recursive grammar can be
+transformed to a right-recursive one. In the above example it’s as simple as swapping the two parts:</p>
+
+<pre><code>non_empty_parameter_list -&gt; parameter
+non_empty_parameter_list -&gt; parameter ',' non_empty_parameter_list
+</code></pre>
+
+<p>So now it should be clear that regular expressions can match any context-free language (and thus pretty much all
+languages which programmers are confronted with). Only problem is: Even though regular expressions can <em>match</em>
+context-free languages nicely, they can’t usually <em>parse</em> them. Parsing means converting some string into an abstract
+syntax tree. This is not possible using regular expressions, at least not with PCRE (sure, in Perl where you can embed
+arbitrary code into a regex you can do pretty much everything…).</p>
+
+<p>Still, the above <code>DEFINE</code> based regex definition has proven to be <em>very</em> useful to me. Usually you don’t need full
+parsing support, but want to just match (e.g. email addresses) or extract small pieces of data (not the whole parse
+tree). Most complex string processing problems can be made much simpler using grammar based regexes :)</p>
+
+<p>At this point, let me point out again what I already quickly mentioned earlier: Well-formed HTML is context-free. So you
+<em>can</em> match it using regular expressions, contrary to popular opinion. But don’t forget two things: Firstly, most HTML
+you see in the wild is <em>not</em> well-formed (usually not even close to it). And secondly, just because you <em>can</em>, doesn’t
+mean that you <em>should</em>. You could write your software in Brainfuck, still for some reason you don’t.</p>
+
+<p>My opinion on the topic is: Whenever you need generic HTML processing, use a DOM library of your choice. It’ll
+gracefully handle malformed HTML and take the burden of parsing from you. On the other hand if you are dealing with
+specific situations a quick regular expression is often the way to go. And I have to admit: Even though I often tell
+people to not parse HTML with regular expressions I do it myself notoriously often. Simply because in most cases I deal
+with specific and contained situations in which using regex is just simpler.</p>
+
+<h2 id="context-sensitive-grammars">Context-sensitive grammars</h2>
+
+<p>Now that we covered context-free languages extensively, let’s move up one step in the Chomsky hierarchy:
+Context-sensitive languages.</p>
+
+<p>In a context-sensitive language all production rules have the following form:</p>
+
+<pre><code>αAβ → αγβ
+</code></pre>
+
+<p>This mix of characters might start to look more complicated, but it is actually quite simple. At it’s core you still
+have the pattern <code>A → γ</code>, which was how we defined context-free grammars. The new thing now is that you additionally
+have <code>α</code> and <code>β</code> on both sides. Those two form the <em>context</em> (which also gives this grammar class the name). So
+basically <code>A</code> can now only be replaced with <code>γ</code> if it has <code>α</code> to its left and <code>β</code> to its right.</p>
+
+<p>To make this more clear, try to interpret the following rules:</p>
+
+<pre><code>a b A -&gt; a b c
+a B c -&gt; a Q H c
+H B -&gt; H C
+</code></pre>
+
+<p>The English translations would be:</p>
+
+<pre><code>Replace `A` with `c`, but only if it has `a b` to its left.
+Replace `B` with `Q H`, but only if it has `a` to its left and `c` to its right.
+Replace `B` with `C`, but only if it has `H` to its left.
+</code></pre>
+
+<p>Context-sensitive languages are something that you will rarely encounter during “normal” programming. They are mostly
+important in the context of natural language processing (as natural languages are clearly not context-free. Words have
+different meaning depending on context). But even in natural language processing people usually work with so called
+“mildly context-sensitive languages”, as they are sufficient for modeling the language but can be parsed much faster.</p>
+
+<p>To understand just how powerful context-sensitive grammars are let’s look at another grammar class, which has the
+exact same expressive power as the context-sensitive ones: Non-contracting grammars.</p>
+
+<p>With non-contracting grammars every production rule has the form <code>α -&gt; β</code> where both <code>α</code> and <code>β</code> are arbitrary symbol
+strings with just one restriction: The number of symbols on the right hand side is not less than on the left hand side.
+Formally this is expressed in the formula <code>|α| &lt;= |β|</code> where <code>|x|</code> denotes the length of the symbol string.</p>
+
+<p>So non-contracting grammars allow rules of any form as long as they don’t shorten the input. E.g. <code>A B C -&gt; H Q</code> would
+be an invalid rule as the left hand side has three symbols and the right hand side only two. Thus this rule would be
+shortening (or “contracting”). The reverse rule <code>H Q -&gt; A B C</code> on the other hand would be valid, as the right side has
+more symbols than the left, thus being lengthening.</p>
+
+<p>This equivalence relationship of context-sensitive grammars and non-contracting grammars should make pretty clear that
+you can match near-everything with a context-sensitive grammar. Just don’t shorten :)</p>
+
+<p>To get an impression of why both grammar kinds have the same expressive power look at the following transformation
+example:</p>
+
+<pre><code>// the non-contracting grammar
+A B -&gt; C D
+// can be transformed to the following context-sensitive grammar
+A B -&gt; A X
+A X -&gt; Y X
+Y X -&gt; Y D
+Y D -&gt; C D
+</code></pre>
+
+<p>Anyways, back to regular expressions. Can they match context-sensitive languages too?</p>
+
+<p>This time I can’t gave you definite answer. They certainly can match <em>some</em> context-sensitive languages, but I don’t
+know whether they can match <em>all</em> of them.</p>
+
+<p>An example of a context-sensitive language that can be easily matched using regex is a modification of the
+context-free language <code>{a^n b^n, n&gt;0}</code> mentioned above. When you change it into <code>{a^n b^n c^n, n&gt;0}</code>, i.e. some number
+of <code>a</code>s followed by the same number of <code>b</code>s and <code>c</code>s, it becomes context-sensitive.</p>
+
+<p>The PCRE regex for this language is this:</p>
+
+<pre><code>/^
+    (?=(a(?-1)?b)c)
+     a+(b(?-1)?c)
+$/x
+</code></pre>
+
+<p>If you ignore the <code>(?=...)</code> assertion for now you’re left with <code>a+(b(?-1)?c)</code>. This checks that there is an arbitrary
+number of <code>a</code>s, followed by the same number of <code>b</code>s and <code>c</code>s. The <code>(?-1)</code> is a relative subpattern reference and means
+“the last defined subpattern”, which is <code>(b(?-1)?c)</code> in this case.</p>
+
+<p>The new thing now is the <code>(?=...)</code> which is a so called zero-width lookahead assertion. It checks that the following
+text matches the pattern, but it does not actually consume the text. Thus the text is basically checked against both
+patterns at the same time. The <code>a+(b(?-1)?c)</code> part verifies that the number of <code>b</code>s and <code>c</code>s is the same and the
+<code>(a(?-1)?b)c</code> part checks that the number of <code>a</code>s and <code>b</code>s is the same. Both pattern together thus ensure that the
+number of all three characters is the same.</p>
+
+<p>In the above regex you can already see how the concept of “context” is realized in regular expressions: Using
+assertions. If we get back to the definition of a context-sensitive grammar, you could now say that a production rule of
+type</p>
+
+<pre><code>αAβ → αγβ
+</code></pre>
+
+<p>can be converted into the following regex <code>DEFINE</code> rule:</p>
+
+<pre><code>(?&lt;A&gt; (?&lt;= α ) γ (?= β ) )
+</code></pre>
+
+<p>This would then say that <code>A</code> is <code>γ</code>, but only if it has <code>α</code> to its left and <code>β</code> to its right.</p>
+
+<p>Now, the above might look as if you can easily convert a context-sensitive grammar into a regular expression, but its
+not actually true. The reason is that lookbehind assertions (<code>(?&lt;= ... )</code>) have one very significant limitation: They
+have to be fixed-width. This means that the length of the text matched by the assertion has to known in advance. E.g.
+you can write <code>(?&lt;= a(bc|cd) )</code>, but you can’t write <code>(?&lt;= ab+)</code>. In the first case the assertion matches exactly three
+characters in any case, thus being fixed-width. In the second case on the other hand the assertion could match <code>ab</code>,
+<code>abb</code>, <code>abbb</code> etc. All of those have different lengths. Thus the engine can’t know when it should start to match them
+and as such they are simply disallowed.</p>
+
+<p>This pretty much blows the easy conversion of context-sensitive grammars to regex. Pretty much all such grammars
+require variable-width lookbehind assertions.</p>
+
+<p>But the fact that there is no direct context-sensitive grammar to regex conversion doesn’t by itself mean that regular
+expressions can’t match all of them. E.g. the above <code>{a^n b^n c^n, n&gt;0}</code> language also has a grammar that would require
+variable-width lookbehind assertions. But we can still avoid using them as regex isn’t bound to specifying rules in a
+grammar. Maybe the same is possible for all other context-sensitive grammars too. I honestly don’t know.</p>
+
+<p>So, what can we say here? Regex can match at least <em>some</em> context-sensitive languages, but it’s unknown whether it can
+match <em>all</em> of them.</p>
+
+<h2 id="unrestricted-grammars">Unrestricted grammars</h2>
+
+<p>The next grammar class in the Chomsky hierarchy are the unrestricted grammars. The language set which one can form using
+them is the set of all recursively enumerable languages.</p>
+
+<p>There is little to say about unrestricted grammars as they are, well, unrestricted. Production rules for unrestricted
+grammars have the form <code>α -&gt; β</code>, where <code>α</code> and <code>β</code> are symbol strings with no restrictions whatsoever.</p>
+
+<p>So basically unrestricted grammars remove the “non-contracting” part of the non-contracting grammars. Thus for them
+<code>A B C -&gt; H Q</code> would be a valid rule, even though previously it wasn’t.</p>
+
+<p>How powerful are unrestricted grammars exactly? They are as powerful as it gets: They are Turing-complete. There even
+is a “programming language” which is based on unrestricted grammars: <a href="http://en.wikipedia.org/wiki/Thue_%28programming_language%29">Thue</a>. As it is Turing-complete it can do
+everything that other languages can do.</p>
+
+<p>One implication of being Turing-complete is that checking whether a certain string adheres to some grammar is
+undecidable for the general case.</p>
+
+<p>Sadly I can’t say anything whatsoever about how regular expressions and unrestricted grammars relate. Heck, I couldn’t
+even find an example of a meaningful unrestricted grammar (that wasn’t non-contracting).</p>
+
+<p>But now that we started talking about Turing-completeness we get to another point:</p>
+
+<h2 id="regular-expressions-with-backreferences-are-np-complete">Regular expressions with backreferences are NP-complete</h2>
+
+<p>There is another very powerful regular expression feature that I did not mentioned previously: backreferences.</p>
+
+<p>E.g. consider this very simple regex:</p>
+
+<pre><code>/^(.+)\1$/
+</code></pre>
+
+<p><code>(.+)</code> matches some arbitrary text and <code>\1</code> matches the <em>same</em> text. In general <code>\n</code> means “whatever the <code>n</code>th
+subpattern matched”. E.g. if <code>(.+)</code> matched <code>foo</code>, then <code>\1</code> will also match only <code>foo</code> and nothing else. Thus the
+expression <code>(.+)\1</code> means “Some text followed by a copy of itself”.</p>
+
+<p>What this simple regex matches is called the “copy language” and is another typical example of a context-sensitive
+language.</p>
+
+<p>Similarly you can match the other example grammars from above using backreferences:</p>
+
+<pre><code># {a^n b^n, n&gt;0} (context-free)
+/^ (?: a (?= a* (\1?+ b) ) )+ \1 $/x
+# {a^n b^n c^n, n&gt;0} (context-sensitive)
+/^ (?: a (?= a* (\1?+ b) b* (\2?+ c) ) )+ \1 \2 $/x
+</code></pre>
+
+<p>Explaining how these work is outside the scope of this article, but you can read an excellent explanation on
+<a href="http://stackoverflow.com/a/3644267/385378">StackOverflow</a>.</p>
+
+<p>As you can see, the mere addition of backreference (without subpattern recursion support) already adds a lot of power
+to regular expressions. The addition is actually so powerful that it makes matching of regular expressions an
+NP-complete problem.</p>
+
+<p>What does NP-complete mean? NP-complete is a computational complexity class for decision problems in which many “hard”
+problems fall. Some examples of NP-complete problems are the traveling salesman problem (TSP), the boolean
+satisfiability problem (SAT) and the knapsack problem (BKP).</p>
+
+<p>One of the main conditions for a problem being NP-complete is that every other NP problem is reducible to it. Thus all
+NP-complete problems are basically interchangeable. If you find a fast solution to one of them, you got a fast solution
+to all of them.</p>
+
+<p>So if somebody found a fast solution to a NP-complete problem, pretty much all of the computationally hard problems of
+humanity would be solved all in one strike. This would mean the end to civilisation as we know.</p>
+
+<p>To prove that regular expressions with backreferences are indeed NP-complete one can simply take one of the known
+NP-complete problems and prove that it can be solved using regular expressions. As an example I choose the 3-CNF SAT
+problem:</p>
+
+<p>3-CNF SAT stands for “3-conjunctive normal form boolean satisfiability problem” and is quite easy to understand. You
+get a boolean formula of the following form:</p>
+
+<pre><code>   (!$a ||  $b ||  $d)
+&amp;&amp; ( $a || !$c ||  $d)
+&amp;&amp; ( $a || !$b || !$d)
+&amp;&amp; ( $b || !$c || !$d)
+&amp;&amp; (!$a ||  $c || !$d)
+&amp;&amp; ( $a ||  $b ||  $c)
+&amp;&amp; (!$a || !$b || !$c)
+</code></pre>
+
+<p>Thus the boolean formula is made up of a number of clauses separated by ANDs. Each of those clauses consists of three
+variables (or their negations) separated by ORs. The 3-CNF SAT problem now asks whether there exists a solution to the
+given boolean formula (such that it is true).</p>
+
+<p>The above boolean formula can be converted to the following regular expression:</p>
+
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="nv">$regex</span> <span class="o">=</span> <span class="s1">&#39;/^</span>
+<span class="s1">    (x?)(x?)(x?)(x?) .* ;</span>
+<span class="s1">    (?: x\1 | \2  | \4  ),</span>
+<span class="s1">    (?: \1  | x\3 | \4  ),</span>
+<span class="s1">    (?: \1  | x\2 | x\4 ),</span>
+<span class="s1">    (?: \2  | x\3 | x\4 ),</span>
+<span class="s1">    (?: x\1 | \3  | x\4 ),</span>
+<span class="s1">    (?: \1  | \2  | \3  ),</span>
+<span class="s1">    (?: x\1 | x\2 | x\3 ),</span>
+<span class="s1">$/x&#39;</span><span class="p">;</span>
+<span class="nv">$string</span> <span class="o">=</span> <span class="s1">&#39;xxxx;x,x,x,x,x,x,x,&#39;</span><span class="p">;</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nb">preg_match</span><span class="p">(</span><span class="nv">$regex</span><span class="p">,</span> <span class="nv">$string</span><span class="p">,</span> <span class="nv">$matches</span><span class="p">));</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$matches</span><span class="p">);</span></code></pre></div>
+
+<p>If you run this code you’ll get the following <code>$matches</code> result:</p>
+
+<pre><code>array(5) {
+  [0]=&gt; string(19) "xxxx;x,x,x,x,x,x,x,"
+  [1]=&gt; string(1) "x"
+  [2]=&gt; string(1) "x"
+  [3]=&gt; string(0) ""
+  [4]=&gt; string(0) ""
+}
+</code></pre>
+
+<p>This means that the above formula is satisfied if <code>$a = true</code>, <code>$b = true</code>, <code>$c = false</code> and <code>$d = false</code>.</p>
+
+<p>The regular expression works with a very simple trick: For ever 3-clause the string contains a <code>x,</code> which has to be
+matched. So if you have something like <code>(?: \1 | x\3 | \4 ),</code> in the regex, then the string can be only matched if
+either <code>\1</code> is <code>x</code> (true), <code>\3</code> is the empty string (false) or <code>\4</code> is <code>x</code> (true).</p>
+
+<p>The rest is left up to the engine. It’ll try out different ways of matching the string until it either finds a solution
+or has to give up.</p>
+
+<h2 id="wrapping-up">Wrapping up</h2>
+
+<p>As the article was quite long, here a summary of the main points:</p>
+
+<ul>
+  <li>The “regular expressions” used by programmers have very little in common with the original notion of regularity in
+the context of formal language theory.</li>
+  <li>Regular expressions (at least PCRE) can match all context-free languages. As such they can also match well-formed
+HTML and pretty much all other programming languages.</li>
+  <li>Regular expressions can match at least some context-sensitive languages.</li>
+  <li>Matching of regular expressions is NP-complete. As such you can solve any other NP problem using regular expressions.</li>
+</ul>
+
+<p>But don’t forget: Just because you <em>can</em>, doesn’t mean that you <em>should</em>. Processing HTML with regular expressions is
+a really bad idea in some cases. In other cases it’s probably the best thing to do.</p>
+
+<p>Just check what the easiest solution to your particular problem is and use it. If you choose to solve a problem using
+regular expressions, don’t forget about the <code>x</code> modifier, which allows you to nicely format your regex. For complex
+regular expressions also don’t forget to make use of <code>DEFINE</code> assertions and named subpatterns to keep your code clean
+and readable.</p>
+
+<p>That’s it.</p>
+
+
+    </section>
+    <footer>
+        <section class="followupActions">
+            If you liked this article, you may want to <a href="/">browse my other articles</a> or
+            <a href="https://twitter.com/#!/nikita_ppv">follow me on Twitter</a>.
+        </section>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            var disqus_shortname = 'nikic';
+            var disqus_url = 'https://nikic.github.io/2012/06/15/The-true-power-of-regular-expressions.html';
+            var disqus_identifier = '/2012/06/15/The-true-power-of-regular-expressions.html';
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    </footer>
+</section>
+
+        </section>
+    </body>
+</html>

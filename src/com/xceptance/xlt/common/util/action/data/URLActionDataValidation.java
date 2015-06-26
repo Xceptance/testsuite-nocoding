@@ -101,7 +101,7 @@ public class URLActionDataValidation
     }
 
     /**
-     * Takes the minimal set of parameters that are necessary to select and validate information <br>
+     * Takes the minimal set of parameters that are necessary to select and v information <br>
      * from a http response.
      * @param name
      * @param selectionMode

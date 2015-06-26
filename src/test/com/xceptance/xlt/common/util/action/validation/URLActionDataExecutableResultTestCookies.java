@@ -13,8 +13,7 @@ import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.XPathGetable;
 import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
-
-public class URLActionDataExecutableResultTest
+public class URLActionDataExecutableResultTestCookies
 {
     static XPathGetable xPathGetable;
 
@@ -25,7 +24,7 @@ public class URLActionDataExecutableResultTest
     @BeforeClass
     public static void setupBeforeClass()
     {
-        mockObjects = new MockObjects();
+        mockObjects = new MockObjects("http://www.amazon.de");
         mockObjects.load();
         page = mockObjects.getHtmlPage();
         xPathGetable = new XPathWithHtmlPage(page);
@@ -37,44 +36,33 @@ public class URLActionDataExecutableResultTest
     }
 
     @Test
-    public void testConstructor()
+    public void testGetCookies()
     {
+
         URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
                                                              xPathGetable);
+        executableResult.getCookie();
+        Assert.assertEquals(executableResult.getCookie().size(), 3);
     }
 
     @Test
-    public void testGetByXPath()
+    public void testGetHttpCookies()
     {
         URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
                                                              xPathGetable);
-        final List<String> something = executableResult.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
-
-        Assert.assertEquals(something.get(0), "Committed to Software Quality");
+        Assert.assertEquals(executableResult.getCookie().size(), 3);
     }
 
     @Test
-    public void testGetByRegEx()
+    public void testGetCookiesByName()
     {
         URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
                                                              xPathGetable);
-
-        final List<String> something = executableResult.getByRegEx("href=\"[\\s\\S]*?\"");
-        Assert.assertFalse(something.isEmpty());
-        Assert.assertEquals("href=\"/en/\"", something.get(0));
+        final List<NameValuePair> cookies = executableResult.getCookieByName("session-id");
+        Assert.assertEquals(1, cookies.size());
+        
     }
-
-    @Test
-    public void testGetHeaders()
-    {
-        URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
-        final List<NameValuePair> headers = executableResult.getHeaders();
-        Assert.assertFalse(headers.isEmpty());
-    }
-
 }
