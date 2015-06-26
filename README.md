@@ -78,6 +78,7 @@ Testcase mapping doesn't work. | :beetle: | :x:
 
 The following is an unordered list of futuristic features.
 
+* Dynamic UserAgent adjusting.
 * Support multiple request encoding types.  
 * Custom js execution engine for dynamic parameter creation. 
 * Implement ParamterInterpreter that handles method invocation recursively 
@@ -98,10 +99,10 @@ ConcreteNodeList  | :white_check_mark: | :x: | :x: | :x: | :x:
 CSVBasedURLActionDataListBuilder  |:x: | :x: | :x: | :x: | :x:  
 Downloader  |:white_check_mark: | :x: | :x: | :x: | :x:  
 HtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
-HtmlPageActionFactory  | :white_check_mark:| :x: | :x: | :x: | :x:  
+HtmlPageActionFactory  | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:  
 LightWeightPageAction  |:white_check_mark: | :x: | :x: | :x: | :x:   
-LightWeightPageActionFactory  | :white_check_mark:| :x: | :x: | :x: | :x: 
-MockObjects  |:white_check_mark: | :x: | :x: | :x: | :x: 
+LightWeightPageActionFactory  | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+MockObjects  |:white_check_mark: | :white_circle: | :white_circle: | :white_circle: | :white_check_mark: 
 MockWebResponse  |:white_check_mark: | :x: | :x: | :x: | :x: 
 ModifiedAbstractHtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
 ModifiedAbstractLightWeightPageAction  |:white_check_mark: | :x: | :x: | :x: | :x: 
@@ -110,27 +111,27 @@ ModifiedRegExUtils  | :white_check_mark:|:x: | :x: | :x: | :x:
 ParameterInterpreter  | :white_check_mark:|:x: | :x: | :x: | :x: 
 ParameterInterpreterNow  | :white_check_mark:| :x: | :x: | :x: | :x: 
 ParameterInterpreterRandom  | :white_check_mark:|:x: | :x: | :x: | :x: 
-ParameterUtils  |:white_check_mark: | :x: | :x: | :x: | :x: 
+ParameterUtils  |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 StaticContentDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
 URLActionData |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:
-URLActionDataBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataExecutable | :white_check_mark:| :x: | :x: | :x: | :x: 
-URLActionDataExecutableFactory | :white_check_mark:|:x: | :x: | :x: | :x: 
-URLActionDataExecutableFactoryBuilder | :white_check_mark:|:x: | :x: | :x: | :x: 
+URLActionDataBuilder |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataExecutable | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataExecutableFactory | :white_check_mark: |:x: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataExecutableFactoryBuilder | :white_check_mark:|:white_check_mark: | :x: | :x: | :x: 
 URLActionDataExecutableResult |:white_check_mark: |:x: | :x: | :x: | :x: 
-URLActionDataExecutableResultFactory |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataListBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataListFacade |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataRequestBuilder | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionDataExecutableResultFactory |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataListBuilder |:white_check_mark: | :x: | :white_circle: | :white_check_mark: | :white_check_mark: 
+URLActionDataListFacade |:white_check_mark: | :white_circle: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataRequestBuilder | :white_circle:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLActionDataResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataStore | :white_check_mark:| :x: | :x: | :x: | :x: 
-URLActionDataStoreBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataStore | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+URLActionDataStoreBuilder |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLActionDataStoreResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
 URLActionDataValidation |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataValidationBuilder |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataValidationBuilder |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLActionDataValidationResponseHandler | :white_check_mark:| :x: | :x: | :x: | :x: 
 URLActionStore | :white_check_mark:|:x: | :x: | :x: | :x: 
-URLActionValidation | :white_check_mark:| :x: | :x: | :x: | :x: 
+URLActionValidation | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLTestCase | :white_check_mark:| :x: | :x: | :x: | :x: 
 UserAgentUtils |:white_check_mark: | :x: | :x: | :x: | :x: 
 XhrHtmlPageAction |:white_check_mark: | :x: | :x: | :x: | :x: 
@@ -141,12 +142,13 @@ XPathWithHtmlPage |:white_check_mark: | :x: | :x: | :x: | :x:
 XPathWithLightWeightPage | :white_check_mark:| :x: | :x: | :x: | :x: 
 XPathWithNonParseableWebResponse |:white_check_mark: | :x: | :x: | :x: | :x: 
 XPathWithParseableWebResponse | :white_check_mark:| :x: | :x: | :x: | :x: 
-YAMLBasedURLActionBuilder |:white_check_mark: |:x: | :x: | :x: | :x: 
-YAMLBasedURLActionDataListBuilder | :white_check_mark:| :x: | :x: | :x: | :x: 
+YAMLBasedURLActionDataListBuilder | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 
 #### Symbology
 
 :white_check_mark: ... done.
+
+:white_circle: ... partly done.
 
 :x: ... open.
 
