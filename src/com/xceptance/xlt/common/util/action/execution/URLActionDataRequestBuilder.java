@@ -21,6 +21,17 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 
+/**
+ * Builder <br>
+ * Takes an {@link URLActionData} object and builds a {@link WebRequest}. <br>
+ * two alternatives that only differ in the headers:
+ * <ul>
+ * <li>General WebRequest: -> {@link #buildRequest(URLActionData)}
+ * <li>XmlHttpRequest: -> {@link #buildXhrRequest(URLActionData, URL)}
+ * </ul>
+ * 
+ * @author matthias mitterreiter
+ */
 public class URLActionDataRequestBuilder
 {
     public URLActionDataRequestBuilder()
@@ -28,6 +39,17 @@ public class URLActionDataRequestBuilder
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
+    /**
+     * Builds a general WebRequest with the information from action. <br>
+     * If you want some additional XmlHttpRequest Headers, <br>
+     * use {@link #buildXhrRequest(URLActionData, URL)} instead.
+     * 
+     * @param action
+     *            {@link URLActionData}
+     * @return {@link WebRequest}
+     * @throws IllegalArgumentException
+     *             if failed to create a WebRequest
+     */
     public WebRequest buildRequest(final URLActionData action)
     {
         ParameterUtils.isNotNull(action, "URLAction");
@@ -76,6 +98,18 @@ public class URLActionDataRequestBuilder
         return resultRequest;
     }
 
+    /**
+     * Builds a WebRequest with the information from action.<br>
+     * Additionally adds some XmlHttpRequest Headers.
+     * 
+     * @param action
+     *            {@link URLActionData}
+     * @param refererUrl
+     *            the url, the request refers to.
+     * @return {@link WebRequest}
+     * @throws IllegalArgumentException
+     *             if failed to create a WebRequest
+     */
     public WebRequest buildXhrRequest(final URLActionData action,
                                       final URL refererUrl)
     {
@@ -90,7 +124,7 @@ public class URLActionDataRequestBuilder
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to create WebRequest for action: "
+            throw new IllegalArgumentException("Failed to create XhrWebRequest for action: "
                                                    + action.getName()
                                                    + e.getMessage(),
                                                e);
@@ -227,8 +261,8 @@ public class URLActionDataRequestBuilder
         {
             final NameValuePair nameValuePair = parameters.get(index);
             /*
-             * For each pair except the first, an & has to be appended. For the first pair it depends on whether there
-             * is already a query (in which case insertLeadingAmp is true).
+             * For each pair except the first, an & has to be appended. For the first pair it depends
+             *  on whether there is already a query (in which case insertLeadingAmp is true).
              */
             if (index > 0 || insertLeadingAmp)
             {
@@ -301,7 +335,14 @@ public class URLActionDataRequestBuilder
         return decodedParameters;
     }
 
-    private void logWebRequest(final WebRequest request)
+    /**
+     * For debugging purpose. <br>
+     * 'err-streams' the attributes of the WebRequest. <br>
+     * 
+     * @param request
+     *            The {@link WebRequest} you want to err stream.
+     */
+    public void logWebRequest(final WebRequest request)
     {
         XltLogger.runTimeLogger.debug("------------Webrequest------------");
         final String url = request.getUrl().toString();

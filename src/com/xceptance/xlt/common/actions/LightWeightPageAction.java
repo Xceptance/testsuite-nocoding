@@ -5,11 +5,11 @@ import java.net.URL;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
-public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutable
+public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutionable
 {
 
     protected Downloader downloader;

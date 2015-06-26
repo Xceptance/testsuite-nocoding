@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutable;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 
 public class URLTestCase extends AbstractURLTestCase
 {
-    private URLActionDataExecutable previousExecutable;
+    private URLActionDataExecutionable previousExecutable;
 
     private URLActionData previousActionData;
 
@@ -47,7 +47,7 @@ public class URLTestCase extends AbstractURLTestCase
         final URLActionData action = getFirstURLActionToExecute();
         checkIfFirstActionIsExecutable(action);
         final WebRequest request = createActionWebRequest(action);
-        final URLActionDataExecutable executable = createExecutableFromAction(action,
+        final URLActionDataExecutionable executable = createExecutableFromAction(action,
                                                                               request);
         setPreviousExecutable(executable);
         setPreviousURLAction(action);
@@ -66,7 +66,7 @@ public class URLTestCase extends AbstractURLTestCase
         actions.remove(action);
     }
 
-    private void setPreviousExecutable(final URLActionDataExecutable executable)
+    private void setPreviousExecutable(final URLActionDataExecutionable executable)
     {
         previousExecutable = executable;
     }
@@ -100,7 +100,7 @@ public class URLTestCase extends AbstractURLTestCase
         handleResponse();
         
         final WebRequest request = createActionWebRequest(action);
-        final URLActionDataExecutable executable = createExecutableFromAction(action,
+        final URLActionDataExecutionable executable = createExecutableFromAction(action,
                                                                               request);
         setPreviousURLAction(action);
         setPreviousExecutable(executable);
@@ -117,7 +117,7 @@ public class URLTestCase extends AbstractURLTestCase
         previousExecutable.executeAction();
     }
 
-    private URLActionDataExecutable createExecutableFromAction(final URLActionData action,
+    private URLActionDataExecutionable createExecutableFromAction(final URLActionData action,
                                                                final WebRequest request)
     {
         return executableFactory.createPageAction(action.getName(), request);
@@ -126,7 +126,7 @@ public class URLTestCase extends AbstractURLTestCase
     private void handleXhrAction(final URLActionData xhrAction)
     {
         final WebRequest request = createXhrWebRequest(xhrAction);
-        final URLActionDataExecutable executable = createExecutableFromXhr(xhrAction,
+        final URLActionDataExecutionable executable = createExecutableFromXhr(xhrAction,
                                                                            request);
         executePreviousExecutable();
         handleResponse();
@@ -139,7 +139,7 @@ public class URLTestCase extends AbstractURLTestCase
         return requestBuilder.buildXhrRequest(xhrAction, previousExecutable.getUrl());
     }
 
-    private URLActionDataExecutable createExecutableFromXhr(final URLActionData action,
+    private URLActionDataExecutionable createExecutableFromXhr(final URLActionData action,
                                                             final WebRequest request)
     {
         return executableFactory.createXhrPageAction(action.getName(), request);

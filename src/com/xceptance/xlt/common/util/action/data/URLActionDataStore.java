@@ -9,16 +9,46 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * <p>
+ * Data container which holds all the necessary information to grab and store information
+ * out of a Http response in order to provide access to them via the {@link #interpreter}.
+ * </p>
+ * @author matthias
+ *
+ */
 public class URLActionDataStore
 {
+    /**
+     * identifier for the variable
+     */
     private String name;
 
+    /**
+     * the way you want to take information out of the http response. <br>
+     * See {@link #PERMITTEDSELECTIONMODE supported modes}.
+     */
     private String selectionMode;
 
+    /**
+     * the individual selection specification. 
+     */
     private String selectionContent;
 
+    /**
+     * The interpreter for dynamic parameter interpretation. 
+     */
     private ParameterInterpreter interpreter;
 
+    /**
+     * Supported selection modes:
+     * <ul>
+     * <li> {@link #XPATH}
+     * <li> {@link #REGEXP}
+     * <li> {@link #HEADER}
+     * <li> {@link #COOKIE}
+     * </ul>
+     */
     public final static Set<String> PERMITTEDSELECTIONMODE = new HashSet<String>();
 
     public static final String XPATH = "XPath";
@@ -37,6 +67,14 @@ public class URLActionDataStore
         PERMITTEDSELECTIONMODE.add(COOKIE);
     }
 
+    /**
+     * Takes the minimal set of parameters that are necessary to select and store information <br>
+     * from a http response.
+     * @param name {@link #name}
+     * @param selectionMode {@link #selectionMode}
+     * @param selectionContent {@link #selectionContent}
+     * @param interpreter {@link #interpreter}
+     */
     public URLActionDataStore(final String name,
                               final String selectionMode,
                               final String selectionContent,
@@ -49,6 +87,10 @@ public class URLActionDataStore
         setParameterInterpreter(interpreter);
     }
 
+    /**
+     * For debugging purpose. <br>
+     * 'err-streams' the attributes of the object without dynamic interpretation of the return values. <br>
+     */
     public void outlineRaw()
     {
         System.err.println("\t\t" + this.name);
@@ -56,6 +98,10 @@ public class URLActionDataStore
                            + this.selectionContent);
     }
 
+    /**
+     * For debugging purpose. <br>
+     * 'err-streams' the attributes of the object. Interprets the values via {@link #interpreter}  <br>
+     */
     public void outline()
     {
         System.err.println("\t\t" + getName());
@@ -63,6 +109,10 @@ public class URLActionDataStore
                            + getSelectionContent());
     }
 
+    /**
+     * @param interpreter : if NULL throws.
+     * @throws IllegalArgumentException
+     */
     private void setParameterInterpreter(final ParameterInterpreter interpreter)
     {
         this.interpreter = (interpreter != null) ? interpreter
@@ -71,6 +121,10 @@ public class URLActionDataStore
 
     }
 
+    /**
+     * @param selectionContent : if NULL throws.
+     * @throws IllegalArgumentException
+     */
     public void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = (selectionContent != null) ? selectionContent
@@ -79,6 +133,10 @@ public class URLActionDataStore
                                                            selectionContent));
     }
 
+    /**
+     * @param selectionMode :if NULL throws.
+     * @throws IllegalArgumentException
+     */
     public void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = (selectionMode != null) ? selectionMode
@@ -86,7 +144,10 @@ public class URLActionDataStore
         XltLogger.runTimeLogger.debug(MessageFormat.format("Set 'Selection Mode': \"{0}\"",
                                                            selectionMode));
     }
-
+    /**
+     * @param name :if NULL throws.
+     * @throws IllegalArgumentException
+     */
     public void setName(final String name)
     {
         this.name = (name != null) ? name
@@ -95,11 +156,17 @@ public class URLActionDataStore
                                                            name));
     }
 
+    /**
+     * @return {@link #name}, after its dynamic interpretation via the {@link #interpreter}.
+     */
     public String getName()
     {
         return interpreter.processDynamicData(this.name);
     }
 
+    /**
+     * @return {@link #selectionMode }, after its dynamic interpretation via the {@link #interpreter}.
+     */
     public String getSelectionMode()
     {
         final String dynamicSelectionMode = interpreter.processDynamicData(this.selectionMode);
@@ -111,27 +178,47 @@ public class URLActionDataStore
         return dynamicSelectionMode;
     }
 
+    /**
+     * @return {@link #selectionContent }, after its dynamic interpretation via the {@link #interpreter}.
+     */
     @Nullable
     public String getSelectionContent()
     {
         return interpreter.processDynamicData(this.selectionContent);
     }
 
+    /**
+     * @return {@link #interpreter}
+     */
     public ParameterInterpreter getInterpreter()
     {
         return this.interpreter;
     }
 
-    public boolean isPermittedSelectionMode(final String s)
+    /**
+     * @param selectionMode
+     * @return if ({@link #selectionMode} is permitted) ? true : false. 
+     */
+    public boolean isPermittedSelectionMode(final String selectionMode)
     {
-        return PERMITTEDSELECTIONMODE.contains(s);
+        return PERMITTEDSELECTIONMODE.contains(selectionMode);
     }
 
+    /**
+     * Dirty way of throwing a IllegalArgumentException with the passed message. 
+     * @param message
+     * @return nothing.
+     */
     private Object throwIllegalArgumentException(final String message)
     {
         throw new IllegalArgumentException(message);
     }
 
+    /**
+     * 
+     * @param tag
+     * @return Formated message,
+     */
     private String getTagCannotBeNullMessage(final String tag)
     {
         final String message = MessageFormat.format("Store: \"{0}\", tag \"{1}\"  cannot be NULL",
@@ -140,6 +227,12 @@ public class URLActionDataStore
         return message;
     }
 
+    /**
+     * 
+     * @param value
+     * @param tag
+     * @return Formated message.
+     */
     private String getIllegalValueForTagMessage(final String value,
                                                 final String tag)
     {

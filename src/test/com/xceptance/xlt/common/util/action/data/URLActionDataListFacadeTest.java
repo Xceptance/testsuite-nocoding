@@ -46,7 +46,7 @@ public class URLActionDataListFacadeTest
         interpreter = new ParameterInterpreter(properties, dataProvider);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testFileWithYamlExtension()
     {
         facade = new URLActionDataListFacade(fileWithYamlExtension, interpreter);
@@ -54,7 +54,7 @@ public class URLActionDataListFacadeTest
         Assert.assertTrue(actions.isEmpty());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testFileWithYmlExtension()
     {
         facade = new URLActionDataListFacade(fileWithYmlExtension, interpreter);
@@ -92,7 +92,7 @@ public class URLActionDataListFacadeTest
         final List<URLActionData> actions = facade.buildUrlActions();
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testFileWithOnlyExtension()
     {
         facade = new URLActionDataListFacade(fileWithOnlyExtension, interpreter);

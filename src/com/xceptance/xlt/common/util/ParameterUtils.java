@@ -9,6 +9,14 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 
+/**
+ * Adaption of the (final) class {@link com.xceptance.common.util.ParameterCheckUtils ParameterCheckUtils}. <br>
+ * Some methods were added. <br>
+ * Error Reasons were complemented. <br>
+ * 
+ * @author Jörg Werner (Xceptance Software Technologies GmbH)
+ * @author Matthias Mitterreiter (Xceptance Software Technologies GmbH)
+ */
 public class ParameterUtils
 {
     private ParameterUtils()
@@ -16,7 +24,18 @@ public class ParameterUtils
 
     }
 
-    public static void isNotNull(final Object parameter, final String parameterName)
+    /**
+     * Checks that the passed parameter is not <code>null</code>.
+     * 
+     * @param parameter
+     *            the parameter to check
+     * @param parameterName
+     *            the parameter name
+     * @throws IllegalArgumentException
+     *             if the parameter is <code>null</code>
+     */
+    public static void isNotNull(final Object parameter,
+                                 final String parameterName)
     {
         if (parameter == null)
         {
@@ -24,6 +43,18 @@ public class ParameterUtils
         }
     }
 
+    /**
+     * Checks that the passed parameter is not <code>null</code>.
+     * 
+     * @param parameter
+     *            the parameter to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            messages for the Exception
+     * @throws IllegalArgumentException
+     *             if the parameter is <code>null</code>
+     */
     public static void isNotNullMessages(final Object parameter,
                                          final String parameterName,
                                          final String... messages)
@@ -34,7 +65,21 @@ public class ParameterUtils
         }
     }
 
-    public static void isString(final Object parameter, final String parameterName, final String... strings)
+    /**
+     * Checks that the passed parameter is of type <code>String</code>.
+     * 
+     * @param parameter
+     *            the parameter to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            messages for the Exception
+     * @throws IllegalArgumentException
+     *             if the parameter is not of type <code>String</code>
+     */
+
+    public static void isString(final Object parameter,
+                                final String parameterName)
     {
         isNotNull(parameter, parameterName);
         if (!(parameter instanceof String))
@@ -43,22 +88,46 @@ public class ParameterUtils
         }
     }
 
-    public static void isStringOrNull(final Object parameter, final String parameterName)
+    /**
+     * Checks that the passed parameter is of type <code>String</code> or is <code>null</code>.
+     * 
+     * @param parameter
+     *            the parameter to check
+     * @param parameterName
+     *            the parameter name
+     * @throws IllegalArgumentException
+     *             if the parameter is not of type <code>String</code> or is <code>null</code>.
+     */
+    public static void isStringOrNull(final Object parameter,
+                                      final String parameterName)
     {
         if (parameter != null)
         {
-            if (parameter instanceof String)
+            if (!(parameter instanceof String))
             {
                 doThrow(parameterName, Reason.STRING);
             }
         }
     }
 
+    /**
+     * Checks that the passed parameter is of type <code>String</code>.
+     * 
+     * @param parameter
+     *            the parameter to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            messages for the Exception
+     * @throws IllegalArgumentException
+     *             if the parameter is not of type <code>String</code>
+     */
     public static void isStringMessage(final Object parameter,
                                        final String parameterName,
                                        final String... messages)
     {
-        if (parameter == null)
+        isNotNull(parameter, parameterName);
+        if (!(parameter instanceof String))
         {
             doThrowMessages(parameterName, Reason.STRING, messages);
         }
@@ -74,7 +143,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code> or empty
      */
-    public static void isNotNullOrEmpty(final String parameter, final String parameterName)
+    public static void isNotNullOrEmpty(final String parameter,
+                                        final String parameterName)
     {
         isNotNull(parameter, parameterName);
         if (parameter.trim().length() == 0)
@@ -117,7 +187,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             thrown when the given file is not a regular file, an existent file or an unreadable file.
      */
-    public static void isReadableFile(final File file, final String parameterName)
+    public static void isReadableFile(final File file,
+                                      final String parameterName)
     {
         isNotNull(file, parameterName);
 
@@ -159,7 +230,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             thrown when the given file is not a regular file, an existent file or an unreadable file.
      */
-    public static void isReadableFile(final FileObject file, final String parameterName)
+    public static void isReadableFile(final FileObject file,
+                                      final String parameterName)
     {
         isNotNull(file, parameterName);
 
@@ -206,7 +278,8 @@ public class ParameterUtils
      * @param parameterName
      *            the name of the parameter
      */
-    public static void isWritableDirectory(final File file, final String parameterName)
+    public static void isWritableDirectory(final File file,
+                                           final String parameterName)
     {
         isNotNull(file, parameterName);
         Reason reason = null;
@@ -247,7 +320,8 @@ public class ParameterUtils
      * @param parameterName
      *            the name of the parameter
      */
-    public static void isWritableFile(final File file, final String parameterName)
+    public static void isWritableFile(final File file,
+                                      final String parameterName)
     {
         isNotNull(file, parameterName);
         Reason reason = null;
@@ -325,7 +399,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code> or an empty string
      */
-    public static void isNonEmptyString(final String str, final String parameterName)
+    public static void isNonEmptyString(final String str,
+                                        final String parameterName)
     {
         isNotNull(str, parameterName);
         if (!(str.trim().length() > 0))
@@ -406,7 +481,8 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter path is not a relative path.
      */
-    public static void isRelativePath(final String path, final String parameterName)
+    public static void isRelativePath(final String path,
+                                      final String parameterName)
     {
         isNonEmptyString(path, parameterName);
 
@@ -416,32 +492,31 @@ public class ParameterUtils
         }
     }
 
-    public static void isArrayListParam(final Object o,
+    /**
+     * Checks whether the passed parameter is of type {@link ArrayList}.
+     * 
+     * @param object
+     *            Object to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            additional messages in case of error
+     * @throws IllegalArgumentException
+     *             if the parameter path is not of type {@link ArrayList}.
+     */
+    public static void isArrayList(final Object object,
                                         final String parameterName,
-                                        final String... arguments)
+                                        final String... messages)
     {
 
-        isNotNull(o, parameterName);
+        isNotNull(object, parameterName);
 
-        if (!(o instanceof ArrayList))
+        if (!(object instanceof ArrayList))
         {
-            doThrow(parameterName, Reason.NOT_ARRAYLIST, arguments);
+            doThrow(parameterName, Reason.NOT_ARRAYLIST, messages);
         }
     }
-
-    public static void isLinkedHashMapParam(final Object o,
-                                            final String parameterName,
-                                            final String... arguments)
-    {
-        isNotNull(o, parameterName);
-
-        if (!(o instanceof LinkedHashMap))
-        {
-            doThrow(parameterName, Reason.NOT_LINKEDHASHMAP, arguments);
-        }
-    }
-
-    public static void isArrayList(final Object o,
+    public static void isArrayListMessage(final Object o,
                                    final String name,
                                    final String... messages)
     {
@@ -454,13 +529,52 @@ public class ParameterUtils
         }
     }
 
-    public static void isLinkedHashMap(final Object o,
+    /**
+     * Checks whether the passed parameter is of type {@link LinkedHashMap}.
+     * 
+     * @param object
+     *            Object to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            additional messages in case of error
+     * @throws IllegalArgumentException
+     *             if the parameter path is not of type {@link LinkedHashMap}.
+     */
+
+    public static void isLinkedHashMap(final Object object,
+                                            final String parameterName,
+                                            final String... messages)
+    {
+        isNotNull(object, parameterName);
+
+        if (!(object instanceof LinkedHashMap))
+        {
+            doThrow(parameterName, Reason.NOT_LINKEDHASHMAP, messages);
+        }
+    }
+
+    /**
+     * Checks whether the passed parameter is of type {@link LinkedHashMap}.
+     * 
+     * @param object
+     *            Object to check
+     * @param parameterName
+     *            the parameter name
+     * @param messages
+     *            additional messages in case of error
+     *            
+     * @throws IllegalArgumentException
+     *             if the parameter path is not of type {@link LinkedHashMap}.
+     *             
+     */
+    public static void isLinkedHashMapMessage(final Object object,
                                        final String parameterName,
                                        final String... messages)
     {
-        isNotNullMessages(o, parameterName, messages);
+        isNotNullMessages(object, parameterName, messages);
 
-        if (!(o instanceof LinkedHashMap))
+        if (!(object instanceof LinkedHashMap))
         {
             doThrowMessages(parameterName, Reason.NOT_LINKEDHASHMAP, messages);
         }
@@ -491,6 +605,18 @@ public class ParameterUtils
         throw new IllegalArgumentException(s);
     }
 
+    /**
+     * Throws an IllegalArgumentException. The exception message is constructed using the given parameter name, reason
+     * and additional arguments.
+     * 
+     * @param parameterName
+     *            parameter name
+     * @param reason
+     *            reason
+     * @param messages
+     *            additional messages
+     * @throws IllegalArgumentException
+     */
     public static void doThrowMessages(final String parameterName,
                                        final Reason reason,
                                        final String... messages)
@@ -506,7 +632,21 @@ public class ParameterUtils
         }
         throw new IllegalArgumentException(s);
     }
-
+    /**
+     * Throws an IllegalArgumentException. The exception message is constructed using the given parameter name, reason
+     * and additional arguments.
+     * 
+     * @param parameterName
+     *            parameter name
+     * @param value
+     *  the illegal value
+     *  
+     * @param reason
+     *            reason
+     * @param messages
+     *            additional messages
+     * @throws IllegalArgumentException
+     */
     public static void doThrow(final String parameterName,
                                final String value,
                                final Reason reason,
@@ -526,13 +666,26 @@ public class ParameterUtils
      */
     public static enum Reason
     {
-        NULL, EMPTY, NEGATIVE, UNREADABLE("an unreadable file"), UNWRITABLE(
-            "an unwritable file"), ABSOLUTE("an absolute path"), LESS("less than"), GREATER(
-            "greater than"), NOT_ARRAY("not an array"), NOT_ARRAYLIST("not an array list"), NOT_LINKEDHASHMAP(
-            "not a linked hash map"), NOT_DIRECTORY("not a directory"), NON_EXISTENT(
-            "non-existent"), NOT_FILE("not a file"), UNACCESSIBLE("an unaccessible file"), STRING(
-            "not a String"), INTEGER("not an Integer"), UNSUPPORTED_TYPE(
-            "not of a supported type"), UNSUPPORTED_VALUE("not a supported value"), UNCOMPLETE("is uncomplete");
+        NULL,
+        EMPTY,
+        NEGATIVE,
+        UNREADABLE("an unreadable file"),
+        UNWRITABLE("an unwritable file"),
+        ABSOLUTE("an absolute path"),
+        LESS("less than"),
+        GREATER("greater than"),
+        NOT_ARRAY("not an array"),
+        NOT_ARRAYLIST("not an array list"),
+        NOT_LINKEDHASHMAP("not a linked hash map"),
+        NOT_DIRECTORY("not a directory"),
+        NON_EXISTENT("non-existent"),
+        NOT_FILE("not a file"),
+        UNACCESSIBLE("an unaccessible file"),
+        STRING("not a String"),
+        INTEGER("not an Integer"),
+        UNSUPPORTED_TYPE("not of a supported type"),
+        UNSUPPORTED_VALUE("not a supported value"),
+        UNCOMPLETE("is uncomplete");
 
         /**
          * Description of reason.

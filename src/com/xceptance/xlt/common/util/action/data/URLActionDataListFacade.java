@@ -8,12 +8,27 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**<p>
+ * Give this class a file path and it tries to construct a List<{@link #URLActionData}> 
+ * from the data in the file via {@link #buildUrlActions()}. <br>
+ * For this purpose it determines the file type and decides which implementation of the {@link URLActionDataListBuilder}
+ * to use.
+ * </p>
+ * 
+ * @author matthias mitterreiter
+ *
+ */
 public class URLActionDataListFacade
 {
     private String filePath;
 
     private ParameterInterpreter interpreter;
 
+    /**
+     * 
+     * @param filePath {@link #filePath}
+     * @param interpreter {@link #interpreter}
+     */
     public URLActionDataListFacade(final String filePath,
                                    final ParameterInterpreter interpreter)
     {
@@ -34,12 +49,22 @@ public class URLActionDataListFacade
         this.interpreter = interpreter;
     }
 
+    /**
+     * Builds a List<{@link #URLActionData}> from the data in {@link #filePath file}, 
+     * by using an {@link URLActionDataListBuilder}.
+     *  @return List<{@link URLActionData}>
+     */
     public List<URLActionData> buildUrlActions()
     {
         final URLActionDataListBuilder builder = createBuilder();
         return builder.buildURLActionDataList();
     }
 
+    /**
+     * Created an implementation of the {@link URLActionDataListBuilder}, 
+     * depending on the file type.
+     * @return {@link URLActionDataListBuilder}
+     */
     private URLActionDataListBuilder createBuilder()
     {
         final String fileNameExtension = getFileNameExtension(this.filePath);
@@ -72,6 +97,9 @@ public class URLActionDataListFacade
         return fileNameExtension;
     }
 
+    /**
+     *  Creates the YAML implementation of the {@link URLActionDataListBuilder}
+     */
     private YAMLBasedURLActionDataListBuilder createYAMLBuilder()
     {
         final URLActionDataStoreBuilder storeBuilder = new URLActionDataStoreBuilder();
@@ -86,6 +114,9 @@ public class URLActionDataListFacade
         return yamlBuilder;
     }
 
+    /**
+     *  Creates the CSV implementation of the {@link URLActionDataListBuilder}
+     */
     private CSVBasedURLActionDataListBuilder createCSVBuilder()
     {
 

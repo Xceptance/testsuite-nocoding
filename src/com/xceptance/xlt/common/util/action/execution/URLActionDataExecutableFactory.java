@@ -5,8 +5,8 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 public abstract class URLActionDataExecutableFactory
 {
 
-    abstract public URLActionDataExecutable createPageAction(final String name, WebRequest request);
+    abstract public URLActionDataExecutionable createPageAction(final String name, WebRequest request);
 
-    abstract public URLActionDataExecutable createXhrPageAction(final String name, WebRequest request);
+    abstract public URLActionDataExecutionable createXhrPageAction(final String name, WebRequest request);
 
 }

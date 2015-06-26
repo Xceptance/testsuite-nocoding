@@ -5,6 +5,14 @@ import java.text.MessageFormat;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * Helper class to build an {@link URLActionDataStore}. <br>
+ * Construct a {@link URLActionDataStore} object step by step. For this fill the URLActionStoreBuilder with values via
+ * setters until you want to create a URLActionDataStore. For this call {@link #build()}.
+ * 
+ * @author matthias mitterreiter
+ */
+
 public class URLActionDataStoreBuilder
 {
     private String name;
@@ -15,23 +23,37 @@ public class URLActionDataStoreBuilder
 
     private ParameterInterpreter interpreter;
 
+    /**
+     * Builds an {@link URLActionDataStore} object from the values of the local attributes. If an important attribute is
+     * not set, or invalid, it throws. After execution, the values of the local attributes are reset to 'null'.
+     * 
+     * @return {@link URLActionDataStore}
+     * @throws IllegalArgumentException
+     */
     public URLActionDataStore build()
     {
         URLActionDataStore store = null;
         try
         {
-            store = new URLActionDataStore(getName(), getSelectionMode(),
-                                       getSelectionContent(), getInterpreter());
+            store = new URLActionDataStore(getName(),
+                                           getSelectionMode(),
+                                           getSelectionContent(),
+                                           getInterpreter());
         }
         catch (final IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("Failed to create URLActionStore: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to create URLActionStore: "
+                                                   + e.getMessage(),
+                                               e);
         }
         reset();
 
         return store;
     }
 
+    /**
+     * Resets all local attribute values to 'null'.
+     */
     public void reset()
     {
         this.name = null;
@@ -60,7 +82,8 @@ public class URLActionDataStoreBuilder
     public void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = selectionMode;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionMode", selectionMode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionMode",
+                                                        selectionMode));
     }
 
     public String getSelectionContent()
@@ -71,7 +94,8 @@ public class URLActionDataStoreBuilder
     public void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = selectionContent;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionContent", selectionContent));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionContent",
+                                                        selectionContent));
     }
 
     public ParameterInterpreter getInterpreter()
@@ -84,9 +108,11 @@ public class URLActionDataStoreBuilder
         this.interpreter = interpreter;
         XltLogger.runTimeLogger.debug(infoSetTag("interpreter"));
     }
+
     private String infoSetTagToValue(final String tag, final String value)
     {
-        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ", tag,
+        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ",
+                                                    tag,
                                                     value);
         return message;
     }

@@ -11,6 +11,18 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * Helper class to build an {@link URLActionData}.
+ * <ul>
+ * <li> Construct a {@link URLActionData} object step by step. For this fill
+ * the URLActionBuilder with values via setters until you want to create a URLActionData. For this call {@link #build()}
+ * <li> Offers a way to default common used values. If default values are set, the URLActionDataBuilder refers to them if
+ * no individual data for the construction of a URLActionData object is available. <br>
+ * Default attributes are prefixed with "d_".
+ * <ul>
+ * @author matthias mitterreiter
+ *
+ */
 public class URLActionDataBuilder
 {
 
@@ -68,6 +80,10 @@ public class URLActionDataBuilder
 
     private ParameterInterpreter interpreter;
 
+    /**
+     * For debugging purpose. <br>
+     * 'err-streams' the attributes of the object. <br>
+     */
     public void outline()
     {
         System.err.println("UrlActionBuilder");
@@ -187,6 +203,19 @@ public class URLActionDataBuilder
         }
     }
 
+    /**
+     * <p> 
+     * Builds an {@link URLActionData} object from the values of the local attributes, set via setters(). <br>
+     * If an attribute is not set, it checks the local default attributes. <br>
+     * If neither an attribute nor a default attribute is given, <br>
+     * it tries to construct the URLActionData object without this attribute.
+     * If this attribute is important but not here (e.g url), it throws.
+     * </p>
+     * attributes are reset to 'null' after execution, default attributes not.
+     *  
+     * @return {@link URLActionData}
+     * @throws IllegalArgumentException
+     */
     public URLActionData build()
     {
         URLActionData resultAction = null;
@@ -216,6 +245,9 @@ public class URLActionDataBuilder
         return resultAction;
     }
 
+    /**
+     * Resets all the NON default attributes.
+     */
     public void reset()
     {
         

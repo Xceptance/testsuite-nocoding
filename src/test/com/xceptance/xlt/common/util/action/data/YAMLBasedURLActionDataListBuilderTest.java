@@ -58,7 +58,7 @@ public class YAMLBasedURLActionDataListBuilderTest
                                                                                             this.storeBuilder);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testOutputForUnExistingFile()
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(
@@ -105,6 +105,7 @@ public class YAMLBasedURLActionDataListBuilderTest
                                                                                             this.validationBuilder,
                                                                                             this.storeBuilder);
         final List<URLActionData> actions  = listBuilder.buildURLActionDataList();
+        
         Assert.assertFalse(actions.isEmpty());
         final URLActionData action = actions.get(0);
         
@@ -113,7 +114,7 @@ public class YAMLBasedURLActionDataListBuilderTest
         Assert.assertEquals(URLActionData.TYPE_XHR, action.getType());
         Assert.assertTrue(action.isXHRAction());
         Assert.assertEquals(URLActionData.METHOD_GET, action.getMethod().toString());
-        Assert.assertTrue(action.encodeParameters());
+        Assert.assertFalse(action.encodeParameters());
         Assert.assertEquals("body", action.getBody());
         Assert.assertEquals(400, action.getResponseCodeValidator().getHttpResponseCode());
         
@@ -148,7 +149,7 @@ public class YAMLBasedURLActionDataListBuilderTest
         final URLActionDataStore store2 = store.get(1);
         
         Assert.assertEquals("variable_2", store2.getName());
-        Assert.assertEquals("RegExp", store2.getSelectionMode());
+        Assert.assertEquals("RegEx", store2.getSelectionMode());
         Assert.assertEquals("xpath_2", store2.getSelectionContent());
         
         final List<URLActionDataValidation> validations = action.getValidations();

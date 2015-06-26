@@ -24,32 +24,28 @@ public class URLActionDataExecutableFactoryBuilderTest
     public void testCorrectConstructorCreation()
     {
         URLActionDataExecutableFactoryBuilder factoryBuilder;
-        factoryBuilder = new URLActionDataExecutableFactoryBuilder(
-                                                                   this.properties,
+        factoryBuilder = new URLActionDataExecutableFactoryBuilder(this.properties,
                                                                    URLActionDataExecutableFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterInterpreter()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(
-                                                                                                        null,
+        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(null,
                                                                                                         URLActionDataExecutableFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterMode()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(
-                                                                                                        this.properties,
+        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
                                                                                                         "someMode");
     }
 
     @Test
     public void testCorrectDomBuildingResult()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(
-                                                                                                        this.properties,
+        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
                                                                                                         URLActionDataExecutableFactoryBuilder.MODE_DOM);
         final URLActionDataExecutableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof HtmlPageActionFactory);
@@ -58,8 +54,7 @@ public class URLActionDataExecutableFactoryBuilderTest
     @Test
     public void testCorrectLightBuildingResult()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(
-                                                                                                        this.properties,
+        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
                                                                                                         URLActionDataExecutableFactoryBuilder.MODE_LIGHT);
         final URLActionDataExecutableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof LightWeightPageActionFactory);

@@ -10,6 +10,20 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 
+/**
+ * <p>
+ * Helper Class. <br>
+ * Takes an {@link URL url}, creates a {@link WebRequest}, creates and uses a {@link WebClient}
+ *  to load the {@link WebResponse}.
+ * Can parse the content of the WebResponse into a {@link LightWeightPage},
+ *  as well as a {@link HtmlPage}, all in one or stepwise. <br>
+ * </p>
+ * Used for Debugging and Testing. <br>
+ *  
+ * @author matthias mitterreiter
+ *
+ */
+
 public class MockObjects
 {
     private WebClient client;

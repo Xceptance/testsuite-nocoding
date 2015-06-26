@@ -218,7 +218,7 @@ public class URLActionData
 
     /**
      * Takes the minimal set of parameters that are necessary to crate a http request. <br>
-     * Defaults rest of the attributes. <br>
+     * Defaults the rest of the attributes. <br>
      * 
      * @param name
      *            : {@link #name}
@@ -243,10 +243,8 @@ public class URLActionData
     }
 
     /**
-     * <p>
      * For debugging purpose. <br>
      * 'err-streams' the attributes of the object. <br>
-     * </p>
      */
     public void outline()
     {
@@ -934,7 +932,7 @@ public class URLActionData
     }
 
     /**
-     * @param s
+     * @param method
      * @return if ({@link #PERMITTEDMETHODS method} is permitted) ? true : false. 
      */
     public static boolean isPermittedMethod(final String method)

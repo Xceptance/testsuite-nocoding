@@ -8,9 +8,18 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
+/**
+ * Builder <br>
+ * Creates a {@link URLActionDataExecutableFactory}, depending on the {@link #mode}.
+ * 
+ * @author matthias mitterreiter
+ */
 public class URLActionDataExecutableFactoryBuilder
 {
 
+    /**
+     * mode of execution
+     */
     private String mode;
 
     private XltProperties properties;
@@ -27,6 +36,12 @@ public class URLActionDataExecutableFactoryBuilder
         PERMITTEDMODES.add(MODE_LIGHT);
     }
 
+    /**
+     * @param properties
+     *            {@link XltProperties}
+     * @param mode
+     *            {@link mode}
+     */
     public URLActionDataExecutableFactoryBuilder(final XltProperties properties,
                                                  final String mode)
     {
@@ -35,6 +50,10 @@ public class URLActionDataExecutableFactoryBuilder
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
+    /**
+     * builds a {@link URLActionDataExecutableFactory} depending on the {@link #mode}, set in the Constructor.
+     * @return {@link URLActionDataExecutableFactory}
+     */
     public URLActionDataExecutableFactory buildFactory()
     {
         final URLActionDataExecutableFactory factory = produceFactory();
@@ -55,8 +74,7 @@ public class URLActionDataExecutableFactoryBuilder
         }
         else
         {
-            throw new IllegalArgumentException(
-                                               MessageFormat.format("Running mode : \"{0}\" is not supported!",
+            throw new IllegalArgumentException(MessageFormat.format("Running mode : \"{0}\" is not supported!",
                                                                     mode));
         }
     }

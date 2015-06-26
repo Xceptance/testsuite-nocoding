@@ -1,14 +1,30 @@
 package com.xceptance.xlt.common.util.action.execution;
 
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.actions.Downloader;
 import com.xceptance.xlt.common.actions.HtmlPageAction;
+import com.xceptance.xlt.common.actions.ModifiedAbstractHtmlPageAction;
 import com.xceptance.xlt.common.actions.XhrHtmlPageAction;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 import com.xceptance.xlt.engine.XltWebClient;
+
+/**
+ * Factory Class <br>
+ * Produces {@link URLActionDataExecutionable}s, depending on the type of request. <br>
+ * Cases:
+ * <ul>
+ * <li>Request is not a XmlHttpRequest -> use {@link #createPageAction(String, WebRequest)}
+ * <li>Request is a XmlHttpRequest -> use {@link #createXhrPageAction(String, WebRequest)}
+ * </ul>
+ * The response gets parsed into the dom. <br>
+ * See the execution model of {@link ModifiedAbstractHtmlPageAction}
+ * 
+ * @author matthias mitterreiter
+ */
 
 public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 {
@@ -18,6 +34,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
 
     private final URLActionDataExecutableResultFactory resultFactory;
 
+    /**
+     * @param properties
+     *            {@link XltProperties} for {@link WebClient} configuration.
+     */
     public HtmlPageActionFactory(final XltProperties properties)
     {
         super();
@@ -32,18 +52,33 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
         this.properties = properties;
     }
 
+    /**
+     * Returns a {@link HtmlPageAction}, that can fire a request.
+     * @param name
+     *            Name of the URLActionDataExecutionable
+     * @param request
+     *            the WebRequest that should be fired
+     * @return {@link URLActionDataExecutionable}
+     *  
+     */
     @Override
-    public URLActionDataExecutable createPageAction(
-                                                    final String name,
-                                                    final WebRequest request)
+    public URLActionDataExecutionable createPageAction(final String name,
+                                                       final WebRequest request)
     {
 
         HtmlPageAction action;
-
+        
+        ParameterUtils.isNotNull(name, "name");
+        ParameterUtils.isNotNull(request, "WebRequest");
+        
+        
         if (this.previousAction == null)
         {
             action = new HtmlPageAction(name, request, resultFactory);
-            previousAction = action;
+            this.previousAction = action;
+
+            // bad design createDownloader() depends on action
+
             action.setDownloader(createDownloader());
 
         }
@@ -74,12 +109,25 @@ public class HtmlPageActionFactory extends URLActionDataExecutableFactory
         return downloader;
 
     }
-
+    /**
+     * Returns a {@link XhrHtmlPageAction}, that can fire a request.
+     * @param name
+     *            Name of the URLActionDataExecutionable
+     * @param request
+     *            the WebRequest that should be fired
+     * @return {@link URLActionDataExecutionable}
+     * @throws IllegalArgumentException
+     *  if there has not been fired a request before. <br>
+     *  Because in this case no WebClient is available. 
+     *  
+     */
     @Override
-    public URLActionDataExecutable createXhrPageAction(
-                                                       final String name,
-                                                       final WebRequest request)
+    public URLActionDataExecutionable createXhrPageAction(final String name,
+                                                          final WebRequest request)
     {
+        ParameterUtils.isNotNull(name, "name");
+        ParameterUtils.isNotNull(request, "WebRequest");
+        
         if (previousAction == null)
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");
