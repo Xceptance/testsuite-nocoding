@@ -1,7 +1,7 @@
 package test.com.xceptance.xlt.common.util.action.validation;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -16,35 +16,38 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataStoreResponseHandlerTest
 {
 
-    MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    private ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-    private XltProperties properties;
+    private static XltProperties properties;
 
-    private GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-    private URLActionDataExecutableResult result;
+    private static URLActionDataExecutableResult result;
 
-    private URLActionDataStoreResponseHandler storeHandler;
+    private static URLActionDataStoreResponseHandler storeHandler;
 
-    private URLActionDataStore storeItemRegex;
+    private static URLActionDataStore storeItemRegex;
 
-    private final String regexString = "href=\"[\\s\\S]*?\"";
-    private final String regexStringExpected = "href=\"/en/\"";
+    private static final String regexString = "href=\"[\\s\\S]*?\"";
 
-    private URLActionDataStore storeItemXPath;
+    private static final String regexStringExpected = "href=\"/en/\"";
 
-    private final String xpathString = "//*[@id='service-areas']/div[1]/div/div/h1";
-    private final String xpathStringExpected = "Committed to Software Quality";
+    private static URLActionDataStore storeItemXPath;
 
-    private URLActionDataStore storeItemHeader;
+    private static final String xpathString = "//*[@id='service-areas']/div[1]/div/div/h1";
 
-    private final String headerString = "Server";
-    private final String headerStringExpected = "Apache";
+    private static final String xpathStringExpected = "Committed to Software Quality";
 
-    @Before
-    public void setup()
+    private static URLActionDataStore storeItemHeader;
+
+    private static final String headerString = "Server";
+
+    private static final String headerStringExpected = "Apache";
+
+    @BeforeClass
+    public static void setup()
     {
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
@@ -73,20 +76,24 @@ public class URLActionDataStoreResponseHandlerTest
     public void testRegex()
     {
         storeHandler.handleStore(storeItemRegex, result);
-        Assert.assertEquals(regexStringExpected, interpreter.processDynamicData("${regex}"));
+        Assert.assertEquals(regexStringExpected,
+                            interpreter.processDynamicData("${regex}"));
     }
 
     @Test
     public void testXPath()
     {
         storeHandler.handleStore(storeItemXPath, result);
-        Assert.assertEquals(xpathStringExpected, interpreter.processDynamicData("${xpath}"));
+        Assert.assertEquals(xpathStringExpected,
+                            interpreter.processDynamicData("${xpath}"));
     }
 
     @Test
     public void testHeader()
     {
         storeHandler.handleStore(storeItemHeader, result);
-        Assert.assertEquals(headerStringExpected, interpreter.processDynamicData("${header}"));
+        Assert.assertEquals(headerStringExpected,
+                            interpreter.processDynamicData("${header}"));
     }
+
 }

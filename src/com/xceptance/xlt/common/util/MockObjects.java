@@ -3,25 +3,26 @@ package com.xceptance.xlt.common.util;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 
 /**
  * <p>
  * Helper Class. <br>
- * Takes an {@link URL url}, creates a {@link WebRequest}, creates and uses a {@link WebClient}
- *  to load the {@link WebResponse}.
- * Can parse the content of the WebResponse into a {@link LightWeightPage},
- *  as well as a {@link HtmlPage}, all in one or stepwise. <br>
+ * Takes an {@link URL url}, creates a {@link WebRequest}, creates and uses a {@link WebClient} to load the
+ * {@link WebResponse}. Can parse the content of the WebResponse into a {@link LightWeightPage}, as well as a
+ * {@link HtmlPage} <br>
+ * This can be done at one go (via {@link #load()}), or stepwise.
  * </p>
  * Used for Debugging and Testing. <br>
- *  
+ * 
  * @author matthias mitterreiter
- *
  */
 
 public class MockObjects
@@ -95,7 +96,8 @@ public class MockObjects
                 catch (final Exception e)
                 {
                     throw new IllegalArgumentException("Failed to load 'HtmlPage': "
-                                                       + e.getMessage(), e);
+                                                           + e.getMessage(),
+                                                       e);
                 }
             }
             else
@@ -130,8 +132,7 @@ public class MockObjects
         }
         else
         {
-            throw new IllegalArgumentException(
-                                               "'urlString' cannot be null in order to create a URL!");
+            throw new IllegalArgumentException("'urlString' cannot be null in order to create a URL!");
         }
     }
 
@@ -143,8 +144,7 @@ public class MockObjects
         }
         else
         {
-            throw new IllegalArgumentException(
-                                               "'URL' cannot be null in order to create a WebRequest!");
+            throw new IllegalArgumentException("'URL' cannot be null in order to create a WebRequest!");
         }
     }
 
@@ -157,24 +157,48 @@ public class MockObjects
                 try
                 {
                     this.response = client.loadWebResponse(this.request);
+                    printWebResponseHeader(response);
                 }
                 catch (final IOException e)
                 {
                     throw new IllegalArgumentException("Failed to load Response: "
-                                                       + e.getMessage(), e);
+                                                           + e.getMessage(),
+                                                       e);
                 }
             }
             else
             {
-                throw new IllegalArgumentException(
-                                                   "'WebClient' cannot be null in order to load a WebResponse!");
+                throw new IllegalArgumentException("'WebClient' cannot be null in order to load a WebResponse!");
             }
         }
         else
         {
-            throw new IllegalArgumentException(
-                                               "'WebRequest' cannot be null in order to load a WebResponse!");
+            throw new IllegalArgumentException("'WebRequest' cannot be null in order to load a WebResponse!");
         }
+    }
+
+    public void printWebResponseHeader(final WebResponse response)
+    {
+        final List<NameValuePair> headers = response.getResponseHeaders();
+        System.err.println("------------WebResponse----------------");
+        System.err.println("---------------------------------------");
+        System.err.println("------------Headers--------------------");
+        for(final NameValuePair header : headers){
+            System.err.println(header.getName() + " : " + header.getValue());
+        }
+    }
+    public void printWebResponse(final WebResponse response)
+    {
+        final List<NameValuePair> headers = response.getResponseHeaders();
+        System.err.println("------------WebResponse----------------");
+        System.err.println("---------------------------------------");
+        System.err.println("------------Headers--------------------");
+        for(final NameValuePair header : headers){
+            System.err.println(header.getName() + " : " + header.getValue());
+        }
+        System.err.println("------------Body--------------------");
+        System.err.println("ContentType: " +response.getContentType() );
+        System.err.println(response.getContentAsString());
     }
 
     public WebResponse getResponse()

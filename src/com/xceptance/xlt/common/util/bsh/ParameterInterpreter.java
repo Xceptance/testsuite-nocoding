@@ -36,7 +36,7 @@ import com.xceptance.xlt.api.util.XltProperties;
 
 /**
  * Our implementation of the param interpreter, it will set some default data objects for later use, such as NOW and
- * RANDOM.
+ * RANDOM ect.
  */
 public class ParameterInterpreter extends Interpreter
 {
@@ -86,11 +86,16 @@ public class ParameterInterpreter extends Interpreter
     {
         final String name = nvp.getName();
         final String value = nvp.getValue();
-        if (name != null && value != null)
+        if (name != null)
         {
-            System.err.println(addVariableMessage(name, value)); 
             XltLogger.runTimeLogger.debug(addVariableMessage(name, value));
             this.set(name, value);
+        }
+        else
+        {
+            XltLogger.runTimeLogger.debug("Failed to add variable: \"" + name
+                                          + "\" = \"" + value
+                                          + "\", because its identifier was 'null'");
         }
     }
 

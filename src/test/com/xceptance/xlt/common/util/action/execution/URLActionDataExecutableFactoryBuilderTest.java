@@ -7,8 +7,8 @@ import org.junit.Test;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.action.execution.HtmlPageActionFactory;
 import com.xceptance.xlt.common.util.action.execution.LightWeightPageActionFactory;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactory;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactoryBuilder;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionableFactory;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionbleFactoryBuilder;
 
 public class URLActionDataExecutableFactoryBuilderTest
 {
@@ -23,40 +23,40 @@ public class URLActionDataExecutableFactoryBuilderTest
     @Test
     public void testCorrectConstructorCreation()
     {
-        URLActionDataExecutableFactoryBuilder factoryBuilder;
-        factoryBuilder = new URLActionDataExecutableFactoryBuilder(this.properties,
-                                                                   URLActionDataExecutableFactoryBuilder.MODE_DOM);
+        URLActionDataExecutionbleFactoryBuilder factoryBuilder;
+        factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.properties,
+                                                                   URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterInterpreter()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(null,
-                                                                                                        URLActionDataExecutableFactoryBuilder.MODE_DOM);
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(null,
+                                                                                                        URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterMode()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.properties,
                                                                                                         "someMode");
     }
 
     @Test
     public void testCorrectDomBuildingResult()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
-                                                                                                        URLActionDataExecutableFactoryBuilder.MODE_DOM);
-        final URLActionDataExecutableFactory actionFactory = factory.buildFactory();
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.properties,
+                                                                                                        URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
+        final URLActionDataExecutionableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof HtmlPageActionFactory);
     }
 
     @Test
     public void testCorrectLightBuildingResult()
     {
-        final URLActionDataExecutableFactoryBuilder factory = new URLActionDataExecutableFactoryBuilder(this.properties,
-                                                                                                        URLActionDataExecutableFactoryBuilder.MODE_LIGHT);
-        final URLActionDataExecutableFactory actionFactory = factory.buildFactory();
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.properties,
+                                                                                                        URLActionDataExecutionbleFactoryBuilder.MODE_LIGHT);
+        final URLActionDataExecutionableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof LightWeightPageActionFactory);
     }
 

@@ -8,8 +8,21 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 
 import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
 
+/**
+ * Handles a {@link URLActionDataValidation} item. <br>
+ * <ul>
+ * <li>Reads the selectionMode & selectionContent of {@link URLActionDataStore}.
+ * <li>Selects the described elements in {@link URLActionDataExecutableResult}.
+ * <li>Validates the result of the selection with the described validationMode & validationContent in
+ * {@link URLActionDataStore}.
+ * <li>For this use {@link #validate(URLActionDataValidation, URLActionDataExecutableResult) validate()}.
+ * </ul>
+ * 
+ * @author matthias mitterreiter
+ */
 public class URLActionDataValidationResponseHandler
 {
     public URLActionDataValidationResponseHandler()
@@ -17,18 +30,33 @@ public class URLActionDataValidationResponseHandler
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
+    /**
+     * Does the following:
+     * <ul>
+     * <li>fetches the elements from the {@link URLActionDataExecutableResult result} that suit the described criteria in
+     * {@link URLActionDataValidation validation}.
+     * <li>validates the found elements.
+     * </ul>
+     * 
+     * @param validation
+     *            : the description of the validation process.
+     * @param result
+     *            : the response to validate in form of a {@link URLActionDataExecutableResult}.
+     * @throws IllegalArgumentException
+     *             if the validation was wrong or failed.
+     */
     public void validate(final URLActionDataValidation validation,
                          final URLActionDataExecutableResult result)
     {
-        XltLogger.runTimeLogger.debug("Validating: " + validation.getName());
+        XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName() + "");
         try
         {
             handleValidation(validation, result);
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to validate Response : "
-                                               + validation.getName() + ": "
+            throw new IllegalArgumentException("Failed to validate Response : \""
+                                               + validation.getName() + "\": "
                                                + e.getMessage(), e);
         }
     }
@@ -60,8 +88,13 @@ public class URLActionDataValidationResponseHandler
             case URLActionDataValidation.HEADER:
                 resultSelection = handleHeaderValidationItem(validation, result);
                 break;
-            default:
+            case URLActionDataValidation.COOKIE:
+                resultSelection = handleCookieValidationItem(validation, result);
                 break;
+            default:
+                throw new IllegalArgumentException("SelectionMode: \""
+                                                   + validation.getSelectionMode()
+                                                   + "\" is not supported!");
         }
         return resultSelection;
     }
@@ -85,24 +118,31 @@ public class URLActionDataValidationResponseHandler
                 validateText(resultSelection, validation);
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("ValidationMode: \""
+                                                   + validation.getValidationMode()
+                                                   + "\" is not supported!");
         }
     }
 
     private void validateExists(final List<String> resultSelection,
                                 final URLActionDataValidation validation)
     {
-        XltLogger.runTimeLogger.debug("Validating EXISTANCE");
+        XltLogger.runTimeLogger.debug("Validating \"" + validation.getName()
+                                      + "\": EXISTANCE");
         Assert.assertFalse(resultSelection.isEmpty());
     }
 
     private void validateCount(final List<String> resultSelection,
                                final URLActionDataValidation validation)
     {
+        
         final int expectedLength = Integer.valueOf(validation.getValidationContent());
         final int actualLength = resultSelection.size();
-        XltLogger.runTimeLogger.debug("Validating COUNT: " + expectedLength
-                                      + " = " + actualLength);
+        
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
+                                      + "\": COUNT: " + expectedLength + " = "
+                                      + actualLength);
+        
         Assert.assertEquals(expectedLength, actualLength);
 
     }
@@ -111,12 +151,17 @@ public class URLActionDataValidationResponseHandler
                                  final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
+        
         final String matcherString = resultSelection.get(0);
         final String patternString = validation.getValidationContent();
-        XltLogger.runTimeLogger.debug("Validating MATECHES: " + matcherString
+        
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
+                                      + "\": MATCHES: " + matcherString
                                       + " matches " + patternString);
+        
         final Pattern pattern = Pattern.compile(patternString);
         final Matcher matcher = pattern.matcher(matcherString);
+        
         Assert.assertTrue(matcher.find());
 
     }
@@ -125,18 +170,26 @@ public class URLActionDataValidationResponseHandler
                               final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
+        
         final String expectedText = validation.getValidationContent();
         final String actualText = resultSelection.get(0);
-        XltLogger.runTimeLogger.debug("Validating TEXT: " + "'" + expectedText
-                                      + "'" + " = " + "'" + actualText + "'");
+        
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
+                                      + "\": TEXT: " + "'" + expectedText + "'"
+                                      + " = " + "'" + actualText + "'");
+        
         Assert.assertEquals(expectedText, actualText);
+    }
+
+    private List<String> handleCookieValidationItem(final URLActionDataValidation validation,
+                                                    final URLActionDataExecutableResult result)
+    {
+        return result.getCookieAsStringByName(validation.getSelectionContent());
     }
 
     private List<String> handleXPathValidationItem(final URLActionDataValidation validation,
                                                    final URLActionDataExecutableResult result)
     {
-        final List<String> someThing = result.getByXPath(validation.getSelectionContent());
-
         return result.getByXPath(validation.getSelectionContent());
 
     }

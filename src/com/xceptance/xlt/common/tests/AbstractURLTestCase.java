@@ -13,42 +13,94 @@ import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.XltConstants;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataListFacade;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactory;
-import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutableFactoryBuilder;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionableFactory;
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionbleFactoryBuilder;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataRequestBuilder;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataStoreResponseHandler;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataValidationResponseHandler;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * 
+ * Prepares the actual test run. <br>
+ * For this, most of the important objects are created.
+ * 
+ * @author matthias mitterreiter
+ *
+ */
 public class AbstractURLTestCase extends AbstractTestCase
 {
+    /**
+     * directory of the datafiles
+     */
     protected String dataDirectory;
 
+    /**
+     * the complete filepath 
+     */
     protected String filePath;
 
+    /**
+     * the ParamterInterpreter for dynamic parameter interpretation. <br>
+     * Created once and passed to every object that shouts for it.
+     */
     protected ParameterInterpreter interpreter;
 
-    protected URLActionDataExecutableFactory executableFactory;
+    protected URLActionDataExecutionableFactory executionableFactory;
 
+    /**
+     * Created the List<URLActionData> which holds the data to create and 
+     * validate responses.
+     */
     protected URLActionDataListFacade urlActionListFacade;
 
+    /**
+     * Handles the responses
+     */
     protected URLActionDataResponseHandler responseHandler;
 
+    /**
+     * Handles the responses particularly for all URLActionDataStore objects.
+     */
     protected URLActionDataStoreResponseHandler storeHandler;
 
+    /**
+     * Handles the responses particularly for all URLActionDataValidation objects <br>
+     * So this does the validation stuff
+     */
     protected URLActionDataValidationResponseHandler validationHandler;
 
+    /**
+     * Builds WebRequests from URLActionData objects.
+     */
     protected URLActionDataRequestBuilder requestBuilder;
 
+    /**
+     * Provides some predefined data.
+     */
     protected GeneralDataProvider dataProvider;
 
+    /**
+     * Needed for properties access.
+     */
     protected XltProperties properties;
 
+    /**
+     * This is running mode, defined in the properties.
+     */
     protected String mode;
 
+    
+    /**
+     * Mapped informations from the files, where the test case is specified.
+     * e.g. the .yaml file.
+     */
     protected List<URLActionData> actions;
 
+    /**
+     * Preparation stuff for the actual test case
+     */
     @Before
     public void initializeVariables()
     {
@@ -133,9 +185,9 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupURLActionExecutableFactory()
     {
-        final URLActionDataExecutableFactoryBuilder factoryBuilder = new URLActionDataExecutableFactoryBuilder(this.properties,
+        final URLActionDataExecutionbleFactoryBuilder factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.properties,
                                                                                                                this.mode);
-        this.executableFactory = factoryBuilder.buildFactory();
+        this.executionableFactory = factoryBuilder.buildFactory();
     }
 
     private void setupURLActionRequestBuilder()

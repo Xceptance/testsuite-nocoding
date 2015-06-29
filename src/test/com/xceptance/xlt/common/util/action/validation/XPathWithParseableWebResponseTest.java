@@ -3,7 +3,7 @@ package test.com.xceptance.xlt.common.util.action.validation;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import test.com.xceptance.xlt.common.util.MockWebResponse;
@@ -14,10 +14,10 @@ import com.xceptance.xlt.common.util.action.validation.XPathWithParseableWebResp
 
 public class XPathWithParseableWebResponseTest
 {
-    MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         mockObjects = new MockObjects();
         mockObjects.load();
@@ -54,7 +54,8 @@ public class XPathWithParseableWebResponseTest
         final WebResponse response = mockObjects.getResponse();
         final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
         final List<String> xPathResults = thing.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
-        Assert.assertEquals(xPathResults.get(0), "Committed to Software Quality");
+        Assert.assertEquals(xPathResults.get(0),
+                            "Committed to Software Quality");
     }
 
 }

@@ -5,13 +5,21 @@ import java.net.URL;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.common.util.ParameterCheckUtils;
+import com.xceptance.xlt.api.actions.AbstractLightWeightPageAction;
 import com.xceptance.xlt.api.actions.AbstractWebAction;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 import com.xceptance.xlt.engine.SessionImpl;
 import com.xceptance.xlt.engine.XltWebClient;
 
+/**
+ * This class is simply a variant of the {@link AbstractLightWeightPageAction}.
+ * They distinguish in the method {@link #loadPage(WebRequest)}, where it is possible to
+ * pass a {@link WebResponse}, which is cozy.
+ *
+ */
 public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebAction
 {
 

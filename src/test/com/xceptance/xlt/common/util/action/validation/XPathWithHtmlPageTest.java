@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.util.MockObjects;
@@ -13,12 +13,12 @@ import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
 public class XPathWithHtmlPageTest
 {
 
-    private final String urlString = "https://www.xceptance.com/en/";
+    private static final String urlString = "https://www.xceptance.com/en/";
 
-    private MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    @Before
-    public void setup() throws MalformedURLException
+    @BeforeClass
+    public static void setup() throws MalformedURLException
     {
         mockObjects = new MockObjects(urlString);
         mockObjects.load();

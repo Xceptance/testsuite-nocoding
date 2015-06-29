@@ -5,6 +5,16 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
+/**
+ *  See {@link HtmlPageAction}. <br>
+ *  Does the same except that the response is NOT parsed into the DOM.
+ *  Used for XmlHttpRequests.
+ * 
+ * @author matthias mitterreiter
+ * @extends {@link HtmlPageAction}.
+ *
+ */
+
 public class XhrHtmlPageAction extends HtmlPageAction
 {
     private WebResponse xhrResponse;

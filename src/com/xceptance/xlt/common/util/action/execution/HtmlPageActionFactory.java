@@ -20,13 +20,13 @@ import com.xceptance.xlt.engine.XltWebClient;
  * <li>Request is not a XmlHttpRequest -> use {@link #createPageAction(String, WebRequest)}
  * <li>Request is a XmlHttpRequest -> use {@link #createXhrPageAction(String, WebRequest)}
  * </ul>
- * The response gets parsed into the dom. <br>
+ * The response is parsed into the dom. <br>
  * See the execution model of {@link ModifiedAbstractHtmlPageAction}
  * 
  * @author matthias mitterreiter
  */
 
-public class HtmlPageActionFactory extends URLActionDataExecutableFactory
+public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
 {
     private XltProperties properties;
 

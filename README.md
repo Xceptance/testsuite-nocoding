@@ -95,7 +95,7 @@ The following is a simple overview of the classes and their individual stage of 
 Class | Scripted | Tested | Documented| Error Handling | Logging
 ----|:----:|:----:|:----:|:----:|:----:
 AbstractURLTestCase | :white_check_mark: |:x: | :x: | :x: | :x: 
-ConcreteNodeList  | :white_check_mark: | :x: | :x: | :x: | :x: 
+ConcreteNodeList  | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 CSVBasedURLActionDataListBuilder  |:x: | :x: | :x: | :x: | :x:  
 Downloader  |:white_check_mark: | :x: | :x: | :x: | :x:  
 HtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
@@ -106,11 +106,9 @@ MockObjects  |:white_check_mark: | :white_circle: | :white_circle: | :white_circ
 MockWebResponse  |:white_check_mark: | :x: | :x: | :x: | :x: 
 ModifiedAbstractHtmlPageAction  | :white_check_mark:| :x: | :x: | :x: | :x: 
 ModifiedAbstractLightWeightPageAction  |:white_check_mark: | :x: | :x: | :x: | :x: 
-ModifiedLWPageUtilities  | :white_check_mark:| :x: | :x: | :x: | :x: 
-ModifiedRegExUtils  | :white_check_mark:|:x: | :x: | :x: | :x: 
-ParameterInterpreter  | :white_check_mark:|:x: | :x: | :x: | :x: 
-ParameterInterpreterNow  | :white_check_mark:| :x: | :x: | :x: | :x: 
-ParameterInterpreterRandom  | :white_check_mark:|:x: | :x: | :x: | :x: 
+ParameterInterpreter  | :white_check_mark:|:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+ParameterInterpreterNow  | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+ParameterInterpreterRandom  | :white_check_mark:|:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 ParameterUtils  |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 StaticContentDownloader |:white_check_mark: | :x: | :x: | :x: | :x: 
 URLActionData |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:
@@ -126,22 +124,18 @@ URLActionDataRequestBuilder | :white_circle:| :white_check_mark: | :white_check_
 URLActionDataResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
 URLActionDataStore | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLActionDataStoreBuilder |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
-URLActionDataStoreResponseHandler |:white_check_mark: | :x: | :x: | :x: | :x: 
-URLActionDataValidation |:white_check_mark: | :x: | :x: | :x: | :x: 
+URLActionDataStoreResponseHandler |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLActionDataValidationBuilder |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
-URLActionDataValidationResponseHandler | :white_check_mark:| :x: | :x: | :x: | :x: 
-URLActionStore | :white_check_mark:|:x: | :x: | :x: | :x: 
+URLActionDataValidationResponseHandler | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:  
 URLActionValidation | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 URLTestCase | :white_check_mark:| :x: | :x: | :x: | :x: 
-UserAgentUtils |:white_check_mark: | :x: | :x: | :x: | :x: 
 XhrHtmlPageAction |:white_check_mark: | :x: | :x: | :x: | :x: 
 XhrLightWeightPageAction |:white_check_mark: | :x: | :x: | :x: | :x: 
-XltMockWebConnection |:white_check_mark: | :x: | :x: | :x: | :x: 
-XPathGetable | :white_check_mark:| :x: | :x: | :x: | :x: 
-XPathWithHtmlPage |:white_check_mark: | :x: | :x: | :x: | :x: 
-XPathWithLightWeightPage | :white_check_mark:| :x: | :x: | :x: | :x: 
-XPathWithNonParseableWebResponse |:white_check_mark: | :x: | :x: | :x: | :x: 
-XPathWithParseableWebResponse | :white_check_mark:| :x: | :x: | :x: | :x: 
+XPathGetable | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark:
+XPathWithHtmlPage | :white_check_mark:  |:white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+XPathWithLightWeightPage | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
+XPathWithNonParseableWebResponse |:white_check_mark: | :white_circle: | :white_circle: | :white_circle: | :white_circle: 
+XPathWithParseableWebResponse | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 YAMLBasedURLActionDataListBuilder | :white_check_mark:| :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: 
 
 #### Symbology

@@ -9,6 +9,17 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
+/**
+ * Handles a {@link URLActionDataStore} item. <br>
+ * <ul>
+ * <li>Reads the selectionMode & selectionContent of {@link URLActionDataStore}.
+ * <li>Selects the described elements in {@link URLActionDataExecutableResult}.
+ * <li>Feeds the {@link ParameterInterpreter}.
+ * <li>For this use {@link #handleStore(URLActionDataStore, URLActionDataExecutableResult) handleStore()}.
+ * </ul>
+ * 
+ * @author matthias mitterreiter
+ */
 public class URLActionDataStoreResponseHandler
 {
     public URLActionDataStoreResponseHandler()
@@ -16,17 +27,28 @@ public class URLActionDataStoreResponseHandler
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
+    /**
+     * @param storeItem
+     *            : the description of the elements that should be taken out of the response.
+     * @param result
+     *            : the response in form of a {@link URLActionDataExecutableResult}.
+     * @throws IllegalArgumentException
+     *             if it is not possible to select the described elements.
+     */
     public void handleStore(final URLActionDataStore storeItem,
                             final URLActionDataExecutableResult result)
     {
-        XltLogger.runTimeLogger.debug("Handling StoreItem");
+        XltLogger.runTimeLogger.debug("Handling StoreItem: \""
+                                      + storeItem.getName() + "\"");
         try
         {
             handleStoreItem(storeItem, result);
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to handle URLActionDataStore Item Response : "
+            throw new IllegalArgumentException("Failed to handle URLActionDataStore Item: \""
+                                                   + storeItem.getName()
+                                                   + "\", Because : "
                                                    + e.getMessage(),
                                                e);
         }
@@ -49,9 +71,37 @@ public class URLActionDataStoreResponseHandler
             case URLActionDataStore.HEADER:
                 handleHeaderStoreItem(storeItem, result);
                 break;
-            default:
+            case URLActionDataStore.COOKIE:
+                handleCookieStoreItem(storeItem, result);
                 break;
+            default:
+                throw new IllegalArgumentException("SelectionMode: \""
+                                                   + storeItem.getSelectionMode()
+                                                   + "\" is not supported!");
         }
+    }
+
+    private void handleCookieStoreItem(final URLActionDataStore storeItem,
+                                       final URLActionDataExecutableResult result)
+        throws EvalError
+    {
+        final List<String> cookies = result.getCookieAsStringByName(storeItem.getSelectionContent());
+        if (!(cookies.isEmpty()))
+        {
+            storeContentInterpreter(storeItem, cookies.get(0));
+        }
+        else
+        {
+            throwExceptionBecauseNothingWasFound(storeItem);
+        }
+    }
+
+    private void throwExceptionBecauseNothingWasFound(final URLActionDataStore storeItem)
+    {
+        throw new IllegalArgumentException(storeItem.getSelectionMode() + " = "
+                                           + "\""
+                                           + storeItem.getSelectionContent()
+                                           + "\"" + "was not found!");
     }
 
     private void handleXPathStoreItem(final URLActionDataStore storeItem,
@@ -62,6 +112,10 @@ public class URLActionDataStoreResponseHandler
         if (!(xpathList.isEmpty()))
         {
             storeContentInterpreter(storeItem, xpathList.get(0));
+        }
+        else
+        {
+            throwExceptionBecauseNothingWasFound(storeItem);
         }
 
     }
@@ -75,6 +129,10 @@ public class URLActionDataStoreResponseHandler
         {
             storeContentInterpreter(storeItem, regexList.get(0));
         }
+        else
+        {
+            throwExceptionBecauseNothingWasFound(storeItem);
+        }
     }
 
     private void handleHeaderStoreItem(final URLActionDataStore storeItem,
@@ -86,10 +144,14 @@ public class URLActionDataStoreResponseHandler
         {
             storeContentInterpreter(storeItem, headers.get(0));
         }
+        else
+        {
+            throwExceptionBecauseNothingWasFound(storeItem);
+        }
     }
 
     private void storeContentInterpreter(final URLActionDataStore storeItem,
-                                                final String variableValue)
+                                         final String variableValue)
         throws EvalError
     {
         final ParameterInterpreter interpreter = storeItem.getInterpreter();

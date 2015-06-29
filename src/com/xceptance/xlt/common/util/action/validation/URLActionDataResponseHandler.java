@@ -10,12 +10,28 @@ import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
 
+/**
+ * Handling the Response in form of a {@link URLActionDataResult} 
+ * for a request described by a {@link URLActionData}. <br>
+ * Automatically handles the response when 
+ * {@link #handleURLActionResponse(URLActionData, URLActionDataExecutableResult) handleUrlActionResponse()} 
+ * is called.
+ * 
+ * @author matthias mitterreiter
+ *
+ */
 public class URLActionDataResponseHandler
 {
     private URLActionDataStoreResponseHandler storeHandler;
 
     private URLActionDataValidationResponseHandler validationHandler;
 
+    /**
+     * 
+     * @param storeHandler : for selecting elements of the response for dynamic 
+     * parameter interpretation.
+     * @param validationHandler : for validating the response content.
+     */
     public URLActionDataResponseHandler(final URLActionDataStoreResponseHandler storeHandler,
                                         final URLActionDataValidationResponseHandler validationHandler)
     {
@@ -37,6 +53,16 @@ public class URLActionDataResponseHandler
         this.validationHandler = validationHandler;
     }
 
+    /**
+     * Does the following:
+     * <ul>
+     * <li> Validates the http response code.
+     * <li> validates the response content via the {@link URLActionDataStoreResponseHandler store handler}.
+     * <li> Validates the response content via the {@link URLActionDataValidationResponseHandler validation handle}.
+     * </ul>
+     * @param action : the {@link URLActionData}, that describes the request.
+     * @param result : the {@link URLActionDataExecutableResult}, that holds the response data.
+     */
     public void handleURLActionResponse(final URLActionData action,
                                         final URLActionDataExecutableResult result)
     {
@@ -79,7 +105,7 @@ public class URLActionDataResponseHandler
     private void validateResponseCode(final URLActionData action,
                                       final URLActionDataExecutableResult result)
     {
-        XltLogger.runTimeLogger.debug("Validation HttpResponseCode for: " + action.getName() );
+        XltLogger.runTimeLogger.debug("Validating HttpResponseCode for: " + action.getName() );
         final int expextedResponseCode = action.getHttpResponseCode();
         final int actualResponseCode = result.getHttpResponseCode();
         Assert.assertEquals(expextedResponseCode, actualResponseCode);

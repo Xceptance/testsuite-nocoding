@@ -3,7 +3,7 @@ package test.com.xceptance.xlt.common.util.action.validation;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.util.MockObjects;
@@ -12,12 +12,12 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 
 public class URLActionDataExecutableResultFactoryTest
 {
-    private URLActionDataExecutableResultFactory resultFactory;
+    private static URLActionDataExecutableResultFactory resultFactory;
 
-    private MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         resultFactory = new URLActionDataExecutableResultFactory();
         mockObjects = new MockObjects();

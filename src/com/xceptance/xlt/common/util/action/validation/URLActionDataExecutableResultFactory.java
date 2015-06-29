@@ -3,15 +3,30 @@ package com.xceptance.xlt.common.util.action.validation;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
+import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
-
+import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
+/**
+ * Factory <br>
+ * Creates {@link URLActionDataExecutableResult} depending on the type of response
+ * of the {@link URLActionDataExecutionable}.
+ * 
+ * @author matthias mitterreiter
+ *
+ */
 public class URLActionDataExecutableResultFactory
 {
     public URLActionDataExecutableResultFactory()
     {
-
+        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
+    /**
+     * 
+     * @param htmlPage
+     * @return
+     *  a wrapper for a {@link HtmlPage}.
+     */
     public URLActionDataExecutableResult getResult(final HtmlPage htmlPage)
     {
         ParameterUtils.isNotNull(htmlPage, "HtmlPage");
@@ -30,6 +45,11 @@ public class URLActionDataExecutableResultFactory
         return result;
     }
 
+    /**
+     * 
+     * @param lightWeightPage
+     * @return a wrapper for a {@link LightWeightPage}.
+     */
     public URLActionDataExecutableResult getResult(
                                                    final LightWeightPage lightWeightPage)
     {
@@ -49,6 +69,12 @@ public class URLActionDataExecutableResultFactory
         return result;
     }
 
+    /**
+     * 
+     * @param webResponse
+     * @return
+     *  a wrapper for a {@link WebResponse}.
+     */
     public URLActionDataExecutableResult getResult(final WebResponse webResponse)
     {
         ParameterUtils.isNotNull(webResponse, "WebResponse");

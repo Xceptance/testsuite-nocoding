@@ -5,6 +5,13 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
+/**
+ *  See {@link LightWeightPageAction}. <br>
+ *   
+ * @author matthias mitterreiter
+ * @extends {@link LightWeightPageAction}.
+ *
+ */
 public class XhrLightWeightPageAction extends LightWeightPageAction
 {
     private WebResponse xhrResponse;

@@ -4,7 +4,15 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
+/**
+ * 
+ * {@link NodeList} implementation. <br>
+ * I don't remember why exactly i implemented it this way,
+ * but it is simple and works.
+ * 
+ * @author matthias mitterreiter
+ *
+ */
 public class ConcreteNodeList implements NodeList
 {
     private final ArrayList<Node> list;

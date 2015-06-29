@@ -8,6 +8,11 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.engine.XltWebClient;
 
+/**
+ * 
+ * Loads all the static content stuff with a passed {@link XltWebClient}, 
+ * distributed on some threads. For this it uses the {@link StaticContentDownloader}.
+ */
 public class Downloader
 {
     private final List<String> urls = new ArrayList<String>();

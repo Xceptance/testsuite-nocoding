@@ -3,21 +3,46 @@ package com.xceptance.xlt.common.tests;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.actions.Downloader;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
 
+/**
+ * Here, the important stuff is done:
+ * <ul>
+ * <li>for every {@link URLActionData} object from the {@link #actions} List, that was prepared in
+ * <ul>
+ * {@link AbstractURLTestCase @Before}.
+ * <li>create a {@link WebRequest} from the {@link URLActionData}
+ * <li>execute the {@link WebRequest} via {@link URLActionDataExecutionable}.
+ * <li>receive the result {@link URLActionDataExecutionableResult}
+ * <li>handle and validate the {@link URLActionDataExecutionableResult} via {@link URLActionDataResponseHandler}.
+ * </ul>
+ * <li>static requests are treated differently. They go to the {@link Downloader} and cannot be validated.
+ * </ul>
+ * 
+ * @author matthias mitterreiter
+ */
 public class URLTestCase extends AbstractURLTestCase
 {
     private URLActionDataExecutionable previousExecutable;
 
     private URLActionData previousActionData;
 
+    /**
+     * The first and the last action are treated differently: <br>
+     * The first action cannot be a static request or a XmlHttpRequest. <br>
+     * The last action must be executed and validated, but no additional URLActionData is loaded. <br>
+     */
     @Test
     public void testURLs()
     {
         if (!actions.isEmpty())
         {
             handleFirstAction();
+
             for (final URLActionData action : actions)
             {
                 if (action.isAction())
@@ -38,7 +63,7 @@ public class URLTestCase extends AbstractURLTestCase
         }
         else
         {
-            // log
+            XltLogger.runTimeLogger.info("Did not do anything, because there was no URLActionData objects available!");
         }
     }
 
@@ -48,7 +73,7 @@ public class URLTestCase extends AbstractURLTestCase
         checkIfFirstActionIsExecutable(action);
         final WebRequest request = createActionWebRequest(action);
         final URLActionDataExecutionable executable = createExecutableFromAction(action,
-                                                                              request);
+                                                                                 request);
         setPreviousExecutable(executable);
         setPreviousURLAction(action);
         removeActionFromActionList(action);
@@ -98,10 +123,10 @@ public class URLTestCase extends AbstractURLTestCase
     {
         executePreviousExecutable();
         handleResponse();
-        
+
         final WebRequest request = createActionWebRequest(action);
         final URLActionDataExecutionable executable = createExecutableFromAction(action,
-                                                                              request);
+                                                                                 request);
         setPreviousURLAction(action);
         setPreviousExecutable(executable);
     }
@@ -118,16 +143,16 @@ public class URLTestCase extends AbstractURLTestCase
     }
 
     private URLActionDataExecutionable createExecutableFromAction(final URLActionData action,
-                                                               final WebRequest request)
+                                                                  final WebRequest request)
     {
-        return executableFactory.createPageAction(action.getName(), request);
+        return executionableFactory.createPageAction(action.getName(), request);
     }
 
     private void handleXhrAction(final URLActionData xhrAction)
     {
         final WebRequest request = createXhrWebRequest(xhrAction);
         final URLActionDataExecutionable executable = createExecutableFromXhr(xhrAction,
-                                                                           request);
+                                                                              request);
         executePreviousExecutable();
         handleResponse();
         setPreviousURLAction(xhrAction);
@@ -136,13 +161,15 @@ public class URLTestCase extends AbstractURLTestCase
 
     private WebRequest createXhrWebRequest(final URLActionData xhrAction)
     {
-        return requestBuilder.buildXhrRequest(xhrAction, previousExecutable.getUrl());
+        return requestBuilder.buildXhrRequest(xhrAction,
+                                              previousExecutable.getUrl());
     }
 
     private URLActionDataExecutionable createExecutableFromXhr(final URLActionData action,
-                                                            final WebRequest request)
+                                                               final WebRequest request)
     {
-        return executableFactory.createXhrPageAction(action.getName(), request);
+        return executionableFactory.createXhrPageAction(action.getName(),
+                                                        request);
     }
 
     private void handleStaticAction(final URLActionData staticAction)

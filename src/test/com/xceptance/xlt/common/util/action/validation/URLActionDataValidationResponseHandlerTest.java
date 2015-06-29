@@ -1,6 +1,6 @@
 package test.com.xceptance.xlt.common.util.action.validation;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -14,44 +14,44 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionDataValidationResponseHandlerTest
 {
-    private URLActionDataValidationResponseHandler validationHandler;
+    private static URLActionDataValidationResponseHandler validationHandler;
 
-    private MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    private ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-    private final String regexString = "href=\"[\\s\\S]*?\"";
+    private static final String regexString = "href=\"[\\s\\S]*?\"";
 
-    private final String regexStringText = "href=\"/en/\"";
+    private static final String regexStringText = "href=\"/en/\"";
     
-    private final String regexStringMatches = "href=\"/en/\"";
+    private static final String regexStringMatches = "href=\"/en/\"";
 
-    private XltProperties properties;
+    private static XltProperties properties;
 
-    private GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-    private URLActionDataExecutableResult result;
+    private static URLActionDataExecutableResult result;
 
-    private XPathWithHtmlPage xpwh;
+    private static XPathWithHtmlPage xpwh;
 
-    private URLActionDataValidation validationExists;
+    private static URLActionDataValidation validationExists;
 
-    private URLActionDataValidation validationCount;
+    private static URLActionDataValidation validationCount;
 
-    private URLActionDataValidation validationText;
+    private static URLActionDataValidation validationText;
 
-    private URLActionDataValidation validationMatches;
+    private static URLActionDataValidation validationMatches;
     
-    private URLActionDataValidation validationExistsMalicious;
+    private static URLActionDataValidation validationExistsMalicious;
 
-    private URLActionDataValidation validationCountMalicious;
+    private static URLActionDataValidation validationCountMalicious;
 
-    private URLActionDataValidation validationTextMalicious;
+    private static URLActionDataValidation validationTextMalicious;
 
-    private URLActionDataValidation validationMatchesMalicious;
+    private static URLActionDataValidation validationMatchesMalicious;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();

@@ -10,11 +10,11 @@ import com.xceptance.xlt.common.util.ParameterUtils;
 
 /**
  * Builder <br>
- * Creates a {@link URLActionDataExecutableFactory}, depending on the {@link #mode}.
+ * Creates a {@link URLActionDataExecutionableFactory}, depending on the {@link #mode}.
  * 
  * @author matthias mitterreiter
  */
-public class URLActionDataExecutableFactoryBuilder
+public class URLActionDataExecutionbleFactoryBuilder
 {
 
     /**
@@ -42,7 +42,7 @@ public class URLActionDataExecutableFactoryBuilder
      * @param mode
      *            {@link mode}
      */
-    public URLActionDataExecutableFactoryBuilder(final XltProperties properties,
+    public URLActionDataExecutionbleFactoryBuilder(final XltProperties properties,
                                                  final String mode)
     {
         setMode(mode);
@@ -51,12 +51,12 @@ public class URLActionDataExecutableFactoryBuilder
     }
 
     /**
-     * builds a {@link URLActionDataExecutableFactory} depending on the {@link #mode}, set in the Constructor.
-     * @return {@link URLActionDataExecutableFactory}
+     * builds a {@link URLActionDataExecutionableFactory} depending on the {@link #mode}, set in the Constructor.
+     * @return {@link URLActionDataExecutionableFactory}
      */
-    public URLActionDataExecutableFactory buildFactory()
+    public URLActionDataExecutionableFactory buildFactory()
     {
-        final URLActionDataExecutableFactory factory = produceFactory();
+        final URLActionDataExecutionableFactory factory = produceFactory();
         return factory;
     }
 
@@ -79,10 +79,10 @@ public class URLActionDataExecutableFactoryBuilder
         }
     }
 
-    private URLActionDataExecutableFactory produceFactory()
+    private URLActionDataExecutionableFactory produceFactory()
     {
 
-        final URLActionDataExecutableFactory resultFactory;
+        final URLActionDataExecutionableFactory resultFactory;
 
         if (this.mode.equals(MODE_DOM))
         {

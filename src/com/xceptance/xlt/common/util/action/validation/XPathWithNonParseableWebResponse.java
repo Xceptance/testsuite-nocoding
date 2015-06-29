@@ -22,10 +22,32 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ConcreteNodeList;
 import com.xceptance.xlt.common.util.ParameterUtils;
-
+/**
+ * <p>
+ * Implementation of {@link XPathGetable}. <br>
+ * The class is intended to offer ways to select elements by passing a xpath for {@link WebReponse} objects, whose body
+ * can NOT be parsed into a {@link HtmlPage}. E.g, XML or JSON content. <br>
+ * </p>
+ * <p>
+ * In this case it is tried to offer alternative parsing possibilities to allow
+ * the selection of elements by xpath.  
+ * If this is also not possible and it is tried to select elements by xpah,
+ * it throws an IllegalArgumentException.
+ * </p>
+ * <ul>
+ * <li>Parses WebResponse only if the mime-type is supported (see {@link #SUPPORTEDHEADERCONTENTTYPES supported types}).
+ * <li>Use {@link #isXPathable(mime-type)} to see if a response is parsable.
+ * <li>Parses automatically and only when needed via {@link #getByXPath(String)}.
+ * <li>If the content of a WebResponse is not parsable, but the method {@link #getByXPath(String)} is not calles,
+ * nothing happens.
+ * </ul>
+ * 
+ * @author matthias mitterreiter
+ */
 public class XPathWithNonParseableWebResponse implements XPathGetable
 {
     private WebResponse webResponse;
@@ -74,6 +96,14 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         }
     }
 
+    /**
+     * Parses the {@link WebResponse} in a format that allows to select
+     * elements by xpath, but only if necessary and only once. <br>
+     * The elements then get parsed to Strings <br>
+     * @throws IllegalArgumentException
+     *  if it is not possible to parse and select.
+     * 
+     */
     @Override
     public List<String> getByXPath(final String xPath)
     {
@@ -224,7 +254,12 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         return document;
     }
 
-    private boolean isXPathable(final String contentType)
+    /**
+     * 
+     * @param contentType mime-type of the WebResponse
+     * @return true only if the content can be parsed so that elements can be selected by xpath.
+     */
+    public boolean isXPathable(final String contentType)
     {
         return SUPPORTEDHEADERCONTENTTYPES.containsKey(contentType);
     }

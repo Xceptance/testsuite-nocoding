@@ -133,8 +133,10 @@ public class URLActionDataExecutableResult
     }
 
     /**
-     * @param cookieName name of the cookie
-     * @return all cookies with name "cookieName" of all the "Set-Cookie" headers in {@link NameValuePair} representation.
+     * @param cookieName
+     *            name of the cookie
+     * @return all cookies with name "cookieName" of all the "Set-Cookie" headers in {@link NameValuePair}
+     *         representation.
      */
     public List<NameValuePair> getCookieByName(final String cookieName)
     {
@@ -149,6 +151,23 @@ public class URLActionDataExecutableResult
                 resultCookies.add(new NameValuePair(cookie.getName(),
                                                     cookie.getValue()));
             }
+        }
+        return resultCookies;
+    }
+
+    /**
+     * @param cookieName
+     *            name of the cookie
+     * @return all cookie values of cookies with name "cookieName" of all the "Set-Cookie" headers in {@link String}
+     *         representation.
+     */
+    public List<String> getCookieAsStringByName(final String cookieName)
+    {
+        final List<NameValuePair> cookies = this.getCookieByName(cookieName);
+        final List<String> resultCookies = new ArrayList<String>();
+        for (final NameValuePair cookie : cookies)
+        {
+            resultCookies.add(cookie.getValue());
         }
         return resultCookies;
     }
