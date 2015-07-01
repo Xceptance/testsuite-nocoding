@@ -13,6 +13,8 @@ import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.XltConstants;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataListFacade;
+import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
+import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionableFactory;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionbleFactoryBuilder;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataRequestBuilder;
@@ -24,20 +26,22 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 /**
  * 
  * Prepares the actual test run. <br>
- * For this, most of the important objects are created.
+ * For this, most of the important objects are created in this class
+ * to allow some kind of DI.
  * 
+ * @extends {@link AbstractTestCase}
  * @author matthias mitterreiter
  *
  */
 public class AbstractURLTestCase extends AbstractTestCase
 {
     /**
-     * directory of the datafiles
+     * directory for the datafiles,read from the properties
      */
     protected String dataDirectory;
 
     /**
-     * the complete filepath 
+     * the complete filepath, read from the properties 
      */
     protected String filePath;
 
@@ -50,23 +54,25 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected URLActionDataExecutionableFactory executionableFactory;
 
     /**
-     * Created the List<URLActionData> which holds the data to create and 
+     * Creates the List<{@link URLActionData}> that holds the data to create and 
      * validate responses.
      */
     protected URLActionDataListFacade urlActionListFacade;
 
     /**
-     * Handles the responses
+     * Handles the responses.
      */
     protected URLActionDataResponseHandler responseHandler;
 
     /**
-     * Handles the responses particularly for all URLActionDataStore objects.
+     * Handles the responses for all {@link URLActionDataStore} objects, 
+     * that are linked in a single {@link URLActionData}.
      */
     protected URLActionDataStoreResponseHandler storeHandler;
 
     /**
-     * Handles the responses particularly for all URLActionDataValidation objects <br>
+     * Handles the responses particularly for all {@link URLActionDataValidation} objects,
+     * that are linked in a single {@link URLActionData}.
      * So this does the validation stuff
      */
     protected URLActionDataValidationResponseHandler validationHandler;

@@ -29,8 +29,8 @@ public class XPathWithLightWeightPage implements XPathGetable
     @Override
     public List<String> getByXPath(final String xPath)
     {
-        XltLogger.runTimeLogger.error("This Mode is not supported!");
-        throw new IllegalArgumentException("This Mode is not supported!");
+        XltLogger.runTimeLogger.error("It is not possible to get elements by xpath from a LightWeightPage!");
+        throw new IllegalArgumentException("It is not possible to get elements by xpath from a LightWeightPage!");
     }
 
 }

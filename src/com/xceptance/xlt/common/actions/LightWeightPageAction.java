@@ -3,7 +3,7 @@ package com.xceptance.xlt.common.actions;
 import java.net.URL;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
@@ -12,7 +12,7 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 
 /**
  * All it does, is loading a WebResponse for a passed WebRequest.
- * The WebResponse in form of a {@link HtmlPage} is wrapped in a {@link URLActionDataExecutableResult}.
+ * The WebResponse in form of a {@link LightWeightPage} is wrapped in a {@link URLActionDataExecutableResult}.
  * Additionally static content requests are fired and loaded via {@link Downloader}.
  * Since this class extends {@link ModifiedAbstractLightWeightPageAction}, 
  * the response is NOT parsed into the DOM.

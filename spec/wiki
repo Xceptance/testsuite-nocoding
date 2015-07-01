@@ -1,0 +1,45 @@
+README.md
+-Overview Data
+-Introduction
+-Picture
+-Example
+-Features
+-Requirements
+- Get invpved
+- Link Quickstarter
+- Link Isssues
+- Link Planed Features
+- Used Librarys
+
+QUICKSTARTER
+- Installation
+- Configuration
+- Start posters 
+- Open Homepage
+
+WIKI
+*HOWTOUSE TSNC
+- What can be done, what cant!
+- YAML Syntax Specification!, YAML Problems , Escape Chars, Default 
+- How to Send a request and what happens with which parameters, -> leads to which parameters
+- How to validate a request, what happens with regex, xpath
+- Rnning Modes
+- Properties
+- Request Defaults
+- Validation Modes + How it works
+- Type of Requests
+
+
+
+*HOWTOEXPAND TSNC
+- Add an Builder
+- Change Syntax
+-URLAction Data
+-Validation Modes
+
+*Debugging info
+*Usefull tools
+*QA
+
+
+

@@ -108,6 +108,6 @@ public class URLActionDataResponseHandler
         XltLogger.runTimeLogger.debug("Validating HttpResponseCode for: " + action.getName() );
         final int expextedResponseCode = action.getHttpResponseCode();
         final int actualResponseCode = result.getHttpResponseCode();
-        Assert.assertEquals(expextedResponseCode, actualResponseCode);
+        Assert.assertEquals("Action: \""+ action.getName() + "\" HttpResponseCode", expextedResponseCode, actualResponseCode);
     }
 }

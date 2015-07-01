@@ -69,6 +69,8 @@ public class LightWeightPageActionFactory extends
             action = new LightWeightPageAction(name, request, resultFactory);
             previousAction = action;
             action.setDownloader(createDownloader());
+            
+            action.getWebClient().getOptions().setRedirectEnabled(false);
         }
         else
         {

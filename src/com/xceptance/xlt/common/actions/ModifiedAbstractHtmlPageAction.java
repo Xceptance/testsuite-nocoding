@@ -7,7 +7,6 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.common.util.ParameterCheckUtils;
 import com.xceptance.xlt.api.actions.AbstractHtmlPageAction;
@@ -21,8 +20,8 @@ import com.xceptance.xlt.engine.XltWebClient;
 
 /**
  * This class is simply a variant of the {@link AbstractHtmlPageAction}.
- * They distinguish in the method {@link #loadPage(WebRequest)}, where it is possible to
- * pass a {@link WebResponse}, which is cozy.
+ * They distinguish in the method {@link #loadPage(WebRequest)}. In this class it is possible to
+ * pass a {@link WebRequest}, which is cozy.
  *
  */
 public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction

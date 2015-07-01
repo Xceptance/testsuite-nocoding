@@ -7,8 +7,8 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 
 /**
  *  See {@link HtmlPageAction}. <br>
- *  Does the same except that the response is NOT parsed into the DOM.
- *  Used for XmlHttpRequests.
+ *  Technically it does the same except that the response is NOT parsed into DOM.
+ *  So this class is intended to be used for XmlHttpRequests.
  * 
  * @author matthias mitterreiter
  * @extends {@link HtmlPageAction}.

@@ -1,5 +1,6 @@
 package com.xceptance.xlt.common.util.action.validation;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,8 +34,8 @@ public class URLActionDataValidationResponseHandler
     /**
      * Does the following:
      * <ul>
-     * <li>fetches the elements from the {@link URLActionDataExecutableResult result} that suit the described criteria in
-     * {@link URLActionDataValidation validation}.
+     * <li>fetches the elements from the {@link URLActionDataExecutableResult result} that suit the described criteria
+     * in {@link URLActionDataValidation validation}.
      * <li>validates the found elements.
      * </ul>
      * 
@@ -48,7 +49,8 @@ public class URLActionDataValidationResponseHandler
     public void validate(final URLActionDataValidation validation,
                          final URLActionDataExecutableResult result)
     {
-        XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName() + "");
+        XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName()
+                                      + "\"");
         try
         {
             handleValidation(validation, result);
@@ -56,8 +58,9 @@ public class URLActionDataValidationResponseHandler
         catch (final Exception e)
         {
             throw new IllegalArgumentException("Failed to validate Response : \""
-                                               + validation.getName() + "\": "
-                                               + e.getMessage(), e);
+                                                   + validation.getName()
+                                                   + "\": " + e.getMessage(),
+                                               e);
         }
     }
 
@@ -129,21 +132,27 @@ public class URLActionDataValidationResponseHandler
     {
         XltLogger.runTimeLogger.debug("Validating \"" + validation.getName()
                                       + "\": EXISTANCE");
-        Assert.assertFalse(resultSelection.isEmpty());
+
+        Assert.assertFalse(getNotFoundFailMessage(validation),
+                           resultSelection.isEmpty());
     }
 
     private void validateCount(final List<String> resultSelection,
                                final URLActionDataValidation validation)
     {
-        
+
+        validateExists(resultSelection, validation);
+
         final int expectedLength = Integer.valueOf(validation.getValidationContent());
         final int actualLength = resultSelection.size();
-        
+
         XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
-                                      + "\": COUNT: " + expectedLength + " = "
-                                      + actualLength);
-        
-        Assert.assertEquals(expectedLength, actualLength);
+                                      + "\": COUNT:" + expectedLength + " = \""
+                                      + actualLength + "\"");
+
+        Assert.assertEquals(getFailMessage(validation),
+                            expectedLength,
+                            actualLength);
 
     }
 
@@ -151,18 +160,18 @@ public class URLActionDataValidationResponseHandler
                                  final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
-        
+
         final String matcherString = resultSelection.get(0);
         final String patternString = validation.getValidationContent();
-        
+
         XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
-                                      + "\": MATCHES: " + matcherString
-                                      + " matches " + patternString);
-        
+                                      + "\": MATCHES: \"" + matcherString
+                                      + "\" matches \"" + patternString + "\"");
+
         final Pattern pattern = Pattern.compile(patternString);
         final Matcher matcher = pattern.matcher(matcherString);
-        
-        Assert.assertTrue(matcher.find());
+
+        Assert.assertTrue(getFailMessage(validation), matcher.find());
 
     }
 
@@ -170,15 +179,17 @@ public class URLActionDataValidationResponseHandler
                               final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
-        
+
         final String expectedText = validation.getValidationContent();
         final String actualText = resultSelection.get(0);
-        
+
         XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
                                       + "\": TEXT: " + "'" + expectedText + "'"
                                       + " = " + "'" + actualText + "'");
-        
-        Assert.assertEquals(expectedText, actualText);
+
+        Assert.assertEquals(getFailMessage(validation),
+                            expectedText,
+                            actualText);
     }
 
     private List<String> handleCookieValidationItem(final URLActionDataValidation validation,
@@ -207,4 +218,22 @@ public class URLActionDataValidationResponseHandler
         return result.getHeaderByName(validation.getSelectionContent());
 
     }
+
+    private String getNotFoundFailMessage(final URLActionDataValidation validation)
+    {
+        final String message = MessageFormat.format("Validation \"{0}\" failed, because for {1} = \"{2}\" no Elements were found! ",
+                                                    validation.getName(),
+                                                    validation.getSelectionMode(),
+                                                    validation.getSelectionContent());
+        return message;
+    }
+
+    private String getFailMessage(final URLActionDataValidation validation)
+    {
+        final String message = MessageFormat.format("Validation \"{0}\" failed, Mode: \"{1}\":",
+                                                    validation.getName(),
+                                                    validation.getValidationMode());
+        return message;
+    }
+
 }

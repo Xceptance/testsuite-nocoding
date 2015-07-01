@@ -73,7 +73,7 @@ public class URLActionDataValidation
 
     public static final String XPATH = "XPath";
 
-    public static final String REGEXP = "RegEx";
+    public static final String REGEXP = "Regex";
 
     public static final String TEXT = "Text";
 

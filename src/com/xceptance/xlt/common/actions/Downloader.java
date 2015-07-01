@@ -11,7 +11,7 @@ import com.xceptance.xlt.engine.XltWebClient;
 /**
  * 
  * Loads all the static content stuff with a passed {@link XltWebClient}, 
- * distributed on some threads. For this it uses the {@link StaticContentDownloader}.
+ * distributed on some threads. For this the {@link StaticContentDownloader} is used.
  */
 public class Downloader
 {
@@ -23,6 +23,10 @@ public class Downloader
 
     private boolean userAgentUID = false;
 
+    /**
+     * 
+     * @param webClient : the {@link XltWebClient}, that fires the requests.
+     */
     public Downloader(final XltWebClient webClient)
     {
         setWebClient(webClient);
@@ -30,6 +34,12 @@ public class Downloader
         setThreadCount(1); // default
     }
 
+    /**
+     * 
+     * @param webClient : the {@link XltWebClient}, that fires the requests.
+     * @param threadCount : amount of threads for parallel loading
+     * @param userAgentUID
+     */
     public Downloader(final XltWebClient webClient,
                       final int threadCount,
                       final boolean userAgentUID)
@@ -55,6 +65,10 @@ public class Downloader
         this.webClient = webClient;
     }
 
+    /**
+     * Adds a request.
+     * @param url : request url
+     */
     public void addRequest(final String url)
     {
         ParameterUtils.isNotNull(url, "URL");
@@ -62,6 +76,11 @@ public class Downloader
         XltLogger.runTimeLogger.debug("Adding Static Request: " + url);
     }
 
+    /**
+     * loads all the requests that were previously added via 
+     * {@link #addRequest(String)}
+     * @throws Exception
+     */
     public void loadRequests() throws Exception
     {
         if (!urls.isEmpty())

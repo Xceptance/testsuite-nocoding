@@ -80,6 +80,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
             // bad design createDownloader() depends on action
 
             action.setDownloader(createDownloader());
+            
+            // Configurate WebClient 
+            
+            action.getWebClient().getOptions().setRedirectEnabled(false);
 
         }
         else

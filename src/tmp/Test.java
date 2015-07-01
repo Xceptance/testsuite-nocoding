@@ -1,49 +1,23 @@
 package tmp;
 
+import java.io.File;
+
+import com.xceptance.xlt.api.engine.Session;
+import com.xceptance.xlt.api.util.XltProperties;
+import com.xceptance.xlt.common.XltConstants;
 
 
 public class Test
 {
-    class AbstractClass {
-        public final AbstractClass previous;
-        public AbstractClass(final AbstractClass previous){
-            this.previous = previous;
-        }
-        protected void print(){
-            System.err.println("AbstractClass");
-        }
-        
-    }
-    class SubClass extends AbstractClass{
-        public final SubClass previous;
-        public SubClass(final SubClass previous){
-            super(previous);
-            this.previous = previous;
-        }
-        protected void print(){
-            System.err.println("SubClass"); 
-        }
-    }
-    class SubSubClass extends SubClass{
-        
-        public SubSubClass(final SubClass previous)
-        {
-            super(previous);
-        }
-
-        protected void print(){
-            System.err.println("SubSubClass"); 
-        }
-    }
+    
     public static void main(final String args[])
     {
-        final Test t = new Test();
-       final Test.AbstractClass ac = t.new SubClass(null);
-       final Test.AbstractClass ac2 = t.new SubClass((SubClass) ac);
-       final Test.AbstractClass ac3 = t.new SubSubClass((SubClass) ac2);
-       final Test.AbstractClass ac4 = t.new SubSubClass((SubClass) ac3);
-       ac4.previous.print();
-       ac4.print();
-       ac3.print();
+        final XltProperties properties = XltProperties.getInstance();
+        final String filename = properties.getProperty("filename", Session.getCurrent().getUserName() + ".csv");
+        final String dataDirectory = properties.getProperty(XltConstants.XLT_PACKAGE_PATH
+                                                 + ".data.directory",
+                                             "config" + File.separatorChar + "data");
+        System.err.println(filename);
+        System.err.println(dataDirectory);
     }
 }
