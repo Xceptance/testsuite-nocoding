@@ -1,0 +1,48 @@
+- Action :
+    Name : Open Website
+    Request :
+        Url : ${host}/posters/
+    Response :
+        Validate :
+            - Validate If title exists:
+                Regex : "<title>Posters\\s-\\sThe\\sUltimate\\sOnline\\sShop</title>"
+            - Validate Navigation Item Name:
+                XPath : "//*[@id='topCategory0']/h4/a"
+                Text : World of Nature
+            - Count Navigation Items :
+                XPath : "/html/body/div[6]/div/div[1]/div/ul/li"
+                Count : 17
+            - Validate Title:
+                XPath : "//*[@id='titleIndex']"
+                Matches: "posters"
+                
+                
+- Action :
+    Name : Go to Product Category
+    Request :
+        Url : ${hostsec}/posters/topCategory/Dining?categoryId=2
+    Response :
+        Validate :
+            - Validate title :
+                Regex : "<h1\\sid=\"titleCategoryName\">Dining</h1>"
+    Subrequests :
+        - Xhr :
+            Name : Navigate to second product page.
+            Request :
+                Method : POST
+                Url : ${hostsec}/posters/getProductOfTopCategory
+                Parameters :
+                    - categoryId : 2
+                    - page : 2
+            Response :
+                Validate :
+                    - Validate Product Pizza :
+                        XPath : "/json/products[2]/name"
+                        Matches : "Frozen Pizza"
+        - Static :
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_3.jpg
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_6.jpg
+            - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg
+            
+          
+ 

@@ -24,14 +24,11 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataValidationRe
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 /**
- * 
  * Prepares the actual test run. <br>
- * For this, most of the important objects are created in this class
- * to allow some kind of DI.
+ * For this, most of the important objects are created in this class to allow some kind of DI.
  * 
  * @extends {@link AbstractTestCase}
  * @author matthias mitterreiter
- *
  */
 public class AbstractURLTestCase extends AbstractTestCase
 {
@@ -41,7 +38,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected String dataDirectory;
 
     /**
-     * the complete filepath, read from the properties 
+     * the complete filepath, read from the properties
      */
     protected String filePath;
 
@@ -54,8 +51,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected URLActionDataExecutionableFactory executionableFactory;
 
     /**
-     * Creates the List<{@link URLActionData}> that holds the data to create and 
-     * validate responses.
+     * Creates the List<{@link URLActionData}> that holds the data to create and validate responses.
      */
     protected URLActionDataListFacade urlActionListFacade;
 
@@ -65,15 +61,14 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected URLActionDataResponseHandler responseHandler;
 
     /**
-     * Handles the responses for all {@link URLActionDataStore} objects, 
-     * that are linked in a single {@link URLActionData}.
+     * Handles the responses for all {@link URLActionDataStore} objects, that are linked in a single
+     * {@link URLActionData}.
      */
     protected URLActionDataStoreResponseHandler storeHandler;
 
     /**
-     * Handles the responses particularly for all {@link URLActionDataValidation} objects,
-     * that are linked in a single {@link URLActionData}.
-     * So this does the validation stuff
+     * Handles the responses particularly for all {@link URLActionDataValidation} objects, that are linked in a single
+     * {@link URLActionData}. So this does the validation stuff
      */
     protected URLActionDataValidationResponseHandler validationHandler;
 
@@ -97,10 +92,8 @@ public class AbstractURLTestCase extends AbstractTestCase
      */
     protected String mode;
 
-    
     /**
-     * Mapped informations from the files, where the test case is specified.
-     * e.g. the .yaml file.
+     * Mapped informations from the files, where the test case is specified. e.g. the .yaml file.
      */
     protected List<URLActionData> actions;
 
@@ -113,6 +106,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         loadXltProperties();
         loadGeneralDataProvider();
         loadDataDirectory();
+        loadFileName();
         loadFilePath();
         loadMode();
         setupParameterInterpreter();
@@ -149,10 +143,13 @@ public class AbstractURLTestCase extends AbstractTestCase
         }
     }
 
-    private void loadFilePath()
+    protected void loadFileName()
     {
-        final String filePath = getProperty("com.xceptance.xlt.common.tests.filename");
-        
+        this.filePath = getProperty("com.xceptance.xlt.common.tests.filename");
+    }
+
+    protected void loadFilePath()
+    {
         if (filePath != null)
         {
             this.filePath = dataDirectory + File.separatorChar + filePath;
@@ -192,7 +189,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     private void setupURLActionExecutableFactory()
     {
         final URLActionDataExecutionbleFactoryBuilder factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.properties,
-                                                                                                               this.mode);
+                                                                                                                   this.mode);
         this.executionableFactory = factoryBuilder.buildFactory();
     }
 
