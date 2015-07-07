@@ -55,6 +55,7 @@ Firebug delivers helpless "XPath"s. Assimilate! | :beetle: | :x:
 Unravel the mystery about "getEffectiveKey()". | :ghost: | :x:
 Testcase mapping doesn't work. | :beetle: | :x:
 Load multiple files | :ghost: | :x:
+Add libraries | :ghost: | :x:
 
 
 #### Symbology
