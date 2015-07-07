@@ -4,7 +4,7 @@ public class A
 {
     protected void shout()
     {
-        System.err.println("A");
+        System.err.println("AA");
     }
 
     protected void doShout()
