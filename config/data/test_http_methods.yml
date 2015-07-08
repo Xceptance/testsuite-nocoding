@@ -23,13 +23,7 @@
     Name : DELETE
     Request :
         Url : ${url}
-        Method : DELETE
-
-- Action :
-    Name : HEAD
-    Request :
-        Url : http://www.google.de
-        Method : HEAD   
+        Method : DELETE   
         
 - Action :
     Name : TRACE

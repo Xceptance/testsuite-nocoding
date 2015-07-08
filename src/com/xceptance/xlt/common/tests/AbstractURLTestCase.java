@@ -145,7 +145,7 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     protected void loadFileName()
     {
-        this.filePath = getProperty("com.xceptance.xlt.common.tests.filename");
+        this.filePath = getProperty("filename");
     }
 
     protected void loadFilePath()
@@ -160,7 +160,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         }
     }
 
-    private void loadMode()
+    protected void loadMode()
     {
         final String mode = getProperty("mode");
         if (mode != null)

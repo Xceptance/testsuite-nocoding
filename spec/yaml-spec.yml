@@ -1,0 +1,97 @@
+#######################################
+#   TestSuite-NoCoding - Syntax YAML
+######################################
+
+# Variable Pool for dynamic data processing
+- Store :
+    - variable_1 : value_1
+    - variable_2 : value_2
+     
+# Default values
+- Name : name 
+- Httpcode : 400
+- Url : https://www.xceptance.com
+- Method : POST
+- Xhr : false
+- Encode-Parameters: true
+- Encode-Body : true
+
+- Headers :
+    - header_1 : value
+    - header_2 : value
+    - header_3 : value
+
+- Parameters :
+    - p_1 : v_1
+    - p_2 : v_2    
+        
+- Cookies : delete
+- Variables : delete
+- Header : delete
+- Httpcode : delete
+- Url : delete
+- Method : delete
+- Xhr : delete
+- Encoded : delete
+
+- Action :
+    Name : <mandatory>
+    Request : <mandatory>
+        Url : <mandatory>
+        Method : <default = GET, optional: POST>
+        Xhr : <default = false>
+        Encode-Parameters : <default = true>
+        Parameters : <optional>
+            - parameter_1 : value_1
+            - parameter 2 : value_2
+        Header : <optional>
+            - header_1 : value_1
+            - header_2 : value_2
+            - header_3 : value_3
+        Body : xy
+        Encode-Body : <default = true>
+                              
+    Response :
+        Httpcode : <default = 200>
+        Validate :
+            - validation_name_1 :
+                XPath : value
+            - validation_name_2 :
+                XPath : value
+                Matches : value
+            -validation_name_3 :
+                XPath : value
+                Count : value
+            -validation_name_3 :
+                Regex : value
+                Equals : value
+            -validation_name_4 :
+                Header : header_element
+            -validation_name_5 :
+                Header : header_element_2
+                Equals : header_element_2_content
+            -validation_name_6 :
+                Header : header_element_3
+                Count : header_element_3_content
+            -Validation_name_7 :
+                Cookie : x
+            -Validation_name_8 :
+                Cookie : y
+                Matches : z
+                
+        Store :
+          - variable :
+              XPath : path
+           - variable_2 :
+               Regexp : path
+            - variable_3 :
+               Header : header
+           - variable_4 :
+               Cookie : cookie
+    Subrequests :
+        - Xhr :
+            Name : ...
+        - Static :
+            - http://www.
+            - http://www.
+            
