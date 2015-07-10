@@ -25,7 +25,8 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
  * <ul>
  * <li>Supports automatic & dynamic parameter interpretation via {@link ParameterInterpreter}. <br>
  * </li>
- * <li>Attributes are of type String to allow parameter interpretation and may be parsed to the intended type when they are accessed.</li>
+ * <li>Attributes are of type String to allow parameter interpretation and may be parsed to the intended type when they
+ * are accessed.</li>
  * <li>Defaults common used Http request values, if not set explicitly.</li>
  * <li>Holds a list of {@link #validations response validations}.</li>
  * <li>Holds a list of {@link #store variables} which should be taken out of the response for dynamic parameter
@@ -178,7 +179,7 @@ public class URLActionData
     public static final String TYPE_ACTION = "A";
 
     /**
-     * Type for a Http requests, that loads static content. <br> 
+     * Type for a Http requests, that loads static content. <br>
      */
     public static final String TYPE_STATIC = "S";
 
@@ -486,6 +487,7 @@ public class URLActionData
 
     /**
      * Sets if NOT null.
+     * 
      * @param validations
      */
     public void setValidations(final List<URLActionDataValidation> validations)
@@ -499,6 +501,7 @@ public class URLActionData
 
     /**
      * Sets if NOT null.
+     * 
      * @param headers
      */
     public void setHeaders(final List<NameValuePair> headers)
@@ -509,8 +512,10 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("headers"));
         }
     }
+
     /**
      * Sets if NOT null.
+     * 
      * @param store
      */
     public void setStore(final List<URLActionDataStore> store)
@@ -524,6 +529,7 @@ public class URLActionData
 
     /**
      * Sets if NOT null.
+     * 
      * @param parameters
      */
     public void setParameters(final List<NameValuePair> parameters)
@@ -534,8 +540,10 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("parameters"));
         }
     }
+
     /**
      * Sets if NOT null.
+     * 
      * @param cookies
      */
     public void setCookies(final List<NameValuePair> cookies)
@@ -546,8 +554,10 @@ public class URLActionData
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("cookies"));
         }
     }
+
     /**
      * Sets if NOT null.
+     * 
      * @param body
      */
     public void setBody(final String body)
@@ -570,9 +580,8 @@ public class URLActionData
     }
 
     /**
-     * 
-     * @return  The {@link #type type of request}. <br>
-     *  if type is unknown, it returns {@link #TYPE_ACTION}. 
+     * @return The {@link #type type of request}. <br>
+     *         if type is unknown, it returns {@link #TYPE_ACTION}.
      */
     public String getType()
     {
@@ -591,10 +600,9 @@ public class URLActionData
         }
         return result;
     }
-    
+
     /**
-     * 
-     * @return {@link #url},  after its dynamic interpretation via {@link #interpreter}.
+     * @return {@link #url}, after its dynamic interpretation via {@link #interpreter}.
      */
     public URL getUrl()
     {
@@ -611,7 +619,7 @@ public class URLActionData
     }
 
     /**
-     * @return {@link #url},  after its dynamic interpretation via {@link #interpreter}.
+     * @return {@link #url}, after its dynamic interpretation via {@link #interpreter}.
      */
     public String getUrlString()
     {
@@ -641,8 +649,8 @@ public class URLActionData
     }
 
     /**
-     * @returns {@link #method}, after its dynamic interpretation via {@link #interpreter}.
-     * If the value of {@link #method} is unsupported, it gets defaulted to {@link #METHOD_GET GET}.
+     * @returns {@link #method}, after its dynamic interpretation via {@link #interpreter}. If the value of
+     *          {@link #method} is unsupported, it gets defaulted to {@link #METHOD_GET GET}.
      */
     public HttpMethod getMethod()
     {
@@ -656,10 +664,9 @@ public class URLActionData
     }
 
     /**
-     * 
      * @param dynamicMethod
-     * @return {@link #method} after its dynamic interpretation via {@link #interpreter}.
-     * If its value is unsupported, {@link #method} gets defaulted to {@link #METHOD_GET GET}.
+     * @return {@link #method} after its dynamic interpretation via {@link #interpreter}. If its value is unsupported,
+     *         {@link #method} gets defaulted to {@link #METHOD_GET GET}.
      */
     private HttpMethod selectMethodFromDynamicData(final String dynamicMethod)
     {
@@ -713,7 +720,6 @@ public class URLActionData
     }
 
     /**
-     * 
      * @return {@link #parameters}, after its dynamic interpretation via {@link #interpreter}.
      */
     public List<NameValuePair> getParameters()
@@ -771,7 +777,6 @@ public class URLActionData
     }
 
     /**
-     * 
      * @return {@link #name} after its dynamic interpretation via {@link #interpreter}.
      */
     public String getName()
@@ -785,7 +790,6 @@ public class URLActionData
     }
 
     /**
-     * 
      * @return value of {@link #encodeParameters} after its dynamic interpretation via {@link #interpreter}.
      */
     public Boolean encodeParameters()
@@ -918,7 +922,6 @@ public class URLActionData
     }
 
     /**
-     * 
      * @return true if {@link #body} is set.
      */
     public Boolean hasBody()
@@ -933,18 +936,18 @@ public class URLActionData
 
     /**
      * @param method
-     * @return if ({@link #PERMITTEDMETHODS method} is permitted) ? true : false. 
+     * @return if ({@link #PERMITTEDMETHODS method} is permitted) ? true : false.
      */
     public static boolean isPermittedMethod(final String method)
     {
         return PERMITTEDMETHODS.contains(method);
     }
+
     /**
-     * 
      * @param type
-     * @return if ({@link #PERMITTEDTYPES type} is permitted) ? true : false. 
+     * @return if ({@link #PERMITTEDTYPES type} is permitted) ? true : false.
      */
-    
+
     public static boolean isPermittedType(final String type)
     {
         return PERMITTEDTYPES.contains(type);
@@ -952,6 +955,7 @@ public class URLActionData
 
     /**
      * Add request parameter if NOT null.
+     * 
      * @param nvp
      */
     public void addParameter(final NameValuePair nvp)
@@ -968,7 +972,26 @@ public class URLActionData
     }
 
     /**
-     * Dirty way of throwing a IllegalArgumentException with the passed message. 
+     * Add a validation if NOT null.
+     * 
+     * @param validation
+     */
+    public void addValidation(final URLActionDataValidation validation)
+    {
+        if (validation != null)
+        {
+            if (!(this.validations.isEmpty()))
+            {
+                validations = new ArrayList<URLActionDataValidation>();
+            }
+            validations.add(validation);
+            XltLogger.runTimeLogger.debug(getAddedToTag("Validation"));
+        }
+    }
+
+    /**
+     * Dirty way of throwing a IllegalArgumentException with the passed message.
+     * 
      * @param message
      * @return nothing.
      */
@@ -978,7 +1001,6 @@ public class URLActionData
     }
 
     /**
-     * 
      * @param tag
      * @param value
      * @return Formated message.
@@ -993,8 +1015,8 @@ public class URLActionData
     }
 
     /**
-     * 
-     * @param tag name
+     * @param tag
+     *            name
      * @return Formated message.
      */
     private String getAddedToTag(final String tag)
@@ -1019,7 +1041,8 @@ public class URLActionData
 
     /**
      * @param value
-     * @param tag name
+     * @param tag
+     *            name
      * @param defaultValue
      * @return Formated error message.
      */

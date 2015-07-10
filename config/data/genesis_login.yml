@@ -74,4 +74,19 @@
                 Text :  My Account Login         
         
                 
+                Subrequests :
+- Xhr :
+    Name : Navigate to second product page.
+    Request :
+        Method : POST
+        Url : ${hostsec}/posters/getProductOfTopCategory
+        Parameters :
+            - categoryId : 2
+            - page : 2
+        Response :
+            Validate :
+                - Validate Product Pizza :
+                    XPath : "/json/products[2]/name"
+                    Matches : "Frozen Pizza"
+        Subrequests : ...
             

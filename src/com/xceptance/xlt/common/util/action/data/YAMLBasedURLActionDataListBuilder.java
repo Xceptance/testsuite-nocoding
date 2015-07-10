@@ -32,11 +32,11 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
  * <li>The structure of the data is determined within this class and described in syntax.yml
  * <li>The names of the tags, whose values should be parsed into a URLActionData are also determined here.
  * <li>Since the used yaml parser ({@link #Yaml SnakeYaml})returns a monstrous {@link #HashMap}, this class is quite
- * busy with slaughtering this HashMap in small tasty pieces, doing some nasty type checkings and convertings, as well
- * as error handlings. Therefore the structure and quality of the code is not very charming, but it works.
+ * busy with slaughtering this HashMap in small tasty pieces, doing some nasty type checking and converting, as well
+ * as error handling. Therefore the structure and quality of the code is not very charming, but it works.
  * <li>If you want to change the names of the tags, you can do it easily.
- * <li>If you want to change the general structure of the data, you better write a new Builder
- * and think about SRP (Single responsibility principle).
+ * <li>If you want to change the general structure of the data, you better write a new Builder and think about SRP
+ * (Single responsibility principle).
  * </ul>
  * 
  * @author matthias mitterreiter
@@ -49,8 +49,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     protected URLActionDataStoreBuilder storeBuilder;
 
     /*
-     * The Following are the allowed syntactic tags.
-     * See "syntax.yml" for the structure.
+     * The Following are the allowed syntactic tags. See "syntax.yml" for the structure.
      */
     private static final String ACTION = "Action";
 
@@ -90,19 +89,22 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private static final String DELETE = "Delete";
 
-
     /**
      * Default static URLs
      */
     private List<String> d_static = new ArrayList<String>();
 
     /**
-     * 
-     * @param filePath : path to the yaml file.
-     * @param interpreter : {@link ParameterInterpreter}
-     * @param actionBuilder : {@link URLActionDataBuilder}
-     * @param validationBuilder :{@link URLActionDataValidationBuilder }
-     * @param storeBuilder : {@link URLActionDataStoreBuilder }
+     * @param filePath
+     *            : path to the yaml file.
+     * @param interpreter
+     *            : {@link ParameterInterpreter}
+     * @param actionBuilder
+     *            : {@link URLActionDataBuilder}
+     * @param validationBuilder
+     *            :{@link URLActionDataValidationBuilder }
+     * @param storeBuilder
+     *            : {@link URLActionDataStoreBuilder }
      */
     public YAMLBasedURLActionDataListBuilder(final String filePath,
                                              final ParameterInterpreter interpreter,
@@ -129,6 +131,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         ParameterUtils.isNotNull(validationBuilder, "URLActionStoreBuilder");
         this.validationBuilder = validationBuilder;
     }
+
     /**
      * For debugging purpose. <br>
      * 'err-streams' the attributes of the object. <br>
@@ -158,6 +161,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     /**
      * Parses the data of the yaml file into List<{@link #URLActionData}>.
+     * 
      * @return List<{@link #URLActionData}>
      */
     public List<URLActionData> buildURLActionDataList()
@@ -177,8 +181,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             if (o != null)
             {
                 ParameterUtils.isArrayListMessage(o,
-                                           "YAML-Data",
-                                           "See the no-coding syntax sepecification!");
+                                                  "YAML-Data",
+                                                  "See the no-coding syntax sepecification!");
                 resultList = (List<Object>) o;
                 XltLogger.runTimeLogger.info(MessageFormat.format("Loading YAML data from file: \"{0}\" ",
                                                                   this.filePath));
@@ -192,9 +196,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         catch (final FileNotFoundException e)
         {
             final String message = MessageFormat.format("File: \"{0}\" not found!",
-                                                  this.filePath); 
+                                                        this.filePath);
             XltLogger.runTimeLogger.warn(message);
-            throw new IllegalArgumentException(message + ": " + e.getMessage());     
+            throw new IllegalArgumentException(message + ": " + e.getMessage());
         }
         return resultList;
     }
@@ -213,7 +217,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         XltLogger.runTimeLogger.info("Start building URLAction list");
         for (final Object listObject : dataList)
         {
-            ParameterUtils.isLinkedHashMapMessage(listObject, "YAML - List", SEESPEC);
+            ParameterUtils.isLinkedHashMapMessage(listObject,
+                                                  "YAML - List",
+                                                  SEESPEC);
             final LinkedHashMap<String, Object> listItem = (LinkedHashMap<String, Object>) listObject;
             handleListItem(listItem);
         }
@@ -640,7 +646,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     {
         final Object actionObject = listItem.get(ACTION);
         ParameterUtils.isNotNull(actionObject, ACTION);
-        ParameterUtils.isLinkedHashMapMessage(actionObject, ACTION, "Missing Content");
+        ParameterUtils.isLinkedHashMapMessage(actionObject,
+                                              ACTION,
+                                              "Missing Content");
         final LinkedHashMap<String, Object> rawAction = (LinkedHashMap<String, Object>) actionObject;
 
         fillURLActionBuilder(rawAction);
@@ -663,7 +671,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
             for (final Object subrequestItem : subrequests)
             {
-                ParameterUtils.isLinkedHashMapMessage(subrequestItem, STATIC, "");
+                ParameterUtils.isLinkedHashMapMessage(subrequestItem,
+                                                      STATIC,
+                                                      "");
 
                 final LinkedHashMap<String, Object> subrequest = (LinkedHashMap<String, Object>) subrequestItem;
                 createSubrequest(subrequest);
@@ -676,7 +686,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Object staticSubrequestObject = subrequest.get(STATIC);
         if (staticSubrequestObject != null)
         {
-            ParameterUtils.isArrayListMessage(staticSubrequestObject, SUBREQUESTS, "");
+            ParameterUtils.isArrayListMessage(staticSubrequestObject,
+                                              SUBREQUESTS,
+                                              "");
             final List<Object> staticSubrequest = (List<Object>) staticSubrequestObject;
             handleStaticSubrequests(staticSubrequest);
         }
@@ -696,7 +708,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Object xhrSubrequestObject = subrequest.get(XHR);
         if (xhrSubrequestObject != null)
         {
-            ParameterUtils.isLinkedHashMapMessage(xhrSubrequestObject, SUBREQUESTS, "");
+            ParameterUtils.isLinkedHashMapMessage(xhrSubrequestObject,
+                                                  SUBREQUESTS,
+                                                  "");
             final LinkedHashMap<String, Object> xhrSubrequest = (LinkedHashMap<String, Object>) xhrSubrequestObject;
             handleXhrSubrequests(xhrSubrequest);
         }
@@ -1002,7 +1016,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             final List<Object> validations = (List<Object>) validationsObject;
             for (final Object validationObject : validations)
             {
-                ParameterUtils.isLinkedHashMapMessage(validationObject, VALIDATION, "");
+                ParameterUtils.isLinkedHashMapMessage(validationObject,
+                                                      VALIDATION,
+                                                      "");
                 final LinkedHashMap<String, Object> validationItem = (LinkedHashMap<String, Object>) validationObject;
                 fillURLActionValidationBuilder(validationItem);
                 final URLActionDataValidation validation = validationBuilder.build();
@@ -1024,8 +1040,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         if (rawValidateSubObject != null)
         {
             ParameterUtils.isLinkedHashMapMessage(rawValidateSubObject,
-                                           validationName,
-                                           "");
+                                                  validationName,
+                                                  "");
             final LinkedHashMap<String, Object> validateListSubItem = (LinkedHashMap<String, Object>) rawValidateSubObject;
             fillURLActionValidationBuilderWithDataFromLinkedHashMap(validateListSubItem);
         }
@@ -1072,7 +1088,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             final List<Object> storeObjects = (List<Object>) storeObject;
             for (final Object storeObjectsItem : storeObjects)
             {
-                ParameterUtils.isLinkedHashMapMessage(storeObjectsItem, STORE, "");
+                ParameterUtils.isLinkedHashMapMessage(storeObjectsItem,
+                                                      STORE,
+                                                      "");
                 final LinkedHashMap<String, Object> storeItem = (LinkedHashMap<String, Object>) storeObjectsItem;
 
                 fillURLActionStoreBuilder(storeItem);
@@ -1095,7 +1113,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Object rawStoreSubObject = storeItem.get(storeName);
         if (rawStoreSubObject != null)
         {
-            ParameterUtils.isLinkedHashMapMessage(rawStoreSubObject, storeName, "");
+            ParameterUtils.isLinkedHashMapMessage(rawStoreSubObject,
+                                                  storeName,
+                                                  "");
             final LinkedHashMap<Object, Object> rawStoreSubItem = (LinkedHashMap<Object, Object>) rawStoreSubObject;
             fillStoreBuilderWithDataFromLinkedHashMap(rawStoreSubItem);
         }

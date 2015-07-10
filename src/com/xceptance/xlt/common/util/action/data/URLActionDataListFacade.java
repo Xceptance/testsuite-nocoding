@@ -120,12 +120,15 @@ public class URLActionDataListFacade
     private CSVBasedURLActionDataListBuilder createCSVBuilder()
     {
 
+        final URLActionDataStoreBuilder storeBuilder = new URLActionDataStoreBuilder();
         final URLActionDataBuilder actionBuilder = new URLActionDataBuilder();
+        final URLActionDataValidationBuilder validationBuilder = new URLActionDataValidationBuilder();
 
         final CSVBasedURLActionDataListBuilder csvBuilder = new CSVBasedURLActionDataListBuilder(this.filePath,
                                                                                                  this.interpreter,
-                                                                                                 actionBuilder);
+                                                                                                 actionBuilder,
+                                                                                                 validationBuilder,
+                                                                                                 storeBuilder);
         return csvBuilder;
-
     }
 }
