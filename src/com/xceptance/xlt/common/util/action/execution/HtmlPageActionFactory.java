@@ -8,6 +8,7 @@ import com.xceptance.xlt.common.actions.Downloader;
 import com.xceptance.xlt.common.actions.HtmlPageAction;
 import com.xceptance.xlt.common.actions.ModifiedAbstractHtmlPageAction;
 import com.xceptance.xlt.common.actions.XhrHtmlPageAction;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 import com.xceptance.xlt.engine.XltWebClient;
@@ -28,7 +29,7 @@ import com.xceptance.xlt.engine.XltWebClient;
 
 public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
 {
-    private XltProperties properties;
+    private NoCodingPropAdmin propAdmin;
 
     private HtmlPageAction previousAction;
 
@@ -38,28 +39,28 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
      * @param properties
      *            {@link XltProperties} for {@link WebClient} configuration.
      */
-    public HtmlPageActionFactory(final XltProperties properties)
+    public HtmlPageActionFactory(final NoCodingPropAdmin propAdmin)
     {
         super();
-        setProperties(properties);
+        setPropertiesAdmin(propAdmin);
         this.resultFactory = new URLActionDataExecutableResultFactory();
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    private void setProperties(final XltProperties properties)
+    private void setPropertiesAdmin(final NoCodingPropAdmin propAdmin)
     {
-        ParameterUtils.isNotNull(properties, "XltProperties");
-        this.properties = properties;
+        ParameterUtils.isNotNull(propAdmin, "NoCodingPropAdmin");
+        this.propAdmin = propAdmin;
     }
 
     /**
      * Returns a {@link HtmlPageAction}, that can fire a request.
+     * 
      * @param name
      *            Name of the URLActionDataExecutionable
      * @param request
      *            the WebRequest that should be fired
      * @return {@link URLActionDataExecutionable}
-     *  
      */
     @Override
     public URLActionDataExecutionable createPageAction(final String name,
@@ -67,11 +68,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
     {
 
         HtmlPageAction action;
-        
+
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
-        
-        
+
         if (this.previousAction == null)
         {
             action = new HtmlPageAction(name, request, resultFactory);
@@ -80,10 +80,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
             // bad design createDownloader() depends on action
 
             action.setDownloader(createDownloader());
-            
-            // Configurate WebClient 
-            
-            action.getWebClient().getOptions().setRedirectEnabled(false);
+
+            // Configurate WebClient
+
+            configureWebClient((XltWebClient) action.getWebClient());
 
         }
         else
@@ -101,10 +101,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
 
     private Downloader createDownloader()
     {
-        final Boolean userAgentUID = properties.getProperty("userAgent.UID",
-                                                            false);
-        final int threadCount = properties.getProperty("com.xceptance.xlt.staticContent.downloadThreads",
-                                                       1);
+        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID,
+                                                                     false);
+        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS,
+                                                                1);
 
         final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(),
                                                      threadCount,
@@ -113,17 +113,23 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
         return downloader;
 
     }
+
+    private void configureWebClient(final XltWebClient webClient)
+    {
+        this.propAdmin.configWebClient(webClient);
+    }
+
     /**
      * Returns a {@link XhrHtmlPageAction}, that can fire a request.
+     * 
      * @param name
      *            Name of the URLActionDataExecutionable
      * @param request
      *            the WebRequest that should be fired
      * @return {@link URLActionDataExecutionable}
      * @throws IllegalArgumentException
-     *  if there has not been fired a request before. <br>
-     *  Because in this case no WebClient is available. 
-     *  
+     *             if there has not been fired a request before. <br>
+     *             Because in this case no WebClient is available.
      */
     @Override
     public URLActionDataExecutionable createXhrPageAction(final String name,
@@ -131,7 +137,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
-        
+
         if (previousAction == null)
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");

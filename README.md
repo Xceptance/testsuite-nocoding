@@ -48,11 +48,11 @@ Issue  |  Type | Status
 ------------- | :-------------: | :-------------:
 The WebClient must be configurated with properties (js, static content, credentials ...).  | :question: | :x:
 HtmlAttributes and Textfields are not validatable. | :beetle: | :white_check_mark:
-CSV file Loader does not work. (because not implemented) | :ghost: | :x:
-Parameter encoding is messy. | :poop: | :x:
-The "Matches" validation mode doesnt work! | :beetle: | :x:
-Firebug delivers helpless "XPath"s. Assimilate! | :beetle: | :x: 
-Unravel the mystery about "getEffectiveKey()". | :ghost: | :x:
+CSV file Loader does not work. (because not implemented) | :ghost: | :white_check_mark:
+Parameter encoding is messy. | :poop: | :white_check_mark:
+The "Matches" validation mode doesnt work! | :beetle: | :white_check_mark:
+Firebug delivers helpless "XPath"s. Assimilate! | :beetle: | :white_check_mark: 
+Unravel the mystery about "getEffectiveKey()". | :ghost: | :white_check_mark:
 Testcase mapping doesn't work. | :beetle: | :white_check_mark:
 Load multiple files | :ghost: | :white_check_mark:
 Add libraries | :ghost: | :white_check_mark:

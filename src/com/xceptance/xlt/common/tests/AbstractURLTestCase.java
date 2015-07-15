@@ -10,7 +10,7 @@ import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.tests.AbstractTestCase;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
-import com.xceptance.xlt.common.XltConstants;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataListFacade;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
@@ -88,6 +88,11 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected XltProperties properties;
 
     /**
+     * This class manages the NoCoding properties and is responsible for the TestCase Mapping
+     */
+    protected NoCodingPropAdmin propertiesAdmin;
+
+    /**
      * This is running mode, defined in the properties.
      */
     protected String mode;
@@ -104,6 +109,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     public void initializeVariables()
     {
         loadXltProperties();
+        loadNoCodingPropAdmin();
         loadGeneralDataProvider();
         loadDataDirectory();
         loadFileName();
@@ -122,6 +128,14 @@ public class AbstractURLTestCase extends AbstractTestCase
         this.properties = XltProperties.getInstance();
     }
 
+    private void loadNoCodingPropAdmin()
+    {
+        this.propertiesAdmin = new NoCodingPropAdmin(properties,
+                                                     getTestName(),
+                                                     Session.getCurrent()
+                                                            .getUserName());
+    }
+
     private void loadGeneralDataProvider()
     {
         this.dataProvider = GeneralDataProvider.getInstance();
@@ -129,10 +143,7 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void loadDataDirectory()
     {
-        final String dataDirectory = getProperty(XltConstants.XLT_PACKAGE_PATH
-                                                     + ".data.directory",
-                                                 "config" + File.separatorChar
-                                                     + "data");
+        final String dataDirectory = propertiesAdmin.getPropertyByKey(NoCodingPropAdmin.DIRECTORY);
         if (dataDirectory != null)
         {
             this.dataDirectory = dataDirectory;
@@ -145,14 +156,10 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     protected void loadFileName()
     {
-        this.filePath = getProperty("filename");
-    }
-
-    protected void loadFilePath()
-    {
+        final String filePath = propertiesAdmin.getPropertyByKey(NoCodingPropAdmin.FILENAME);
         if (filePath != null)
         {
-            this.filePath = dataDirectory + File.separatorChar + filePath;
+            this.filePath = filePath;
         }
         else
         {
@@ -160,9 +167,14 @@ public class AbstractURLTestCase extends AbstractTestCase
         }
     }
 
+    protected void loadFilePath()
+    {
+        this.filePath = dataDirectory + File.separatorChar + filePath;
+    }
+
     protected void loadMode()
     {
-        final String mode = getProperty("mode");
+        final String mode = propertiesAdmin.getPropertyByKey(NoCodingPropAdmin.MODE);
         if (mode != null)
         {
             this.mode = mode;
@@ -188,7 +200,7 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupURLActionExecutableFactory()
     {
-        final URLActionDataExecutionbleFactoryBuilder factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.properties,
+        final URLActionDataExecutionbleFactoryBuilder factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.propertiesAdmin,
                                                                                                                    this.mode);
         this.executionableFactory = factoryBuilder.buildFactory();
     }
@@ -218,50 +230,5 @@ public class AbstractURLTestCase extends AbstractTestCase
                                                    + e.getMessage(),
                                                e);
         }
-    }
-
-    /**
-     * Returns the effective key to be used for property lookup via one of the getProperty(...) methods.
-     * <p>
-     * This method implements the fall-back logic:
-     * <ol>
-     * <li>user name plus simple key, e.g. TMyRunningTest.password
-     * <li>test class name plus simple key, e.g. "com.xceptance.xlt.samples.testsuite.tests.TAuthor.password"</li>
-     * <li>simple key, e.g. "password"</li>
-     * </ol>
-     * 
-     * @param bareKey
-     *            the bare property key, i.e. without any prefixes
-     * @return the first key that produces a result
-     */
-    @Override
-    protected String getEffectiveKey(final String bareKey)
-    {
-        String effectiveKey = null;
-        final XltProperties xltProperties = XltProperties.getInstance();
-
-        // 1. use the current user name as prefix
-        final String userNameQualifiedKey = Session.getCurrent().getUserName()
-                                            + "." + bareKey;
-        if (xltProperties.containsKey(userNameQualifiedKey))
-        {
-            effectiveKey = userNameQualifiedKey;
-        }
-        else
-        {
-            // 2. use the current class name as prefix
-            final String classNameQualifiedKey = getTestName() + "." + bareKey;
-            if (xltProperties.containsKey(classNameQualifiedKey))
-            {
-                effectiveKey = classNameQualifiedKey;
-            }
-            else
-            {
-                // 3. use the bare key
-                effectiveKey = bareKey;
-            }
-        }
-
-        return effectiveKey;
     }
 }

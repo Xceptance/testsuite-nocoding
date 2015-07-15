@@ -3,7 +3,7 @@ package test.com.xceptance.xlt.common.util.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.common.actions.Downloader;
@@ -11,16 +11,16 @@ import com.xceptance.xlt.engine.XltWebClient;
 
 public class DownloaderTest
 {
-    private XltWebClient client;
+    private static  XltWebClient client;
 
-    private boolean userAgentUID;
+    private static boolean userAgentUID;
 
-    private int threadCount;
+    private static int threadCount;
 
-    private final List<String> urls = new ArrayList<String>();
+    private static final List<String> urls = new ArrayList<String>();
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         userAgentUID = false;
         threadCount = 1;

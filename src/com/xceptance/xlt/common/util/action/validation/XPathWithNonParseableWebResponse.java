@@ -230,7 +230,6 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         String xmlString;
         xmlString = org.json.XML.toString(new JSONObject(json));
         xmlString = "<json>" + xmlString + "</json>";
-        System.err.println(xmlString);
 
         final Document document = createDocumentFromXmlString(xmlString);
 

@@ -1,0 +1,22 @@
+- Action :
+    Name : Go to Product Category
+    Request :
+        Url : ${hostsec}/posters/topCategory/Dining?categoryId=2
+    Subrequests :
+    - Static :
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_3.jpg
+            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_6.jpg
+            - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg
+        - Xhr :
+            Name : Navigate to second product page.
+            Request :
+                Method : POST
+                Url : ${hostsec}/posters/getProductOfTopCategory
+                Parameters :
+                    - categoryId : 2
+                    - page : 2
+            Response :
+                Validate :
+                    - Validate Product Pizza :
+                        XPath : "/json/products[2]/name"
+                        Matches : "Frozen Pizza"

@@ -60,7 +60,6 @@ public class URLTestCase extends AbstractURLTestCase
                 {
                     handleStaticAction(action);
                 }
-                action.outline();
             }
             handleLastAction();
             System.err.println(Session.getCurrent().getUserName());
@@ -81,7 +80,6 @@ public class URLTestCase extends AbstractURLTestCase
         setPreviousExecutionable(executable);
         setPreviousURLAction(action);
         removeActionFromActionList(action);
-        action.outline();
     }
 
     protected void handleLastAction()

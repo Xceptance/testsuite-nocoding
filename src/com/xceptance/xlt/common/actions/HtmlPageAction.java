@@ -11,9 +11,9 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 /**
- * All it does, is loading a WebResponse for a passed WebRequest.
- * The WebResponse in form of a {@link HtmlPage} is wrapped in a {@link URLActionDataExecutableResult}.
- * Additionally static content requests are fired and loaded via {@link Downloader}. <br>
+ * All it does, is loading a WebResponse for a passed WebRequest. The WebResponse in form of a {@link HtmlPage} is
+ * wrapped in a {@link URLActionDataExecutableResult}. Additionally static content requests are fired and loaded via
+ * {@link Downloader}. <br>
  * Since this class extends {@link ModifiedAbstractHtmlPageAction}, the response is parsed into the DOM.
  * 
  * @extends {@link ModifiedAbstractHtmlPageAction}
@@ -25,8 +25,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     implements URLActionDataExecutionable
 {
     /**
-     * For downloading static content.
-     * To add a request, use {@link #addStaticRequest(URL)}
+     * For downloading static content. To add a request, use {@link #addStaticRequest(URL)}
      */
     protected Downloader downloader;
 
@@ -46,12 +45,16 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     protected URLActionDataExecutableResultFactory resultFactory;
 
     /**
-     * 
-     * @param previousAction : the action that is is executed before.
-     * @param name : name of the action.
-     * @param webRequest : the request that is fired.
-     * @param downloader : the {@link Downloader}.
-     * @param resultFactory : produces the {@link #result}
+     * @param previousAction
+     *            : the action that is is executed before.
+     * @param name
+     *            : name of the action.
+     * @param webRequest
+     *            : the request that is fired.
+     * @param downloader
+     *            : the {@link Downloader}.
+     * @param resultFactory
+     *            : produces the {@link #result}
      */
     public HtmlPageAction(final HtmlPageAction previousAction,
                           final String name,
@@ -66,20 +69,23 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    private void setResultFactory(
-                                  final URLActionDataExecutableResultFactory resultFactory)
+    private void setResultFactory(final URLActionDataExecutableResultFactory resultFactory)
     {
-        ParameterUtils.isNotNull(resultFactory, "URLActionDataExecutableResultFactory");
+        ParameterUtils.isNotNull(resultFactory,
+                                 "URLActionDataExecutableResultFactory");
         this.resultFactory = resultFactory;
     }
 
     /**
      * This constructor should be used if there is no previous action available. <br>
-     * In this case a {@link WebClien} is constructed. 
+     * In this case a {@link WebClien} is constructed.
      * 
-     * @param name : name of the action.
-     * @param webRequest : the request that is fired.
-     * @param resultFactory : produces the {@link #result}
+     * @param name
+     *            : name of the action.
+     * @param webRequest
+     *            : the request that is fired.
+     * @param resultFactory
+     *            : produces the {@link #result}
      */
     public HtmlPageAction(final String name,
                           final WebRequest webRequest,
@@ -145,8 +151,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     }
 
     /**
-     * Adds a static content request, which gets loaded 
-     * by the {@link Downloader}.
+     * Adds a static content request, which gets loaded by the {@link Downloader}.
      */
     @Override
     public void addStaticRequest(final URL url)

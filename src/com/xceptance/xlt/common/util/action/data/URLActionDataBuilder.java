@@ -219,6 +219,11 @@ public class URLActionDataBuilder
     public URLActionData build()
     {
         URLActionData resultAction = null;
+        
+        // for debugging, use if u want to print the stored information
+        // of URLActionDataBuilder
+        this.outline();
+        
         try
         {
             resultAction = new URLActionData(getName(), getUrl(), getInterpreter());
@@ -393,11 +398,11 @@ public class URLActionDataBuilder
     public List<URLActionDataValidation> getValidations()
     {
         List<URLActionDataValidation> result = Collections.emptyList();
-        if (this.validations != null)
+        if (!this.validations.isEmpty())
         {
             result = this.validations;
         }
-        else if (this.d_validations != null)
+        else if (!this.d_validations.isEmpty())
         {
             result = d_validations;
         }
@@ -408,11 +413,11 @@ public class URLActionDataBuilder
     public List<NameValuePair> getParameters()
     {
         List<NameValuePair> result = Collections.emptyList();
-        if (this.validations != null)
+        if (!this.parameters.isEmpty())
         {
             result = this.parameters;
         }
-        else if (this.d_parameters != null)
+        else if (!this.d_parameters.isEmpty())
         {
             result = d_parameters;
         }
@@ -423,11 +428,11 @@ public class URLActionDataBuilder
     public List<NameValuePair> getHeaders()
     {
         List<NameValuePair> result = Collections.emptyList();
-        if (this.headers != null)
+        if (!this.headers.isEmpty())
         {
             result = this.headers;
         }
-        else if (this.d_headers != null)
+        else if (!this.d_headers.isEmpty())
         {
             result = d_headers;
         }
@@ -438,11 +443,11 @@ public class URLActionDataBuilder
     public List<NameValuePair> getCookies()
     {
         List<NameValuePair> result = Collections.emptyList();
-        if (this.cookies != null)
+        if (!this.cookies.isEmpty())
         {
             result = this.cookies;
         }
-        else if (this.d_cookies != null)
+        else if (!this.d_cookies.isEmpty())
         {
             result = d_cookies;
         }
@@ -453,11 +458,11 @@ public class URLActionDataBuilder
     public List<URLActionDataStore> getStore()
     {
         List<URLActionDataStore> result = Collections.emptyList();
-        if (this.store != null)
+        if (!this.store.isEmpty())
         {
             result = this.store;
         }
-        else if (this.d_store != null)
+        else if (!this.d_store.isEmpty())
         {
             result = d_store;
         }

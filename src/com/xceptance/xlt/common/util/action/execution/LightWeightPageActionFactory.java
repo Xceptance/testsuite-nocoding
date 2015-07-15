@@ -9,6 +9,7 @@ import com.xceptance.xlt.common.actions.LightWeightPageAction;
 import com.xceptance.xlt.common.actions.ModifiedAbstractHtmlPageAction;
 import com.xceptance.xlt.common.actions.ModifiedAbstractLightWeightPageAction;
 import com.xceptance.xlt.common.actions.XhrLightWeightPageAction;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 import com.xceptance.xlt.engine.XltWebClient;
@@ -22,7 +23,6 @@ import com.xceptance.xlt.engine.XltWebClient;
  * <li>Request is a XmlHttpRequest -> use {@link #createXhrPageAction(String, WebRequest)}
  * </ul>
  * The response is NOT parsed into the dom. <br>
- * 
  * See the execution model of {@link ModifiedAbstractLightWeightPageAction}
  * 
  * @author matthias mitterreiter
@@ -30,7 +30,7 @@ import com.xceptance.xlt.engine.XltWebClient;
 public class LightWeightPageActionFactory extends
     URLActionDataExecutionableFactory
 {
-    private XltProperties properties;
+    private NoCodingPropAdmin propAdmin;
 
     private LightWeightPageAction previousAction;
 
@@ -40,37 +40,35 @@ public class LightWeightPageActionFactory extends
      * @param properties
      *            {@link XltProperties} for {@link WebClient} configuration.
      */
-    public LightWeightPageActionFactory(final XltProperties properties)
+    public LightWeightPageActionFactory(final NoCodingPropAdmin propAdmin)
     {
         super();
-        setProperties(properties);
+        setPropertiesAdmin(propAdmin);
         this.resultFactory = new URLActionDataExecutableResultFactory();
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    private void setProperties(final XltProperties properties)
+    private void setPropertiesAdmin(final NoCodingPropAdmin propAdmin)
     {
-        ParameterUtils.isNotNull(properties, "XltProperties");
-        this.properties = properties;
+        ParameterUtils.isNotNull(propAdmin, "NoCodingPropAdmin");
+        this.propAdmin = propAdmin;
     }
 
     @Override
-    public URLActionDataExecutionable createPageAction(
-                                                    final String name,
-                                                    final WebRequest request)
+    public URLActionDataExecutionable createPageAction(final String name,
+                                                       final WebRequest request)
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
-        
+
         LightWeightPageAction action;
-        
+
         if (this.previousAction == null)
         {
             action = new LightWeightPageAction(name, request, resultFactory);
             previousAction = action;
             action.setDownloader(createDownloader());
-            
-            action.getWebClient().getOptions().setRedirectEnabled(false);
+            configureWebClient((XltWebClient) action.getWebClient());
         }
         else
         {
@@ -86,10 +84,10 @@ public class LightWeightPageActionFactory extends
 
     private Downloader createDownloader()
     {
-        final Boolean userAgentUID = properties.getProperty("userAgent.UID",
-                                                            false);
-        final int threadCount = properties.getProperty("com.xceptance.xlt.staticContent.downloadThreads",
-                                                       1);
+        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID,
+                                                                     false);
+        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS,
+                                                                1);
 
         final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(),
                                                      threadCount,
@@ -99,14 +97,18 @@ public class LightWeightPageActionFactory extends
 
     }
 
+    private void configureWebClient(final XltWebClient webClient)
+    {
+        this.propAdmin.configWebClient(webClient);
+    }
+
     @Override
-    public URLActionDataExecutionable createXhrPageAction(
-                                                       final String name,
-                                                       final WebRequest request)
+    public URLActionDataExecutionable createXhrPageAction(final String name,
+                                                          final WebRequest request)
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
-        
+
         if (previousAction == null)
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");

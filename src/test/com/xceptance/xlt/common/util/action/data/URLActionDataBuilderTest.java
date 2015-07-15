@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
@@ -20,70 +20,70 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionDataBuilderTest
 {
-    private ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-    private XltProperties properties;
+    private static XltProperties properties;
 
-    private GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-    private String name;
+    private static String name;
 
-    private String type;
+    private static String type;
 
-    private String url;
+    private static String url;
 
-    private String method;
+    private static String method;
 
-    private String encodeParameters;
+    private static String encodeParameters;
     
-    private String encodeBody;
+    private static String encodeBody;
 
-    private String httpResponceCode;
+    private static String httpResponceCode;
 
-    private String body;
+    private static String body;
 
-    private List<URLActionDataValidation> validations = new ArrayList<URLActionDataValidation>();
+    private static List<URLActionDataValidation> validations = new ArrayList<URLActionDataValidation>();
 
-    URLActionDataValidation validation;
+    private static URLActionDataValidation validation;
 
-    private List<URLActionDataStore> store = Collections.emptyList();
+    private static List<URLActionDataStore> store = Collections.emptyList();
 
-    URLActionDataStore storeItem;
+    private static URLActionDataStore storeItem;
 
-    private List<NameValuePair> parameters = Collections.emptyList();
+    private static List<NameValuePair> parameters = Collections.emptyList();
+            
+    private static List<NameValuePair> cookies = Collections.emptyList();
 
-    private List<NameValuePair> cookies = Collections.emptyList();
+    private static List<NameValuePair> headers = Collections.emptyList();
+            
+    private static String d_name;
+            
+    private static String d_type;
+            
+    private static String d_url;
+          
+    private static String d_method;
 
-    private List<NameValuePair> headers = Collections.emptyList();
+    private static String d_encode_parameters;
+ 
+    private static String d_encode_body;
+ 
+    private static String d_httpResponceCode;
+ 
+    private static String d_body;
+ 
+    private static List<URLActionDataValidation> d_validations = Collections.emptyList();
+ 
+    private static List<URLActionDataStore> d_store = Collections.emptyList();
+ 
+    private static List<NameValuePair> d_parameters = Collections.emptyList();
+ 
+    private static List<NameValuePair> d_cookies = Collections.emptyList();
+ 
+    private static  List<NameValuePair> d_headers = Collections.emptyList();
 
-    private String d_name;
-
-    private String d_type;
-
-    private String d_url;
-
-    private String d_method;
-
-    private String d_encode_parameters;
-    
-    private String d_encode_body;
-
-    private String d_httpResponceCode;
-
-    private String d_body;
-
-    private List<URLActionDataValidation> d_validations = Collections.emptyList();
-
-    private List<URLActionDataStore> d_store = Collections.emptyList();
-
-    private List<NameValuePair> d_parameters = Collections.emptyList();
-
-    private List<NameValuePair> d_cookies = Collections.emptyList();
-
-    private List<NameValuePair> d_headers = Collections.emptyList();
-
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();

@@ -70,7 +70,7 @@ XA,AddToCart,"${host}/posters/addToCartSlider?productId=48&finish=gloss&size=32%
 A,ViewCart,"${host}/posters/cart",GET,,200,id('titleCart'),"Cart",false
 
 # Proceed to checkout
-A,Checkout,"${hostsec}/posters/checkout",GET,,200,id('titleDelAddr'),"Select or enter a shipping address",false
+A,Checkout,"${hostsec}/posters/checkout",GET,,303,,,false
 
 # Fill out and submit shipping address form
 A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Select or enter a payment method",false

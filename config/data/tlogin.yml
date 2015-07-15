@@ -84,11 +84,12 @@
             - btnSignIn :
             - email : ${email}
             - password : ${password}
-    Response : 
+    Response :
         Httpcode : 303
         Store :
             - loginRedirectLocation :
                 Header : Location
+        
             
 - Action :
     Name : Login Redirection

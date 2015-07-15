@@ -1,27 +1,27 @@
 package test.com.xceptance.xlt.common.util.action.execution;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.MockObjects;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.action.execution.HtmlPageActionFactory;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 
 public class HtmlPageActionFactoryTest
 {
-    private XltProperties properties;
+    private static NoCodingPropAdmin propAdmin;
 
-    private MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-    private WebRequest request;
+    private static WebRequest request;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
-        properties = XltProperties.getInstance();
-
+        propAdmin = new NoCodingPropAdmin(XltProperties.getInstance(), "", "");
         mockObjects = new MockObjects();
         mockObjects.initURL();
         mockObjects.initWebRequest();
@@ -31,14 +31,14 @@ public class HtmlPageActionFactoryTest
     @Test
     public void testConstructor()
     {
-        final HtmlPageActionFactory factory = new HtmlPageActionFactory(properties);
+        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
 
     }
 
     @Test
     public void testCreatePageAction()
     {
-        final HtmlPageActionFactory factory = new HtmlPageActionFactory(properties);
+        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
         final URLActionDataExecutionable executionable = factory.createPageAction("Action",
                                                                                   request);
         executionable.executeAction();
@@ -48,7 +48,7 @@ public class HtmlPageActionFactoryTest
     @Test
     public void testCreateXhrPageAction()
     {
-        final HtmlPageActionFactory factory = new HtmlPageActionFactory(properties);
+        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
         URLActionDataExecutionable executionable = factory.createPageAction("Action",
                                                                             request);
         executionable.executeAction();
@@ -59,7 +59,7 @@ public class HtmlPageActionFactoryTest
     @Test(expected = IllegalArgumentException.class)
     public void testCreateXhrPageActionAsFirstAction()
     {
-        final HtmlPageActionFactory factory = new HtmlPageActionFactory(properties);
+        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
         final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
                                                                                      request);
     }

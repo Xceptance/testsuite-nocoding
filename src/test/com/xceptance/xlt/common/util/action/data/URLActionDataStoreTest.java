@@ -3,7 +3,7 @@ package test.com.xceptance.xlt.common.util.action.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -14,18 +14,18 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataStoreTest
 {
 
-    private ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-    private XltProperties properties;
+    private static XltProperties properties;
 
-    private GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-    List<String> selectionModes;
+    private static List<String> selectionModes;
 
-    List<URLActionDataStore> stores;
+    private static List<URLActionDataStore> stores;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();

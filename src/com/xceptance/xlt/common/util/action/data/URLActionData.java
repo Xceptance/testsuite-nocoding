@@ -72,7 +72,7 @@ public class URLActionData
     /**
      * <p>
      * Intended type: Boolean <br>
-     * Default: 'false'. <br>
+     * Default: 'true'. <br>
      * </p>
      * <p>
      * Allows further encoding of request {@link #parameters} with the declared {@link #encodingType encoding type}.
@@ -83,7 +83,7 @@ public class URLActionData
     /**
      * <p>
      * Intended type: Boolean <br>
-     * Default: 'false'. <br>
+     * Default: 'true'. <br>
      * </p>
      * <p>
      * Allows further encoding of request {@link #body} with the declared {@link #encodingType encoding type}.
@@ -237,8 +237,8 @@ public class URLActionData
         setUrl(url);
         setType(TYPE_ACTION); // default
         setMethod(METHOD_GET); // default
-        setEncodeParameters("false"); // default
-        setEncodeBody("false"); // default
+        setEncodeParameters("true"); // default
+        setEncodeBody("true"); // default
         setHttpResponceCode("200"); // default
         setInterpreter(interpreter);
     }
@@ -496,6 +496,10 @@ public class URLActionData
         {
             this.validations = validations;
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("validations"));
+            for(final URLActionDataValidation validation : validations)
+            {
+                XltLogger.runTimeLogger.debug("\t" + validation.getName());
+            }
         }
     }
 
@@ -510,6 +514,11 @@ public class URLActionData
         {
             this.headers = headers;
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("headers"));
+            for (final NameValuePair header : headers)
+            {
+                XltLogger.runTimeLogger.debug("\t" + header.getName()
+                                              + " : " + header.getValue());
+            }
         }
     }
 
@@ -524,6 +533,10 @@ public class URLActionData
         {
             this.store = store;
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("store"));
+            for(final URLActionDataStore storeItem : store)
+            {
+                XltLogger.runTimeLogger.debug("\t" + storeItem.getName());
+            }
         }
     }
 
@@ -538,6 +551,11 @@ public class URLActionData
         {
             this.parameters = parameters;
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("parameters"));
+            for (final NameValuePair parameter : parameters)
+            {
+                XltLogger.runTimeLogger.debug("\t" + parameter.getName()
+                                              + " : " + parameter.getValue());
+            }
         }
     }
 
@@ -552,6 +570,11 @@ public class URLActionData
         {
             this.cookies = cookies;
             XltLogger.runTimeLogger.debug(getSetNewTagMessage("cookies"));
+            for (final NameValuePair cookie : cookies)
+            {
+                XltLogger.runTimeLogger.debug("\t" + cookie.getName()
+                                              + " : " + cookie.getValue());
+            }
         }
     }
 

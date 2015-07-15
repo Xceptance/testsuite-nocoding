@@ -530,8 +530,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final Object headersObject = headersItem.get(HEADERS);
         if (headersObject instanceof String)
         {
-            final String headers = (String) headersObject;
-            if (headers.equals(DELETE))
+            final String headersString = (String) headersObject;
+            if (headersString.equals(DELETE))
             {
 
                 actionBuilder.setDefaultHeaders(Collections.<NameValuePair> emptyList());
@@ -540,7 +540,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             else
             {
                 ParameterUtils.doThrow(HEADERS,
-                                       headers,
+                                       headersString,
                                        Reason.UNSUPPORTED_VALUE);
             }
         }
@@ -652,7 +652,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         final LinkedHashMap<String, Object> rawAction = (LinkedHashMap<String, Object>) actionObject;
 
         fillURLActionBuilder(rawAction);
-
+        
         final URLActionData action = actionBuilder.build();
         this.actions.add(action);
 

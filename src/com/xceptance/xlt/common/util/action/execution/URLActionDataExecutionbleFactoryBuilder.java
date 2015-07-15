@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.ParameterUtils;
 
 /**
@@ -22,7 +23,7 @@ public class URLActionDataExecutionbleFactoryBuilder
      */
     private String mode;
 
-    private XltProperties properties;
+    private NoCodingPropAdmin propAdmin;
 
     public static final String MODE_DOM = "dom";
 
@@ -42,11 +43,11 @@ public class URLActionDataExecutionbleFactoryBuilder
      * @param mode
      *            {@link mode}
      */
-    public URLActionDataExecutionbleFactoryBuilder(final XltProperties properties,
+    public URLActionDataExecutionbleFactoryBuilder(final NoCodingPropAdmin propAdmin,
                                                  final String mode)
     {
         setMode(mode);
-        setProperties(properties);
+        setPropertiesAdmin(propAdmin);
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
@@ -60,10 +61,10 @@ public class URLActionDataExecutionbleFactoryBuilder
         return factory;
     }
 
-    private void setProperties(final XltProperties properties)
+    private void setPropertiesAdmin(final NoCodingPropAdmin propAdmin)
     {
-        ParameterUtils.isNotNull(properties, "XltProperties");
-        this.properties = properties;
+        ParameterUtils.isNotNull(propAdmin, "NoCodingPropAdmin");
+        this.propAdmin = propAdmin;
     }
 
     private void setMode(final String mode)
@@ -101,12 +102,12 @@ public class URLActionDataExecutionbleFactoryBuilder
 
     private HtmlPageActionFactory createHtmlPageActionFactory()
     {
-        return new HtmlPageActionFactory(properties);
+        return new HtmlPageActionFactory(this.propAdmin);
     }
 
     private LightWeightPageActionFactory createLightWeightPageActionFactory()
     {
-        return new LightWeightPageActionFactory(properties);
+        return new LightWeightPageActionFactory(this.propAdmin);
     }
 
     private boolean isPermittedMode(final String item)

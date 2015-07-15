@@ -22,10 +22,10 @@
                     - validation_name_1 :
                         XPath : xpath_value_1
                     - validation_name_2 :
-                        RegExp : regexp_value_2
+                        Regex : regexp_value_2
                         Matches : matches_value_2   
                 Store :
                     - variable_1 :
                         XPath : xpath_1
                     - variable_2 :
-                        RegExp : xpath_2
+                        Regex : xpath_2

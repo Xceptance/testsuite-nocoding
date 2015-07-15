@@ -6,12 +6,13 @@ import org.junit.Test;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.MockObjects;
+import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.action.execution.LightWeightPageActionFactory;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 
 public class LightWeightPageActionFactoryTest
 {
-    private XltProperties properties;
+    private NoCodingPropAdmin propAdmin;
 
     private MockObjects mockObjects;
 
@@ -20,8 +21,7 @@ public class LightWeightPageActionFactoryTest
     @Before
     public void setup()
     {
-        properties = XltProperties.getInstance();
-
+        propAdmin = new NoCodingPropAdmin(XltProperties.getInstance(), "", "");
         mockObjects = new MockObjects("http://xceptance.github.io/SiteGenesis-Community-TestSuite/");
         mockObjects.initURL();
         mockObjects.initWebRequest();
@@ -31,14 +31,14 @@ public class LightWeightPageActionFactoryTest
     @Test
     public void testConstructor()
     {
-        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(properties);
+        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
 
     }
 
     @Test
     public void testCreatePageAction()
     {
-        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(properties);
+        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
         final URLActionDataExecutionable executionable = factory.createPageAction("Action",
                                                                                   request);
         executionable.executeAction();
@@ -48,7 +48,7 @@ public class LightWeightPageActionFactoryTest
     @Test
     public void testCreateXhrPageAction()
     {
-        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(properties);
+        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
         URLActionDataExecutionable executionable = factory.createPageAction("Action",
                                                                             request);
         executionable.executeAction();
@@ -59,7 +59,7 @@ public class LightWeightPageActionFactoryTest
     @Test(expected = IllegalArgumentException.class)
     public void testCreateXhrPageActionAsFirstAction()
     {
-        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(properties);
+        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
         final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
                                                                                      request);
     }

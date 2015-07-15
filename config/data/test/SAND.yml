@@ -4,7 +4,7 @@
         Url : http://www.xceptance.com
         Method : GET
         Xhr : true
-        Encoded : true
+        Encode-Parameters : false
         Parameters :
             - parameter_1 : parameter_value_1
             - parameter_2 : parameter_value_2
@@ -18,13 +18,13 @@
             - validation_name_1 :
                 XPath : xpath_value_1
             - validation_name_2 :
-                RegEx : regexp_value_2
+                Regex : regexp_value_2
                 Matches : matches_value_2   
         Store :
             - variable_1 :
                 XPath : xpath_1
             - variable_2 :
-                RegEx : xpath_2
+                Regex : xpath_2
                 
             
         

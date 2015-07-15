@@ -47,35 +47,35 @@
             - validation_name_2 :
                 XPath : value
                 Matches : value
-            -validation_name_3 :
+            - validation_name_3 :
                 XPath : value
                 Count : value
-            -validation_name_3 :
+            - validation_name_3 :
                 Regex : value
                 Equals : value
-            -validation_name_4 :
+            - validation_name_4 :
                 Header : header_element
-            -validation_name_5 :
+            - validation_name_5 :
                 Header : header_element_2
                 Equals : header_element_2_content
-            -validation_name_6 :
+            - validation_name_6 :
                 Header : header_element_3
                 Count : header_element_3_content
-            -Validation_name_7 :
+            - validation_name_7 :
                 Cookie : x
-            -Validation_name_8 :
+            - validation_name_8 :
                 Cookie : y
                 Matches : z
                 
         Store :
-          - variable :
-              XPath : path
-           - variable_2 :
-               Regexp : path
+            - variable :
+                XPath : path
+            - variable_2 :
+                Regexp : path
             - variable_3 :
-               Header : header
-           - variable_4 :
-               Cookie : cookie
+                Header : header
+            - variable_4 :
+                Cookie : cookie
     Subrequests :
         - Xhr :
             Name : ...

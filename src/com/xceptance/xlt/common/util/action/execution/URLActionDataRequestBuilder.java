@@ -182,7 +182,6 @@ public class URLActionDataRequestBuilder
                                + cookie.getValue() + ";";
             }
             request.setAdditionalHeader("Cookie", cookieString);
-            System.err.println(cookieString);
         }
     }
 
@@ -203,9 +202,9 @@ public class URLActionDataRequestBuilder
         throws UnsupportedEncodingException
     {
         String resultBody = body;
-        if (encodeBody)
+        if (!encodeBody)
         {
-            resultBody = encodeRequestBody(body);
+            resultBody = decodeRequestBody(body);
         }
         if (request.getHttpMethod().equals(HttpMethod.POST)
             || request.getHttpMethod().equals(HttpMethod.PUT))
@@ -223,9 +222,9 @@ public class URLActionDataRequestBuilder
         if (!parameters.isEmpty())
         {
             List<NameValuePair> resultParameters = new ArrayList<NameValuePair>(parameters);
-            if (encodeParameters)
+            if (!encodeParameters)
             {
-                resultParameters = encodeRequestParameters(resultParameters);
+                resultParameters = decodeRequestParameters(resultParameters);
             }
             if (!httpMethod.equals(HttpMethod.POST)
                 || request.getRequestBody() != null)

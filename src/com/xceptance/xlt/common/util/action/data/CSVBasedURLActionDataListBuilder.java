@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.util.XltLogger;
-import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 /**
@@ -40,9 +39,6 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 {
-    protected URLActionDataValidationBuilder validationBuilder;
-
-    protected URLActionDataStoreBuilder storeBuilder;
 
     // dynamic parameters
     public static final String XPATH_GETTER_PREFIX = "xpath";
@@ -112,38 +108,19 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     public CSVBasedURLActionDataListBuilder(final String filePath,
                                             final ParameterInterpreter interpreter,
-                                            final URLActionDataBuilder actionBuilder,
-                                            final URLActionDataValidationBuilder validationBuilder,
-                                            final URLActionDataStoreBuilder storeBuilder)
+                                            final URLActionDataBuilder actionBuilder)
     {
         super(filePath, interpreter, actionBuilder);
-
-        setStoreBuilder(storeBuilder);
-        setValidationBuilder(validationBuilder);
-
         XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
-    private void setStoreBuilder(final URLActionDataStoreBuilder storeBuilder)
-    {
-        ParameterUtils.isNotNull(storeBuilder, "URLActionStoreBuilder");
-        this.storeBuilder = storeBuilder;
-    }
-
-    private void setValidationBuilder(final URLActionDataValidationBuilder validationBuilder)
-    {
-        ParameterUtils.isNotNull(validationBuilder, "URLActionStoreBuilder");
-        this.validationBuilder = validationBuilder;
-    }
-
-    private Iterator createCSVRecordIteratorFromFilepath(final String filePath)
+    private CSVParser createCSVParserFromFilepath(final String filePath)
     {
         final File file = createFile(filePath);
         final BufferedReader br = createBufferedReaderFromFile(file);
         final CSVFormat format = createCSVFormat();
         final CSVParser parser = createCSVParser(br, format);
-        final Iterator<CSVRecord> csvRecords = createCSVIterator(parser);
-        return csvRecords;
+        return parser;
     }
 
     private void checkHeaderSpelling(final Map<String, Integer> headerMap)
@@ -161,15 +138,12 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
     @Override
     protected List<URLActionData> buildURLActionDataList()
     {
-        final File file = createFile(this.filePath);
-        final BufferedReader br = createBufferedReaderFromFile(file);
-        final CSVFormat format = createCSVFormat();
-        final CSVParser parser = createCSVParser(br, format);
+
+        final CSVParser parser = createCSVParserFromFilepath(this.filePath);
         final Iterator<CSVRecord> csvRecords = createCSVIterator(parser);
 
         // verify header fields to avoid problems with incorrect spelling or spaces
         final Map<String, Integer> headerMap = parser.getHeaderMap();
-
         checkHeaderSpelling(headerMap);
 
         boolean incorrectLines = false;
@@ -192,8 +166,6 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
                                                                         e.getMessage()));
             }
             final CSVRecord csvRecord = csvRecords.next();
-
-            System.err.println(csvRecord.toString());
 
             if (csvRecord.isConsistent())
             {
@@ -233,6 +205,9 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         final String parametersString = csvRecord.get(PARAMETERS);
 
+        final String responseCode = StringUtils.defaultIfBlank(csvRecord.get(RESPONSECODE),
+                                                               RESPONSECODE_DEFAULT);
+
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
         if (parametersString != null)
@@ -255,6 +230,7 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
             action.setType(URLActionData.TYPE_XHR);
         }
         action.setMethod(method);
+        action.setHttpResponceCode(responseCode);
         action.setEncodeParameters("true".equals(encoded));
         action.setParameters(parameters);
 
@@ -275,12 +251,12 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         final String text = csvRecord.get(TEXT);
 
-        if (regexpString != null)
+        if (StringUtils.isNotBlank(regexpString))
         {
             selectionMode = URLActionDataValidation.REGEXP;
             selectionValue = regexpString;
         }
-        else if (xPath != null)
+        else if (StringUtils.isNotBlank(xPath))
         {
             selectionMode = URLActionDataValidation.XPATH;
             selectionValue = xPath;
@@ -288,7 +264,7 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         if (text != null)
         {
-            validationMode = URLActionDataValidation.TEXT;
+            validationMode = URLActionDataValidation.MATCHES;
             validationValue = text;
         }
         else
@@ -308,13 +284,10 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         }
 
-        if (regexpString != null && xPath != null)
+        if (StringUtils.isNotBlank(regexpString)
+            && StringUtils.isNotBlank(xPath))
         {
-            throw new IllegalArgumentException();
-        }
-        else if (xPath != null)
-        {
-
+            throw new IllegalArgumentException("naaaaaaaaaaaaaa");
         }
 
         return resultList;

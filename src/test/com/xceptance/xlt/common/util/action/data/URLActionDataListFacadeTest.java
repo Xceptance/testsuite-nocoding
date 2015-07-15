@@ -3,7 +3,7 @@ package test.com.xceptance.xlt.common.util.action.data;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -14,32 +14,32 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionDataListFacadeTest
 {
-    private final String fileWithYamlExtension = "file.yaml";
+    private static final String fileWithYamlExtension = "file.yaml";
 
-    private final String fileWithYmlExtension = "file.yml";
+    private static final String fileWithYmlExtension = "file.yml";
 
-    private final String fileWithCsvExtension = "file.csv";
+    private static final String fileWithCsvExtension = "./config/data/torder.csv";
 
-    private final String fileWithUnknownExtension = "file.unknown";
+    private static final String fileWithUnknownExtension = "file.unknown";
 
-    private final String fileWithNoExtension = "file";
+    private static final String fileWithNoExtension = "file";
 
-    private final String fileWithEmptyExtension = "file.";
+    private static final String fileWithEmptyExtension = "file.";
 
-    private final String fileWithOnlyExtension = ".yml";
+    private static final String fileWithOnlyExtension = ".yml";
 
-    private final String emptyFileString = "";
+    private static final String emptyFileString = "";
 
-    private ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-    private XltProperties properties;
+    private static XltProperties properties;
 
-    private GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-    private URLActionDataListFacade facade;
+    private static URLActionDataListFacade facade;
 
-    @Before
-    public void setup()
+    @BeforeClass
+    public static void setup()
     {
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
@@ -51,7 +51,7 @@ public class URLActionDataListFacadeTest
     {
         facade = new URLActionDataListFacade(fileWithYamlExtension, interpreter);
         final List<URLActionData> actions = facade.buildUrlActions();
-        Assert.assertTrue(actions.isEmpty());
+        Assert.assertTrue(!actions.isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -67,7 +67,7 @@ public class URLActionDataListFacadeTest
     {
         facade = new URLActionDataListFacade(fileWithCsvExtension, interpreter);
         final List<URLActionData> actions = facade.buildUrlActions();
-        Assert.assertTrue(actions.isEmpty());
+        Assert.assertFalse(actions.isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)

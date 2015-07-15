@@ -1,0 +1,9 @@
+- Action :
+    Name : test credentials
+    Request :
+        Url : https://test-eu.suitsupply.com/
+    Response :
+        Validate :
+            - Validate Menu Item :
+                XPath : "//*[@id='header-legacy-overide-1']/nav/div/ul[1]/li[2]/a"
+                Matches : Shop
