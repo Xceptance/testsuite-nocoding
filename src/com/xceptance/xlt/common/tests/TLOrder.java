@@ -1,6 +1,6 @@
 package com.xceptance.xlt.common.tests;
 
-public class TOrder extends URLTestCase
+public class TLOrder extends URLTestCase
 {
 
 }

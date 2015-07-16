@@ -1,6 +1,6 @@
 package com.xceptance.xlt.common.tests;
 
-public class TLogin extends URLTestCase
+public class TLOrderCSV extends URLTestCase
 {
 
 }

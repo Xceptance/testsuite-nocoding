@@ -1,6 +1,6 @@
 package com.xceptance.xlt.common.tests;
 
-public class TRegister extends URLTestCase
+public class TDOrderCSV extends URLTestCase
 {
 
 }

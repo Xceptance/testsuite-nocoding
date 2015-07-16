@@ -61,7 +61,7 @@
         Validate :
             - Validate Success Cookie:
                 Cookie : NINJA_FLASH
-                Text : "success=Your+account+has+been+created.+Log+in+with+your+email+address+and+password."
+                Matches : success=Your\+account\+has\+been\+created\.\+Log\+in\+with\+your\+email\+address\+and\+password.
 
 
 - Action :

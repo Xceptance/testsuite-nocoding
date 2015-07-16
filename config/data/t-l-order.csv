@@ -30,4 +30,4 @@ A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.
 A,COBilling,"${hostsec}/posters/paymentMethodCompleted",POST,creditCardNumber=4111111111111111&name=Dagobert Duck&expirationDateMonth=01&expirationDateYear=2017&btnAddPayment=,200,"<h1 id=""titleOrderOverview"">(.*?)</h1>","Order Overview",false
 
 # Finally, place the order
-A,PlaceOrder,"${hostsec}/posters/checkoutCompleted",POST,btnOrder=,200,"<script type=""text/javascript"">.+?\Q$(""#successMessage div strong"").text(""Thank you for shopping with us!"");\E",,false
+A,PlaceOrder,"${hostsec}/posters/checkoutCompleted",POST,btnOrder=,200,,,false
