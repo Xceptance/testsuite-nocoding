@@ -3,7 +3,6 @@ package com.xceptance.xlt.common.tests;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.actions.Downloader;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
@@ -62,7 +61,6 @@ public class URLTestCase extends AbstractURLTestCase
                 }
             }
             handleLastAction();
-            System.err.println(Session.getCurrent().getUserName());
         }
         else
         {

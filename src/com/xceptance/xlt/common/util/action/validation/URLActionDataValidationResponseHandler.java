@@ -57,7 +57,6 @@ public class URLActionDataValidationResponseHandler
         }
         catch (final Exception e)
         {
-            System.err.println("FAAAAAIIIIIIIIL");
             throw new IllegalArgumentException("Failed to validate Response : \""
                                                    + validation.getName()
                                                    + "\": " + e.getMessage(),
