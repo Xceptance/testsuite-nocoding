@@ -28,9 +28,8 @@ Additionally it is possible to filter, select and store data from the response w
 
 Since the source is open and licensed under the Apache License V2.0, feel free to extend and customize it. 
 
-<p align="center">
-[Getting Started](https://github.com/matthiasware/testsuite-nocoding/wiki): In order to get an overview.
-</p>
+####[Getting Started](https://github.com/matthiasware/testsuite-nocoding/wiki): In order to get an overview.
+
 
 ###Features
 
@@ -55,9 +54,9 @@ Since the source is open and licensed under the Apache License V2.0, feel free t
 
 To learn more, try one of the following links.
 
-[Overview](https://github.com/matthiasware/testsuite-nocoding/wiki): In order to get an overview.
-[Qickstart](https://github.com/matthiasware/testsuite-nocoding/wiki/Quickstart) : To get started super fase.
-[Examples](https://github.com/matthiasware/testsuite-nocoding/wiki/Examples): To see some examples.
+* [Overview](https://github.com/matthiasware/testsuite-nocoding/wiki): In order to get an overview.
+* [Qickstart](https://github.com/matthiasware/testsuite-nocoding/wiki/Quickstart) : To get started super fase.
+* [Examples](https://github.com/matthiasware/testsuite-nocoding/wiki/Examples): To see some examples.
 
 
  
