@@ -1,7 +1,5 @@
 #  TestSuite-NoCoding
 
-![](https://github.com/matthiasware/testsuite-nocoding/blob/master/spec/nopecodingducks.gif?raw=true)
-
 This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtest.com/.
 
 * Name: testsuite-nocoding
