@@ -28,8 +28,11 @@ Additionally it is possible to filter, select and store data from the response w
 
 Since the source is open and licensed under the Apache License V2.0, feel free to extend and customize it. 
 
-####[Getting Started](https://github.com/matthiasware/testsuite-nocoding/wiki): In order to get an overview.
+***
 
+####[Getting Started](https://github.com/matthiasware/testsuite-nocoding/wiki)
+
+***
 
 ###Features
 
