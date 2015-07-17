@@ -28,12 +28,39 @@ Additionally it is possible to filter, select and store data from the response w
 
 Since the source is open and licensed under the Apache License V2.0, feel free to extend and customize it. 
 
-
 <p align="center">
- <span style="font-family:Georgia; font-size:3em;">
-<a style="color:blue"  src="https://github.com/matthiasware/testsuite-nocoding/wiki">Getting Started</a>
-</span>
+<a style="color:blue; font-size:3em"  src="https://github.com/matthiasware/testsuite-nocoding/wiki">Getting Started</a>
 </p>
+
+###Features
+
+* Reads test definitions from files.
+  Supported file types :
+  * YAML
+  * CSV
+* Supports the validation of:
+  * HTTP response headers.
+  * Cookies
+  *  HTTP Response Content. 
+* Offers various validation modes in order to validate data.
+* Supports two modes to run the test-cases:
+  * DOM : the response are parsed into the DOM, which allows to select elements by xpath for validation purpose
+  * LIGHT : there exsists no DIM, which makes the test case fast to execute.
+* Cookie handling is automatic
+* JavaScript and Static Content can be handled automatically and also be switched off.
+* None of the XLT features are disabled.
+* ...
+
+###Getting Started
+
+To learn more, try one of the following links.
+
+* <a src="https://github.com/matthiasware/testsuite-nocoding/wiki"> Overview </a>: In order to get an overview.
+* <a src="https://github.com/matthiasware/testsuite-nocoding/wiki/Examples"> Example </a>: To see some examples.
+* <a src="https://github.com/matthiasware/testsuite-nocoding/wiki/Quickstart"> Quickstart </a>: To get started super fase.
+
+ 
+
  
 
 
