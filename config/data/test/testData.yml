@@ -1,0 +1,39 @@
+- Name : t_name
+- Url : http://www.xceptance.com
+- Httpcode : 400
+- Method : POST
+- Body : t_body
+- Xhr : false
+- Encode-Parameters : true
+- Encode-Body : true
+- Headers :
+    - header_1 : value
+    - header_2 : value
+    - header_3 : value
+
+- Parameters :
+    - p_1 : v_1
+    - p_2 : v_2   
+
+- Static :
+    - http://www.xceptance.com
+    - http://www.xceptance.com
+    - http://www.xceptance.com
+    
+- Store :
+    - variable_1 : value_1
+    - variable_2 : value_2
+
+- Name : Delete
+- Url : Delete
+- Httpcode : Delete
+- Method : Delete
+- Body : Delete
+- Xhr : Delete
+- Encoded : Delete
+- Headers : Delete
+- Parameters : Delete
+- Static : Delete
+- Encode-Parameters : Delete
+- Encode-Body : Delete
+    

@@ -1,0 +1,16 @@
+com.xceptance.xlt.common.actions
+com.xceptance.xlt.common.tests
+com.xceptance.xlt.common.util
+com.xceptance.xlt.common.util.action.data
+com.xceptance.xlt.common.util.action.execution
+com.xceptance.xlt.common.util.action.validation
+com.xceptance.xlt.common.util.bsh
+test.com.xceptance.xlt.common
+test.com.xceptance.xlt.common.actions
+test.com.xceptance.xlt.common.tests
+test.com.xceptance.xlt.common.util
+test.com.xceptance.xlt.common.util.action
+test.com.xceptance.xlt.common.util.action.data
+test.com.xceptance.xlt.common.util.action.execution
+test.com.xceptance.xlt.common.util.action.validation
+test.com.xceptance.xlt.common.util.bsh
