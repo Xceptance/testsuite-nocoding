@@ -1,0 +1,28 @@
+#################################################
+#
+# Example Sub Selection
+#
+##################################################
+
+- Store :
+    - firstName : ${DATA.getFirstName(false)}
+    - secondName : ${DATA.getLastName(false)}
+    - email : ${DATA.getEmail()}
+    - password : ${RANDOM.String(8)}
+    
+- Action :
+    Name : Open Website
+    Request :
+        Url : ${host}/posters/
+    Response :
+        Validate :
+            - Validate Title:
+                Regex : "<title>Posters\\s-\\sThe\\sUltimate\\sOnline\\sShop</title>"
+        Store :
+            - Store Something :
+                Regex : "<title>([\\s\\S]*)</title>"
+                Group : 1
+            
+                
+    
+        

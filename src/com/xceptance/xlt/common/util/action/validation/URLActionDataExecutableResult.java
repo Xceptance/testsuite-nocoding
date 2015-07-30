@@ -91,6 +91,24 @@ public class URLActionDataExecutableResult
         }
         return resultList;
     }
+    /**
+     * Compiles the pattern and scans the request body for matches.
+     * 
+     * @param regex
+     *            the regex pattern.
+     * @return list of all the matches.
+     */
+    public List<String> getByRegExGroup(final String regex, final int group)
+    {
+        final List<String> resultList = new ArrayList<String>();
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(webResponse.getContentAsString());
+        while (matcher.find())
+        {
+            resultList.add(matcher.group(group));
+        }
+        return resultList;
+    }
 
     /**
      * @param headerName

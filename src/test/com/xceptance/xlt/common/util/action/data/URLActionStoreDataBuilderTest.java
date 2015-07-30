@@ -19,6 +19,10 @@ public class URLActionStoreDataBuilderTest
     String selectionMode;
 
     String selectionContent;
+    
+    String subSelectionContent;
+    
+    String subSelectionMode;
 
     URLActionDataStoreBuilder storeBuilder;
 
@@ -36,7 +40,10 @@ public class URLActionStoreDataBuilderTest
         name = "name";
         selectionMode = "XPath";
         selectionContent = "someXPath";
+        subSelectionContent = "blabla";
+        subSelectionMode = URLActionDataStore.REGEXGROUP;
         storeBuilder = new URLActionDataStoreBuilder();
+        
     }
 
     @Test
@@ -46,11 +53,14 @@ public class URLActionStoreDataBuilderTest
         storeBuilder.setSelectionMode(selectionMode);
         storeBuilder.setSelectionContent(selectionContent);
         storeBuilder.setInterpreter(interpreter);
+        storeBuilder.setSubSelectionContent(subSelectionContent);
+        storeBuilder.setSubSelectionMode(subSelectionMode);
 
         Assert.assertEquals(name, storeBuilder.getName());
         Assert.assertEquals(selectionMode, storeBuilder.getSelectionMode());
         Assert.assertEquals(selectionContent, storeBuilder.getSelectionContent());
-
+        Assert.assertEquals(subSelectionContent, storeBuilder.getSubSelectionContent());
+        Assert.assertEquals(subSelectionMode, storeBuilder.getSubSelectionMode());
     }
 
     @Test
