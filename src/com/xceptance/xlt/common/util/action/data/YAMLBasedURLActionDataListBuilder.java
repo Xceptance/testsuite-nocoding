@@ -1128,9 +1128,28 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillStoreBuilderWithDataFromLinkedHashMap(final LinkedHashMap<Object, Object> rawStoreSubItem)
     {
-        final NameValuePair nvp = createPairfromLinkedHashMap(rawStoreSubItem);
-        storeBuilder.setSelectionMode(nvp.getName());
-        storeBuilder.setSelectionContent(nvp.getValue());
+    	final Set<?> entrySet = rawStoreSubItem.entrySet();
+        final Iterator<?> it = entrySet.iterator();
+        Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
+        final String selectionMode = (String) entry.getKey();
+        final String selectionContent = (String) entry.getValue();
+        String subSelectionMode = null;
+        String subSelectionContent = null;
+
+        if (it.hasNext())
+        {
+            entry = (Map.Entry<?, ?>) it.next();
+            subSelectionMode = entry.getKey().toString();
+            subSelectionContent = entry.getValue().toString();
+        }
+        storeBuilder.setSelectionMode(selectionMode);
+        storeBuilder.setSelectionContent(selectionContent);
+        
+        if(subSelectionMode != null)
+        {
+        	storeBuilder.setSubSelectionMode(subSelectionMode);
+        	storeBuilder.setSubSelectionContent(subSelectionContent);
+        }
     }
 
     private String determineTagName(final LinkedHashMap<String, Object> tag)
