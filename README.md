@@ -56,7 +56,7 @@ Since the source is open and licensed under the Apache License V2.0, feel free t
 To learn more, try one of the following links.
 
 * [Overview](https://github.com/Xceptance/testsuite-nocoding/wiki): In order to get an overview.
-* [Qickstart](https://github.com/Xceptance/testsuite-nocoding/wiki/Quickstart) : To get started super fase.
+* [Quickstart](https://github.com/Xceptance/testsuite-nocoding/wiki/Quickstart) : To get started.
 * [Examples](https://github.com/Xceptance/testsuite-nocoding/wiki/Examples): To see some examples.
 
 
