@@ -62,7 +62,8 @@ public class YAMLBasedURLActionDataListBuilderTest
     @Test
     public void testCorrectConstructor()
     {
-        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData,
+        @SuppressWarnings("unused")
+		final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData,
                                                                                                     this.interpreter,
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
@@ -101,7 +102,8 @@ public class YAMLBasedURLActionDataListBuilderTest
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
-        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+        @SuppressWarnings("unused")
+		final List<URLActionData> actions = listBuilder.buildURLActionDataList();
     }
 
     @Test
@@ -257,7 +259,8 @@ public class YAMLBasedURLActionDataListBuilderTest
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
-        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+        @SuppressWarnings("unused")
+		final List<URLActionData> actions = listBuilder.buildURLActionDataList();
     }
 
 }

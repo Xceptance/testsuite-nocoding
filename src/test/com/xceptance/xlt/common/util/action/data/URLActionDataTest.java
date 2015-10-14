@@ -46,7 +46,7 @@ public class URLActionDataTest
     {
 
         @SuppressWarnings({
-                "unused", "null"
+                "unused"
             })
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
 
@@ -113,7 +113,7 @@ public class URLActionDataTest
     public void wrongSetupName()
     {
         @SuppressWarnings({
-                "unused", "null"
+                "unused"
             })
         final URLActionData action = new URLActionData(null, "http://www.xceptance.com", interpreter);
     }
@@ -123,7 +123,7 @@ public class URLActionDataTest
     public void wrongSetupUrl()
     {
         @SuppressWarnings({
-                "unused", "null"
+                "unused"
             })
         final URLActionData action = new URLActionData("name", null, interpreter);
     }
@@ -131,7 +131,7 @@ public class URLActionDataTest
     public void wrongSetupInterpreter()
     {
         @SuppressWarnings({
-                "unused", "null"
+                "unused"
             })
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", null);
     }
@@ -142,7 +142,8 @@ public class URLActionDataTest
 
         final URLActionData action = new URLActionData("name", "c", interpreter);
         
-        final URL url = action.getUrl();
+        @SuppressWarnings("unused")
+		final URL url = action.getUrl();
     }
     
     

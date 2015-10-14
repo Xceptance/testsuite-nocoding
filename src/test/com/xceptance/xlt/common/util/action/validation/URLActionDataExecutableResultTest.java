@@ -39,7 +39,8 @@ public class URLActionDataExecutableResultTest
     @Test
     public void testConstructor()
     {
-        URLActionDataExecutableResult executableResult;
+        @SuppressWarnings("unused")
+		URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
                                                              xPathGetable);
     }

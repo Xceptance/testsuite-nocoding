@@ -24,7 +24,8 @@ public class URLActionDataValidationResponseHandlerTest
 
     private static final String regexStringText = "href=\"/en/\"";
     
-    private static final String regexStringMatches = "href=\"/en/\"";
+    @SuppressWarnings("unused")
+	private static final String regexStringMatches = "href=\"/en/\"";
 
     private static XltProperties properties;
 

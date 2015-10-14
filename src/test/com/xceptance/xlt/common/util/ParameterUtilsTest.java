@@ -76,7 +76,8 @@ public class ParameterUtilsTest
         ParameterUtils.isStringMessage(1, "one", "zwo");
     }
 
-    @Test
+    @SuppressWarnings("rawtypes")
+	@Test
     public void testIsArrayListArrayList()
     {
         ParameterUtils.isArrayList(new ArrayList(), "list", "a");
@@ -88,7 +89,8 @@ public class ParameterUtilsTest
         ParameterUtils.isArrayList(new Integer(1), "one", "a");
     }
 
-    @Test
+    @SuppressWarnings("rawtypes")
+	@Test
     public void testIsArrayListMessageArrayList()
     {
         ParameterUtils.isArrayListMessage(new ArrayList(), "list", "a");
@@ -108,7 +110,8 @@ public class ParameterUtilsTest
                                        "a");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings("rawtypes")
+	@Test(expected = IllegalArgumentException.class)
     public void testIsLinkedHashMapNoHashMap()
     {
         ParameterUtils.isLinkedHashMap(new ArrayList(), "hm", "a");

@@ -19,7 +19,8 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 public class URLActionDataRequestBuilderTest
 {
-    private MockObjects mockObjects;
+    @SuppressWarnings("unused")
+	private MockObjects mockObjects;
     
     private URLActionDataRequestBuilder builder;
 
@@ -33,13 +34,15 @@ public class URLActionDataRequestBuilderTest
 
     private final String urlStringEmpty = "https://www.xceptance.com/?x=%45s#q=xeceptance+%2B";
 
-    private String urlStringWithEncodedParameters;
+    @SuppressWarnings("unused")
+	private String urlStringWithEncodedParameters;
 
     private String urlStringWithDecodedParameters;
 
     private final String methodPost = "POST";
 
-    private final String methodGet = "GET";
+    @SuppressWarnings("unused")
+	private final String methodGet = "GET";
 
     private final String bodyDecoded = "Body?=%$";
 

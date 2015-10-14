@@ -140,13 +140,15 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
     {
 
         final CSVParser parser = createCSVParserFromFilepath(this.filePath);
-        final Iterator<CSVRecord> csvRecords = createCSVIterator(parser);
+        @SuppressWarnings("unchecked")
+		final Iterator<CSVRecord> csvRecords = createCSVIterator(parser);
 
         // verify header fields to avoid problems with incorrect spelling or spaces
         final Map<String, Integer> headerMap = parser.getHeaderMap();
         checkHeaderSpelling(headerMap);
 
-        boolean incorrectLines = false;
+        @SuppressWarnings("unused")
+		boolean incorrectLines = false;
 
         while (true)
         {
@@ -184,7 +186,8 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         return actions;
     }
 
-    private URLActionData buildURLActionDataFromCSVRecord(final CSVRecord csvRecord)
+    @SuppressWarnings("static-access")
+	private URLActionData buildURLActionDataFromCSVRecord(final CSVRecord csvRecord)
     {
         final String urlString = csvRecord.get(URL);
         if (urlString == null)
@@ -438,7 +441,8 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         return parser;
     }
 
-    private Iterator createCSVIterator(final CSVParser parser)
+    @SuppressWarnings("rawtypes")
+	private Iterator createCSVIterator(final CSVParser parser)
     {
 
         final Iterator<CSVRecord> csvRecords = parser.iterator();

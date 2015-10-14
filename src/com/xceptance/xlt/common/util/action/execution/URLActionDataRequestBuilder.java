@@ -283,14 +283,16 @@ public class URLActionDataRequestBuilder
         return decodedBody;
     }
 
-    private String encodeRequestBody(final String body)
+    @SuppressWarnings("unused")
+	private String encodeRequestBody(final String body)
         throws UnsupportedEncodingException
     {
         final String encodedBody = URLEncoder.encode(body, "UTF-8");
         return encodedBody;
     }
 
-    private List<NameValuePair> encodeRequestParameters(final List<NameValuePair> parameters)
+    @SuppressWarnings("unused")
+	private List<NameValuePair> encodeRequestParameters(final List<NameValuePair> parameters)
         throws UnsupportedEncodingException
     {
         final List<NameValuePair> encodedParameters = new ArrayList<NameValuePair>();

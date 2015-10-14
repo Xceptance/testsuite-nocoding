@@ -82,14 +82,16 @@ public class URLActionDataListFacadeTest
     public void testFileWithNoExtension()
     {
         facade = new URLActionDataListFacade(fileWithNoExtension, interpreter);
-        final List<URLActionData> actions = facade.buildUrlActions();
+        @SuppressWarnings("unused")
+		final List<URLActionData> actions = facade.buildUrlActions();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFileWithEmptyExtension()
     {
         facade = new URLActionDataListFacade(fileWithEmptyExtension, interpreter);
-        final List<URLActionData> actions = facade.buildUrlActions();
+        @SuppressWarnings("unused")
+		final List<URLActionData> actions = facade.buildUrlActions();
     }
 
     @Test(expected = IllegalArgumentException.class)

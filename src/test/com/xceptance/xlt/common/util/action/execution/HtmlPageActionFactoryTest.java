@@ -31,7 +31,8 @@ public class HtmlPageActionFactoryTest
     @Test
     public void testConstructor()
     {
-        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
+        @SuppressWarnings("unused")
+		final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
 
     }
 
@@ -60,7 +61,8 @@ public class HtmlPageActionFactoryTest
     public void testCreateXhrPageActionAsFirstAction()
     {
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
-        final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
+        @SuppressWarnings("unused")
+		final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
                                                                                      request);
     }
 }

@@ -106,21 +106,24 @@ public class XPathWithNonParseableWebResponseTest
     @Test
     public void testConstructorWithJsonResponse()
     {
-        final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
+        @SuppressWarnings("unused")
+		final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
                                                                                                     jsonResponse);
     }
 
     @Test
     public void testConstructorWithXmlResponse()
     {
-        final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
+        @SuppressWarnings("unused")
+		final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
                                                                                                     xmlResponse);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithUUnsupportedResponseType()
     {
-        final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
+        @SuppressWarnings("unused")
+		final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
                                                                                                     unknownTypeResponse);
     }
     
@@ -151,7 +154,8 @@ public class XPathWithNonParseableWebResponseTest
     {
         final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
                                                                                                     maliciousJsonContentResponse);
-        final List<String> list = xpathResponse.getByXPath("//latitude");
+        @SuppressWarnings("unused")
+		final List<String> list = xpathResponse.getByXPath("//latitude");
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -159,7 +163,8 @@ public class XPathWithNonParseableWebResponseTest
     {
         final XPathWithNonParseableWebResponse xpathResponse = new XPathWithNonParseableWebResponse(
                                                                                                     maliciousXmlContentResponse);
-        final List<String> list = xpathResponse.getByXPath("//title");
+        @SuppressWarnings("unused")
+		final List<String> list = xpathResponse.getByXPath("//title");
     }
 
 }

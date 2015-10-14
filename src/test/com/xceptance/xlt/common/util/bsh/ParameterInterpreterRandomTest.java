@@ -10,7 +10,8 @@ public class ParameterInterpreterRandomTest
     @Test
     public void testConstructor()
     {
-        final ParameterInterpreterRandom pir = new ParameterInterpreterRandom();
+        @SuppressWarnings("unused")
+		final ParameterInterpreterRandom pir = new ParameterInterpreterRandom();
     }
     @Test
     public void testEmail(){

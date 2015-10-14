@@ -31,7 +31,8 @@ public class LightWeightPageActionFactoryTest
     @Test
     public void testConstructor()
     {
-        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
+        @SuppressWarnings("unused")
+		final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
 
     }
 
@@ -60,7 +61,8 @@ public class LightWeightPageActionFactoryTest
     public void testCreateXhrPageActionAsFirstAction()
     {
         final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
-        final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
+        @SuppressWarnings("unused")
+		final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
                                                                                      request);
     }
 }

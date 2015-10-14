@@ -36,7 +36,8 @@ public class DownloaderTest
     @Test
     public void testConstructors()
     {
-        Downloader downloader;
+        @SuppressWarnings("unused")
+		Downloader downloader;
         downloader = new Downloader(client);
         downloader = new Downloader(client, threadCount, userAgentUID);
     }

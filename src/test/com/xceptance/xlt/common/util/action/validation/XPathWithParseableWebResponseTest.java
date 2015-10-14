@@ -27,7 +27,8 @@ public class XPathWithParseableWebResponseTest
     public void testConstructor()
     {
         final WebResponse response = mockObjects.getResponse();
-        final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
+        @SuppressWarnings("unused")
+		final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
     }
 
     @Test

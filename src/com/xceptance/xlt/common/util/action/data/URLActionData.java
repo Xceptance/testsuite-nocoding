@@ -109,7 +109,8 @@ public class URLActionData
     /**
      * Not implemented yet
      */
-    private String encodingType;
+    @SuppressWarnings("unused")
+	private String encodingType;
 
     /**
      * Data to validate the Http response.

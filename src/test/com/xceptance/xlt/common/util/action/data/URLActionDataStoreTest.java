@@ -25,8 +25,6 @@ public class URLActionDataStoreTest
 
 	private static List<String> subSelectionModes;
 
-	private static List<URLActionDataStore> stores;
-
 	@BeforeClass
 	public static void setup()
 	{
@@ -47,7 +45,7 @@ public class URLActionDataStoreTest
 		for (final String selectionMode : selectionModes)
 		{
 			@SuppressWarnings(
-			{ "null", "unused" })
+			{"unused" })
 			final URLActionDataStore store = new URLActionDataStore("name",
 					selectionMode,
 					"content",
@@ -63,7 +61,7 @@ public class URLActionDataStoreTest
 			for (final String subSelectionMode : subSelectionModes)
 			{
 				@SuppressWarnings(
-				{ "null", "unused" })
+				{"unused" })
 				final URLActionDataStore store = new URLActionDataStore("name",
 						selectionMode,
 						"content",
@@ -78,7 +76,7 @@ public class URLActionDataStoreTest
 	public void wrongSetupName()
 	{
 		@SuppressWarnings(
-		{ "null", "unused" })
+		{"unused" })
 		final URLActionDataStore store = new URLActionDataStore(null,
 				URLActionDataStore.REGEXP,
 				"content",
@@ -88,8 +86,7 @@ public class URLActionDataStoreTest
 	@Test(expected = IllegalArgumentException.class)
 	public void wrongSetupSelectionMode()
 	{
-		@SuppressWarnings(
-		{ "null", "unused" })
+		@SuppressWarnings("unused")
 		final URLActionDataStore store = new URLActionDataStore("name",
 				null,
 				"content",
@@ -100,7 +97,7 @@ public class URLActionDataStoreTest
 	public void wrongSetupInterpreter()
 	{
 		@SuppressWarnings(
-		{ "null", "unused" })
+		{"unused" })
 		final URLActionDataStore store = new URLActionDataStore("name",
 				URLActionDataStore.REGEXP,
 				"content",
@@ -110,32 +107,36 @@ public class URLActionDataStoreTest
 	@Test(expected = IllegalArgumentException.class)
 	public void wrongSelectionMode()
 	{
-		@SuppressWarnings(
-		{ "null", "unused" })
 		final URLActionDataStore store = new URLActionDataStore("name",
 				"bla",
 				"content",
 				interpreter);
+		@SuppressWarnings("unused")
 		final String name = store.getName();
+		@SuppressWarnings("unused")
 		final String mode = store.getSelectionMode();
+		@SuppressWarnings("unused")
 		final String content = store.getSelectionContent();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void wrongSubSelectionMode()
 	{
-		@SuppressWarnings(
-		{ "null", "unused" })
 		final URLActionDataStore store = new URLActionDataStore("name",
 				URLActionDataStore.REGEXP,
 				"content",
 				"wrong Sub-Selection-Mode",
 				"ssss",
 				interpreter);
+		@SuppressWarnings("unused")
 		final String name = store.getName();
+		@SuppressWarnings("unused")
 		final String mode = store.getSelectionMode();
+		@SuppressWarnings("unused")
 		final String content = store.getSelectionContent();
+		@SuppressWarnings("unused")
 		final String subSelectionMode = store.getSubSelectionMode();
+		@SuppressWarnings("unused")
 		final String subSelectionContent = store.getSubSelectionContent();
 	}
 
@@ -148,8 +149,7 @@ public class URLActionDataStoreTest
 		final String subSelectionMode = URLActionDataStore.REGEXGROUP;
 		final String subSelectionContent = "blablablabla";
 
-		@SuppressWarnings(
-		{ "null", "unused" })
+
 		final URLActionDataStore store = new URLActionDataStore(name,
 				selectionMode,
 				selectionContent,

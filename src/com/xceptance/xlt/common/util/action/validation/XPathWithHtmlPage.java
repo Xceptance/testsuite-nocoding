@@ -73,7 +73,8 @@ public class XPathWithHtmlPage implements XPathGetable
         }
     }
 
-    private List<DomNode> getHtmlElementListByXPath(final String xPath)
+    @SuppressWarnings("unchecked")
+	private List<DomNode> getHtmlElementListByXPath(final String xPath)
     {
         XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
         

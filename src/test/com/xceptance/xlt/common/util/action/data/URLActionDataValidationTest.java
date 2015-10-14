@@ -45,7 +45,7 @@ public class URLActionDataValidationTest
             for (final String validationMode : validationModes)
             {
                 @SuppressWarnings({
-                        "null", "unused"
+                        "unused"
                     })
                 final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                                selectionMode,
@@ -61,7 +61,7 @@ public class URLActionDataValidationTest
     public void illegalSetupName()
     {
         @SuppressWarnings({
-                "unused", "null"
+                "unused"
             })
         final URLActionDataValidation validation = new URLActionDataValidation(null, null, null, null,
                                                                        null, null);
@@ -71,7 +71,7 @@ public class URLActionDataValidationTest
     public void illegalSetupSelectionMode()
     {
         @SuppressWarnings({
-                "null", "unused"
+                "unused"
             })
         final URLActionDataValidation validation = new URLActionDataValidation("name", null, "something",
                                                                        URLActionDataValidation.EXISTS,
@@ -82,7 +82,7 @@ public class URLActionDataValidationTest
     public void illegalSetupValidationMode()
     {
         @SuppressWarnings({
-                "null", "unused"
+                "unused"
             })
         final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                        URLActionDataValidation.XPATH,
@@ -94,7 +94,7 @@ public class URLActionDataValidationTest
     public void illegalInterpreter()
     {
         @SuppressWarnings({
-                "null", "unused"
+                "unused"
             })
         final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                        URLActionDataValidation.XPATH,
@@ -106,11 +106,11 @@ public class URLActionDataValidationTest
     @Test(expected = IllegalArgumentException.class)
     public void illegalSelectionMode()
     {
-        @SuppressWarnings("null")
         final URLActionDataValidation validation = new URLActionDataValidation("name", "x", "something",
                                                                        URLActionDataValidation.MATCHES,
                                                                        null, interpreter);
-        final String selectionMode = validation.getSelectionMode();
+        @SuppressWarnings("unused")
+		final String selectionMode = validation.getSelectionMode();
 
 
     }
@@ -118,11 +118,11 @@ public class URLActionDataValidationTest
     @Test(expected = IllegalArgumentException.class)
     public void illegalValidationMode()
     {
-        @SuppressWarnings("null")
         final URLActionDataValidation validation = new URLActionDataValidation("name",
                                                                        URLActionDataValidation.XPATH,
                                                                        "something", "x", null,
                                                                        interpreter);
-        final String validationMode = validation.getValidationMode();
+        @SuppressWarnings("unused")
+		final String validationMode = validation.getValidationMode();
     }
 }

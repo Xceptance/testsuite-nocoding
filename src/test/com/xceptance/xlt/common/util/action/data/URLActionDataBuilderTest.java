@@ -259,7 +259,8 @@ public class URLActionDataBuilderTest
         builder.setDefaultMethod(method);
         builder.setInterpreter(interpreter);
         
-        final URLActionData action = builder.build();
+        @SuppressWarnings("unused")
+		final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -268,7 +269,8 @@ public class URLActionDataBuilderTest
         final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setUrl(url);
         builder.setInterpreter(interpreter);
-        final URLActionData action = builder.build();
+        @SuppressWarnings("unused")
+		final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -277,7 +279,8 @@ public class URLActionDataBuilderTest
         final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setName(name);
         builder.setInterpreter(interpreter);
-        final URLActionData action = builder.build();
+        @SuppressWarnings("unused")
+		final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -286,7 +289,8 @@ public class URLActionDataBuilderTest
         final URLActionDataBuilder builder = new URLActionDataBuilder();
         builder.setUrl(url);
         builder.setName(name);
-        final URLActionData action = builder.build();
+        @SuppressWarnings("unused")
+		final URLActionData action = builder.build();
     }
 
 }
