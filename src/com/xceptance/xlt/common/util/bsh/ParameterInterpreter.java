@@ -90,7 +90,6 @@ public class ParameterInterpreter extends Interpreter
         {
             XltLogger.runTimeLogger.debug(addVariableMessage(name, value));
             this.set(name, value);
-            System.err.println(name + " : " + this.eval(name));
         }
         else
         {
