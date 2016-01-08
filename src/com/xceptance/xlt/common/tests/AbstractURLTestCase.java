@@ -3,6 +3,7 @@ package com.xceptance.xlt.common.tests;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -157,13 +158,13 @@ public class AbstractURLTestCase extends AbstractTestCase
     protected void loadFileName()
     {
         final String filePath = propertiesAdmin.getPropertyByKey(NoCodingPropAdmin.FILENAME);
-        if (filePath != null)
+        if (StringUtils.isNotBlank(filePath))
         {
             this.filePath = filePath;
         }
         else
         {
-            throw new IllegalArgumentException("Missing property: 'filename'!");
+            this.filePath = getClass().getSimpleName();
         }
     }
 

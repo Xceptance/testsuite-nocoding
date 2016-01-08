@@ -1,5 +1,6 @@
 package com.xceptance.xlt.common.util.action.data;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -68,15 +69,44 @@ public class URLActionDataListFacade
     private URLActionDataListBuilder createBuilder()
     {
         final String fileNameExtension = getFileNameExtension(this.filePath);
-        final URLActionDataListBuilder resultBuilder;
 
         if (fileNameExtension.equals("yml") || fileNameExtension.equals("yaml"))
         {
-            resultBuilder = createYAMLBuilder();
+            return createYAMLBuilder();
         }
         else if (fileNameExtension.equals("csv"))
         {
-            resultBuilder = createCSVBuilder();
+            return createCSVBuilder();
+        }
+        else if (fileNameExtension.isEmpty())
+        {
+            // no extension found, try the usual suspects
+
+            // check for YAML files first
+            final String[] yamlPaths =
+                {
+                    filePath + ".yml", filePath + ".yaml"
+                };
+
+            for (final String yamlPath : yamlPaths)
+            {
+                if (new File(yamlPath).isFile())
+                {
+                    filePath = yamlPath;
+                    return createYAMLBuilder();
+                }
+            }
+
+            // check for CSV file second
+            final String csvPath = filePath + ".csv";
+            if (new File(csvPath).isFile())
+            {
+                filePath = csvPath;
+                return createCSVBuilder();
+            }
+
+            // no file with a supported extension found
+            throw new IllegalArgumentException("Failed to find a script file for file path: " + filePath);
         }
         else
         {
@@ -88,7 +118,6 @@ public class URLActionDataListFacade
                                                + "Supported types: '.yaml' | '.yml' or '.csv'"
                                                + "\n");
         }
-        return resultBuilder;
     }
 
     private String getFileNameExtension(final String filePath)
