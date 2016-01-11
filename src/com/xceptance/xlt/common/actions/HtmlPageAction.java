@@ -114,6 +114,9 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     protected void execute() throws Exception
     {
         loadPage(this.webRequest);
+
+        // now download explicitly added static content
+        downloader.loadRequests();
     }
 
     @Override
