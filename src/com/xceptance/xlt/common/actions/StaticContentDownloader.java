@@ -184,8 +184,7 @@ public class StaticContentDownloader
             if (count != 0)
             {
                 // no, log an event
-                Session.getCurrent().getDataManager()
-                       .logEvent("Timed out when loading static content", "Outstanding requests: " + count);
+                Session.getCurrent().getDataManager().logEvent("Timed out when loading static content", "Outstanding requests: " + count);
             }
         }
         catch (final InterruptedException ex)

@@ -14,14 +14,14 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 /**
  * Helper class to build an {@link URLActionData}.
  * <ul>
- * <li> Construct a {@link URLActionData} object step by step. For this fill
- * the URLActionBuilder with values via setters until you want to create a URLActionData. For this call {@link #build()}
- * <li> Offers a way to default common used values. If default values are set, the URLActionDataBuilder refers to them if
+ * <li>Construct a {@link URLActionData} object step by step. For this fill the URLActionBuilder with values via setters
+ * until you want to create a URLActionData. For this call {@link #build()}
+ * <li>Offers a way to default common used values. If default values are set, the URLActionDataBuilder refers to them if
  * no individual data for the construction of a URLActionData object is available. <br>
  * Default attributes are prefixed with "d_".
  * <ul>
+ * 
  * @author matthias mitterreiter
- *
  */
 public class URLActionDataBuilder
 {
@@ -204,26 +204,26 @@ public class URLActionDataBuilder
     }
 
     /**
-     * <p> 
+     * <p>
      * Builds an {@link URLActionData} object from the values of the local attributes, set via setters(). <br>
      * If an attribute is not set, it checks the local default attributes. <br>
      * If neither an attribute nor a default attribute is given, <br>
-     * it tries to construct the URLActionData object without this attribute.
-     * If this attribute is important but not here (e.g url), it throws.
+     * it tries to construct the URLActionData object without this attribute. If this attribute is important but not
+     * here (e.g url), it throws.
      * </p>
      * attributes are reset to 'null' after execution, default attributes not.
-     *  
+     * 
      * @return {@link URLActionData}
      * @throws IllegalArgumentException
      */
     public URLActionData build()
     {
         URLActionData resultAction = null;
-        
+
         // for debugging, use if u want to print the stored information
         // of URLActionDataBuilder
-        //this.outline();
-        
+        // this.outline();
+
         try
         {
             resultAction = new URLActionData(getName(), getUrl(), getInterpreter());
@@ -241,8 +241,7 @@ public class URLActionDataBuilder
         }
         catch (final IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("Failed to create URLAction : "
-                                               + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to create URLAction : " + e.getMessage(), e);
         }
 
         reset();
@@ -255,7 +254,7 @@ public class URLActionDataBuilder
      */
     public void reset()
     {
-        
+
         this.interpreter = null;
         this.name = null;
         this.type = null;
@@ -270,7 +269,7 @@ public class URLActionDataBuilder
         this.parameters = Collections.emptyList();
         this.cookies = Collections.emptyList();
         this.headers = Collections.emptyList();
-        
+
         XltLogger.runTimeLogger.debug("Resetting stored values!");
     }
 
@@ -514,8 +513,7 @@ public class URLActionDataBuilder
     public void setHttpResponceCode(final String httpResponceCode)
     {
         this.httpResponceCode = httpResponceCode;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("httpResponseCode",
-                                                        httpResponceCode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("httpResponseCode", httpResponceCode));
     }
 
     public void setBody(final String body)
@@ -599,8 +597,7 @@ public class URLActionDataBuilder
     public void setDefaultHttpResponceCode(final String d_httpResponceCode)
     {
         this.d_httpResponceCode = d_httpResponceCode;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_httpResponceCode",
-                                                        d_httpResponceCode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("d_httpResponceCode", d_httpResponceCode));
     }
 
     public void setDefaultBody(final String d_body)
@@ -649,9 +646,7 @@ public class URLActionDataBuilder
         if (this.cookies != null)
         {
             this.cookies.add(cookie);
-            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Cookies",
-                                                                  cookie.getName(),
-                                                                  cookie.getValue()));
+            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Cookies", cookie.getName(), cookie.getValue()));
         }
     }
 
@@ -677,9 +672,7 @@ public class URLActionDataBuilder
         if (header != null)
         {
             this.headers.add(header);
-            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Headers",
-                                                                  header.getName(),
-                                                                  header.getValue()));
+            XltLogger.runTimeLogger.debug(infoAddedNameValueToTag("Headers", header.getName(), header.getValue()));
         }
     }
 
@@ -698,8 +691,7 @@ public class URLActionDataBuilder
 
     private String infoSetTagToValue(final String tag, final String value)
     {
-        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ", tag,
-                                                    value);
+        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ", tag, value);
         return message;
     }
 
@@ -709,12 +701,9 @@ public class URLActionDataBuilder
         return message;
     }
 
-    private String infoAddedNameValueToTag(final String tag,
-                                           final String name,
-                                           final String value)
+    private String infoAddedNameValueToTag(final String tag, final String name, final String value)
     {
-        final String message = MessageFormat.format("Added \"{0}\" = \"{1}\" to tag \"{2}\" ",
-                                                    name, value, tag);
+        final String message = MessageFormat.format("Added \"{0}\" = \"{1}\" to tag \"{2}\" ", name, value, tag);
         return message;
     }
 

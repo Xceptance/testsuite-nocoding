@@ -33,7 +33,9 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class ParameterInterpreterTest
 {
     private ParameterInterpreter interpreter;
+
     private XltProperties properties;
+
     private GeneralDataProvider dataProvider;
 
     @Before
@@ -71,8 +73,7 @@ public class ParameterInterpreterTest
     @Test
     public void twoOccurences()
     {
-        Assert.assertEquals("No 1 here and 2 here.",
-                            interpreter.processDynamicData("No ${Math.abs(-1)} here and ${Math.abs(-2)} here."));
+        Assert.assertEquals("No 1 here and 2 here.", interpreter.processDynamicData("No ${Math.abs(-1)} here and ${Math.abs(-2)} here."));
     }
 
     @Test
@@ -95,8 +96,10 @@ public class ParameterInterpreterTest
         Assert.assertEquals("No 1 here and 3 here.",
                             interpreter.processDynamicData("No ${m = Math.abs(-1)} here and ${m + Math.abs(-2)} here."));
     }
+
     @Test
-    public void storeAndEvaluete(){
+    public void storeAndEvaluete()
+    {
         try
         {
             interpreter.set("a", "A");
@@ -110,10 +113,12 @@ public class ParameterInterpreterTest
         Assert.assertEquals("A", interpreter.processDynamicData("${a}"));
         Assert.assertEquals("B", interpreter.processDynamicData("${b}"));
         Assert.assertEquals("AB", interpreter.processDynamicData("${a}${b}"));
-        
+
     }
+
     @Test
-    public void storeNVPAndEvaluete(){
+    public void storeNVPAndEvaluete()
+    {
         try
         {
             final NameValuePair nvpC = new NameValuePair("c", "C");
@@ -131,6 +136,7 @@ public class ParameterInterpreterTest
         Assert.assertEquals("CD", interpreter.processDynamicData("${c}${d}"));
         Assert.assertEquals("C", interpreter.processDynamicData("${c}"));
     }
+
     // ----------------------------------------------------------------------------------------
     /* Error handling */
     // ----------------------------------------------------------------------------------------

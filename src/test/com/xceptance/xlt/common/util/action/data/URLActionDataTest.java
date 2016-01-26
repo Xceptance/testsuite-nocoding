@@ -15,16 +15,16 @@ import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
-public class URLActionDataTest 
+public class URLActionDataTest
 {
     private List<String> types;
 
     private List<String> methods;
 
     private ParameterInterpreter interpreter;
-    
+
     private XltProperties properties;
-    
+
     private GeneralDataProvider dataProvider;
 
     @Before
@@ -33,7 +33,7 @@ public class URLActionDataTest
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
         interpreter = new ParameterInterpreter(properties, dataProvider);
-        
+
         methods = new ArrayList<String>();
         methods.addAll(URLActionData.PERMITTEDMETHODS);
         types = new ArrayList<String>();
@@ -45,54 +45,59 @@ public class URLActionDataTest
     public void constructorTest()
     {
 
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
 
     }
+
     @Test
-    public void rightSetup(){
-        for(final String type : types){
-            for(final String method : methods){
+    public void rightSetup()
+    {
+        for (final String type : types)
+        {
+            for (final String method : methods)
+            {
                 final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
-                
+
                 action.setBody("Body");
                 Assert.assertEquals("Body", action.getBody());
-                
+
                 action.setCookies(null);
                 Assert.assertEquals(Collections.emptyList(), action.getCookies());
-                
+
                 action.setEncodeBody(false);
                 Assert.assertEquals(false, action.encodeBody());
-                
+
                 action.setEncodeParameters(false);
                 Assert.assertEquals(false, action.encodeParameters());
-                
+
                 action.setHeaders(null);
                 Assert.assertEquals(Collections.emptyList(), action.getHeaders());
-                
+
                 action.setHttpResponceCode(400);
                 Assert.assertEquals(400, action.getResponseCodeValidator().getHttpResponseCode());
-                
+
                 action.setMethod(method);
                 Assert.assertEquals(method, action.getMethod().toString());
-                
+
                 action.setType(type);
                 Assert.assertEquals(type, action.getType());
-                
+
                 action.setName("name");
                 Assert.assertEquals("name", action.getName());
-                
+
                 action.setParameters(null);
                 Assert.assertEquals(Collections.emptyList(), action.getParameters());
-                
+
                 action.setStore(null);
                 Assert.assertEquals(Collections.emptyList(), action.getStore());
-                
+
                 action.setCookies(null);
                 Assert.assertEquals(Collections.emptyList(), action.getCookies());
-                
+
                 action.setUrl("http://www.xceptance.com");
                 try
                 {
@@ -102,7 +107,7 @@ public class URLActionDataTest
                 {
                     e.printStackTrace();
                 }
-                
+
                 action.setValidations(null);
                 Assert.assertEquals(Collections.emptyList(), action.getValidations());
             }
@@ -112,54 +117,57 @@ public class URLActionDataTest
     @Test(expected = IllegalArgumentException.class)
     public void wrongSetupName()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
         final URLActionData action = new URLActionData(null, "http://www.xceptance.com", interpreter);
     }
-    
 
     @Test(expected = IllegalArgumentException.class)
     public void wrongSetupUrl()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
         final URLActionData action = new URLActionData("name", null, interpreter);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void wrongSetupInterpreter()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void wrongUrl() throws MalformedURLException
     {
 
         final URLActionData action = new URLActionData("name", "c", interpreter);
-        
+
         @SuppressWarnings("unused")
-		final URL url = action.getUrl();
+        final URL url = action.getUrl();
     }
-    
-    
+
     @Test
-    public void defaultValues(){
+    public void defaultValues()
+    {
         final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
         Assert.assertEquals(200, action.getResponseCodeValidator().getHttpResponseCode());
-        
+
         action.setMethod("x");
         Assert.assertEquals(URLActionData.METHOD_GET, action.getMethod().toString());
-        
+
         action.setEncodeParameters("x");
         Assert.assertEquals(false, action.encodeParameters());
-        
+
         action.setType("x");
         Assert.assertEquals(URLActionData.TYPE_ACTION, action.getType());
     }
-    
+
 }

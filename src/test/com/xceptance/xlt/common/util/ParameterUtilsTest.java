@@ -77,7 +77,7 @@ public class ParameterUtilsTest
     }
 
     @SuppressWarnings("rawtypes")
-	@Test
+    @Test
     public void testIsArrayListArrayList()
     {
         ParameterUtils.isArrayList(new ArrayList(), "list", "a");
@@ -90,7 +90,7 @@ public class ParameterUtilsTest
     }
 
     @SuppressWarnings("rawtypes")
-	@Test
+    @Test
     public void testIsArrayListMessageArrayList()
     {
         ParameterUtils.isArrayListMessage(new ArrayList(), "list", "a");
@@ -105,13 +105,11 @@ public class ParameterUtilsTest
     @Test
     public void testIsLinkedHashMapHashMap()
     {
-        ParameterUtils.isLinkedHashMap(new LinkedHashMap<String, String>(),
-                                       "hm",
-                                       "a");
+        ParameterUtils.isLinkedHashMap(new LinkedHashMap<String, String>(), "hm", "a");
     }
 
     @SuppressWarnings("rawtypes")
-	@Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIsLinkedHashMapNoHashMap()
     {
         ParameterUtils.isLinkedHashMap(new ArrayList(), "hm", "a");
@@ -120,9 +118,7 @@ public class ParameterUtilsTest
     @Test
     public void testIsLinkedHashMapMessageHashMap()
     {
-        ParameterUtils.isLinkedHashMapMessage(new LinkedHashMap<String, String>(),
-                                              "hm",
-                                              "a");
+        ParameterUtils.isLinkedHashMapMessage(new LinkedHashMap<String, String>(), "hm", "a");
     }
 
     @Test(expected = IllegalArgumentException.class)

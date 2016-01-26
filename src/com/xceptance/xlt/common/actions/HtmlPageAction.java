@@ -4,7 +4,6 @@ import java.net.URL;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
@@ -21,8 +20,7 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
  * @author matthias mitterreiter
  */
 
-public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
-    implements URLActionDataExecutionable
+public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements URLActionDataExecutionable
 {
     /**
      * For downloading static content. To add a request, use {@link #addStaticRequest(URL)}
@@ -42,7 +40,7 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     /**
      * Automatically produces the {@link URLActionDataExecutableResult}
      */
-    protected URLActionDataExecutableResultFactory resultFactory;
+    protected final URLActionDataExecutableResultFactory resultFactory;
 
     /**
      * @param previousAction
@@ -56,24 +54,20 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
      * @param resultFactory
      *            : produces the {@link #result}
      */
-    public HtmlPageAction(final HtmlPageAction previousAction,
-                          final String name,
-                          final WebRequest webRequest,
-                          final Downloader downloader,
+    public HtmlPageAction(final HtmlPageAction previousAction, final String name, final WebRequest webRequest, final Downloader downloader,
                           final URLActionDataExecutableResultFactory resultFactory)
     {
         super(previousAction, name);
-        setDownloader(downloader);
-        setWebRequest(webRequest);
-        setResultFactory(resultFactory);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
-    }
 
-    private void setResultFactory(final URLActionDataExecutableResultFactory resultFactory)
-    {
-        ParameterUtils.isNotNull(resultFactory,
-                                 "URLActionDataExecutableResultFactory");
+        ParameterUtils.isNotNull(resultFactory, "URLActionDataExecutableResultFactory");
         this.resultFactory = resultFactory;
+
+        if (downloader != null)
+        {
+            this.downloader = downloader;
+        }
+        setWebRequest(webRequest);
+
     }
 
     /**
@@ -87,14 +81,9 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
      * @param resultFactory
      *            : produces the {@link #result}
      */
-    public HtmlPageAction(final String name,
-                          final WebRequest webRequest,
-                          final URLActionDataExecutableResultFactory resultFactory)
+    public HtmlPageAction(final String name, final WebRequest webRequest, final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(null, name);
-        setWebRequest(webRequest);
-        setResultFactory(resultFactory);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
+        this(null, name, webRequest, null, resultFactory);
     }
 
     public void setDownloader(final Downloader downloader)
@@ -142,14 +131,11 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction
     {
         try
         {
-            XltLogger.runTimeLogger.debug("Executing Action");
             this.run();
         }
         catch (final Throwable e)
         {
-            throw new IllegalArgumentException("Failed to execute Action: "
-                                               + getTimerName() + " - "
-                                               + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
         }
     }
 

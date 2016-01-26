@@ -14,10 +14,8 @@ import com.xceptance.xlt.engine.SessionImpl;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * This class is simply a variant of the {@link AbstractLightWeightPageAction}.
- * They distinguish in the method {@link #loadPage(WebRequest)}. In this class it is possible to
- * pass a {@link WebRequest}, which is cozy.
- *
+ * This class is simply a variant of the {@link AbstractLightWeightPageAction}. They distinguish in the method
+ * {@link #loadPage(WebRequest)}. In this class it is possible to pass a {@link WebRequest}, which is cozy.
  */
 public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebAction
 {
@@ -26,16 +24,16 @@ public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebA
 
     private URL url;
 
-    protected ModifiedAbstractLightWeightPageAction(final ModifiedAbstractLightWeightPageAction previousAction,
-                                                    final String timerName)
+    protected ModifiedAbstractLightWeightPageAction(final ModifiedAbstractLightWeightPageAction previousAction, final String timerName)
     {
         super(previousAction, timerName);
     }
+
     protected ModifiedAbstractLightWeightPageAction(final String timerName)
     {
         this(null, timerName);
     }
-   
+
     @Override
     public ModifiedAbstractLightWeightPageAction getPreviousAction()
     {
@@ -46,23 +44,24 @@ public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebA
     {
         return page;
     }
+
     public String getContent()
     {
         final LightWeightPage page = getLightWeightPage();
         return page != null ? page.getContent() : null;
     }
-    
+
     public int getHttpResponseCode()
     {
         final LightWeightPage page = getLightWeightPage();
         return page != null ? page.getHttpResponseCode() : 0;
     }
-    
 
     public URL getURL()
     {
         return url;
     }
+
     @Override
     public void run() throws Throwable
     {
@@ -79,21 +78,20 @@ public abstract class ModifiedAbstractLightWeightPageAction extends AbstractWebA
             dumpPage(getLightWeightPage());
         }
     }
-    
+
     public void setLightWeightPage(final LightWeightPage page)
     {
         ParameterCheckUtils.isNotNull(page, "page");
 
         this.page = page;
     }
-    
-    protected void loadPage(final WebRequest webRequest)
-        throws FailingHttpStatusCodeException, IOException
+
+    protected void loadPage(final WebRequest webRequest) throws FailingHttpStatusCodeException, IOException
     {
         this.url = webRequest.getUrl();
         setLightWeightPage(((XltWebClient) getWebClient()).getLightWeightPage(webRequest));
     }
-    
+
     private void dumpPage(final LightWeightPage page)
     {
         if (page != null)

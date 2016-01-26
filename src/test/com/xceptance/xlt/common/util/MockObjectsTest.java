@@ -36,9 +36,9 @@ public class MockObjectsTest
         mockObjects = new MockObjects();
         mockObjects.load();
         System.err.println("-------------LIGHTWEIGHT-----------------");
-        System.err.println(mockObjects.getLightWeightPage().getContent().replaceAll("\\s+",""));
+        System.err.println(mockObjects.getLightWeightPage().getContent().replaceAll("\\s+", ""));
         System.err.println("-------------HTMLPAGE-----------------");
-        System.err.println(mockObjects.getHtmlPage().getWebResponse().getContentAsString().replaceAll("\\s+",""));
+        System.err.println(mockObjects.getHtmlPage().getWebResponse().getContentAsString().replaceAll("\\s+", ""));
     }
 
 }

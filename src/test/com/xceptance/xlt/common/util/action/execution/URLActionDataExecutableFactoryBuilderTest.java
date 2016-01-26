@@ -22,36 +22,39 @@ public class URLActionDataExecutableFactoryBuilderTest
     }
 
     @SuppressWarnings("static-access")
-	@Test
+    @Test
     public void testCorrectConstructorCreation()
     {
         @SuppressWarnings("unused")
-		URLActionDataExecutionbleFactoryBuilder factoryBuilder;
-        factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin,
-                                                                     URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
+        URLActionDataExecutionbleFactoryBuilder factoryBuilder;
+        factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin, URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterInterpreter()
     {
         @SuppressWarnings("unused")
-		final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(null,
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(
+                                                                                                            null,
                                                                                                             URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWrongConstructorParameterMode()
     {
-        @SuppressWarnings({ "unused", "static-access" })
-		final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin,
-                                                                                                            "someMode");
+        @SuppressWarnings(
+            {
+                "unused", "static-access"
+            })
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin, "someMode");
     }
 
     @Test
     public void testCorrectDomBuildingResult()
     {
         @SuppressWarnings("static-access")
-		final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin,
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(
+                                                                                                            this.propAdmin,
                                                                                                             URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
         final URLActionDataExecutionableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof HtmlPageActionFactory);
@@ -61,7 +64,8 @@ public class URLActionDataExecutableFactoryBuilderTest
     public void testCorrectLightBuildingResult()
     {
         @SuppressWarnings("static-access")
-		final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin,
+        final URLActionDataExecutionbleFactoryBuilder factory = new URLActionDataExecutionbleFactoryBuilder(
+                                                                                                            this.propAdmin,
                                                                                                             URLActionDataExecutionbleFactoryBuilder.MODE_LIGHT);
         final URLActionDataExecutionableFactory actionFactory = factory.buildFactory();
         Assert.assertTrue(actionFactory instanceof LightWeightPageActionFactory);

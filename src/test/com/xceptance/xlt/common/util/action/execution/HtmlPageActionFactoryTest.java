@@ -32,7 +32,7 @@ public class HtmlPageActionFactoryTest
     public void testConstructor()
     {
         @SuppressWarnings("unused")
-		final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
+        final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
 
     }
 
@@ -40,8 +40,7 @@ public class HtmlPageActionFactoryTest
     public void testCreatePageAction()
     {
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
-        final URLActionDataExecutionable executionable = factory.createPageAction("Action",
-                                                                                  request);
+        final URLActionDataExecutionable executionable = factory.createPageAction("Action", request);
         executionable.executeAction();
 
     }
@@ -50,8 +49,7 @@ public class HtmlPageActionFactoryTest
     public void testCreateXhrPageAction()
     {
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
-        URLActionDataExecutionable executionable = factory.createPageAction("Action",
-                                                                            request);
+        URLActionDataExecutionable executionable = factory.createPageAction("Action", request);
         executionable.executeAction();
         executionable = factory.createXhrPageAction("Xhr", request);
         executionable.executeAction();
@@ -62,7 +60,6 @@ public class HtmlPageActionFactoryTest
     {
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
         @SuppressWarnings("unused")
-		final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
-                                                                                     request);
+        final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr", request);
     }
 }

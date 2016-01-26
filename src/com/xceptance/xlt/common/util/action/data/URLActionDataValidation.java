@@ -11,8 +11,7 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 
 /**
  * <p>
- * Data container which holds all the necessary information to grab 
- * and validate information out of a http request.
+ * Data container which holds all the necessary information to grab and validate information out of a http request.
  * </p>
  */
 public class URLActionDataValidation
@@ -29,7 +28,7 @@ public class URLActionDataValidation
     private String selectionMode;
 
     /**
-     * the individual selection specification. 
+     * the individual selection specification.
      */
     private String selectionContent;
 
@@ -45,7 +44,7 @@ public class URLActionDataValidation
     private String validationContent;
 
     /**
-     * The interpreter for dynamic parameter interpretation. 
+     * The interpreter for dynamic parameter interpretation.
      */
     private ParameterInterpreter interpreter;
 
@@ -103,6 +102,7 @@ public class URLActionDataValidation
     /**
      * Takes the minimal set of parameters that are necessary to select and v information <br>
      * from a http response.
+     * 
      * @param name
      * @param selectionMode
      * @param selectionContent
@@ -110,12 +110,8 @@ public class URLActionDataValidation
      * @param validationContent
      * @param interpreter
      */
-    public URLActionDataValidation(final String name,
-                               final String selectionMode,
-                               final String selectionContent,
-                               final String validationMode,
-                               final String validationContent,
-                               final ParameterInterpreter interpreter)
+    public URLActionDataValidation(final String name, final String selectionMode, final String selectionContent,
+                                   final String validationMode, final String validationContent, final ParameterInterpreter interpreter)
     {
         XltLogger.runTimeLogger.debug("Creating new Validation Item");
         setName(name);
@@ -125,6 +121,7 @@ public class URLActionDataValidation
         setValidationContent(validationContent);
         setParameterInterpreter(interpreter);
     }
+
     /**
      * For debugging purpose. <br>
      * 'err-streams' the attributes of the object without dynamic interpretation of the return values. <br>
@@ -137,9 +134,10 @@ public class URLActionDataValidation
         System.err.println("\t\t\t" + "Validation Mode : " + validationMode);
         System.err.println("\t\t\t" + "Validation Value : " + validationContent);
     }
+
     /**
      * For debugging purpose. <br>
-     * 'err-streams' the attributes of the object. Interprets the values via {@link #interpreter}  <br>
+     * 'err-streams' the attributes of the object. Interprets the values via {@link #interpreter} <br>
      */
     public void outline()
     {
@@ -149,18 +147,23 @@ public class URLActionDataValidation
         System.err.println("\t\t\t" + "Validation Mode : " + getValidationMode());
         System.err.println("\t\t\t" + "Validation Content : " + getValidationContent());
     }
+
     /**
-     * @param interpreter : if NULL throws.
+     * @param interpreter
+     *            : if NULL throws.
      * @throws IllegalArgumentException
      */
     private void setParameterInterpreter(final ParameterInterpreter interpreter)
     {
-        this.interpreter = (interpreter != null) ? interpreter
+        this.interpreter = (interpreter != null)
+                                                ? interpreter
                                                 : (ParameterInterpreter) throwIllegalArgumentException(getTagCannotBeNullMessage("Parameter Interpreter"));
         XltLogger.runTimeLogger.debug(getSetNewTagMessage("Interpreter"));
     }
+
     /**
-     * @param selectionMode :if NULL throws.
+     * @param selectionMode
+     *            :if NULL throws.
      * @throws IllegalArgumentException
      */
     private void setSelectionMode(final String selectionMode)
@@ -180,12 +183,14 @@ public class URLActionDataValidation
     }
 
     /**
-     * @param validateionMode :if NULL throws.
+     * @param validateionMode
+     *            :if NULL throws.
      * @throws IllegalArgumentException
      */
     private void setValidationMode(final String validationMode)
     {
-        this.validationMode = (validationMode != null) ? validationMode
+        this.validationMode = (validationMode != null)
+                                                      ? validationMode
                                                       : (String) throwIllegalArgumentException(getTagCannotBeNullMessage("Validation Mode"));
         XltLogger.runTimeLogger.debug(getSetTagToValueMessage("Validation Mode", validationMode));
     }
@@ -200,7 +205,8 @@ public class URLActionDataValidation
     }
 
     /**
-     * @param name :if NULL throws.
+     * @param name
+     *            :if NULL throws.
      * @throws IllegalArgumentException
      */
     private void setName(final String name)
@@ -219,7 +225,7 @@ public class URLActionDataValidation
 
     /**
      * @return {@link #selectionMode }, after its dynamic interpretation via the {@link #interpreter}.
-     */   
+     */
     public String getSelectionMode()
     {
         final String dynamicSelectionMode = interpreter.processDynamicData(selectionMode);
@@ -251,6 +257,7 @@ public class URLActionDataValidation
         }
         return dynamicValidationMode;
     }
+
     /**
      * @return {@link #validationContent}, after its dynamic interpretation via the {@link #interpreter}.
      */
@@ -262,7 +269,7 @@ public class URLActionDataValidation
 
     /**
      * @param selectionMode
-     * @return if ({@link #selectionMode} is permitted) ? true : false. 
+     * @return if ({@link #selectionMode} is permitted) ? true : false.
      */
     public boolean isPermittedSelectionMode(final String s)
     {
@@ -271,7 +278,7 @@ public class URLActionDataValidation
 
     /**
      * @param selectionMode
-     * @return if ({@link #validationMode} is permitted) ? true : false. 
+     * @return if ({@link #validationMode} is permitted) ? true : false.
      */
     public boolean isPermittedValidationMode(final String s)
     {
@@ -279,7 +286,8 @@ public class URLActionDataValidation
     }
 
     /**
-     * Dirty way of throwing a IllegalArgumentException with the passed message. 
+     * Dirty way of throwing a IllegalArgumentException with the passed message.
+     * 
      * @param message
      * @return nothing.
      */
@@ -289,52 +297,44 @@ public class URLActionDataValidation
     }
 
     /**
-     * 
      * @param tag
      * @param value
      * @return Formated message.
      */
     private String getSetTagToValueMessage(final String tag, final String value)
     {
-        final String message = MessageFormat.format("Validation: \"{0}\", Set \"{1}\" to value: \"{2}\"",
-                                                    this.name, tag, value);
+        final String message = MessageFormat.format("Validation: \"{0}\", Set \"{1}\" to value: \"{2}\"", this.name, tag, value);
         return message;
     }
 
     /**
-     * 
      * @param tag
      * @return Formated message.
      */
     private String getSetNewTagMessage(final String tag)
     {
-        final String message = MessageFormat.format("Validation: \"{0}\", Set new \"{1}\"",
-                                                    this.name, tag);
+        final String message = MessageFormat.format("Validation: \"{0}\", Set new \"{1}\"", this.name, tag);
         return message;
     }
 
     /**
-     * 
      * @param value
      * @param tag
      * @return Formated message.
      */
     private String getIllegalValueForTagMessage(final String value, final String tag)
     {
-        final String message = MessageFormat.format("Validation: \"{0}\", Illegal value: \"{1}\" for tag \"{2}\"",
-                                                    this.name, value, tag);
+        final String message = MessageFormat.format("Validation: \"{0}\", Illegal value: \"{1}\" for tag \"{2}\"", this.name, value, tag);
         return message;
     }
 
     /**
-     * 
      * @param tag
      * @return Formated message.
      */
     private String getTagCannotBeNullMessage(final String tag)
     {
-        final String message = MessageFormat.format("Validation: \"{0}\", tag \"{1}\"  cannot be NULL",
-                                                    this.name, tag);
+        final String message = MessageFormat.format("Validation: \"{0}\", tag \"{1}\"  cannot be NULL", this.name, tag);
         return message;
     }
 }

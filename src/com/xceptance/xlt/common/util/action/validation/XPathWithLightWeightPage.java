@@ -9,8 +9,7 @@ import com.xceptance.xlt.api.util.XltLogger;
  * Implementation of {@link XPathGetable}. <br>
  * Offers a simple way to throw a IllegalArgumentException.<br>
  * Objects of the class {@link LightWeightPage} are not parsed into the DOM. <br>
- * Therefore its is impossible to select anything by XPath.
- * {@link #getByXPath(String)}.
+ * Therefore its is impossible to select anything by XPath. {@link #getByXPath(String)}.
  * 
  * @author matthias mitterreiter
  */

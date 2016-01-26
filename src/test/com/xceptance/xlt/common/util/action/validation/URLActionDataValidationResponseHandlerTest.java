@@ -23,9 +23,9 @@ public class URLActionDataValidationResponseHandlerTest
     private static final String regexString = "href=\"[\\s\\S]*?\"";
 
     private static final String regexStringText = "href=\"/en/\"";
-    
+
     @SuppressWarnings("unused")
-	private static final String regexStringMatches = "href=\"/en/\"";
+    private static final String regexStringMatches = "href=\"/en/\"";
 
     private static XltProperties properties;
 
@@ -42,7 +42,7 @@ public class URLActionDataValidationResponseHandlerTest
     private static URLActionDataValidation validationText;
 
     private static URLActionDataValidation validationMatches;
-    
+
     private static URLActionDataValidation validationExistsMalicious;
 
     private static URLActionDataValidation validationCountMalicious;
@@ -60,60 +60,27 @@ public class URLActionDataValidationResponseHandlerTest
         mockObjects = new MockObjects();
         mockObjects.load();
         xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
-        result = new URLActionDataExecutableResult(mockObjects.getResponse(),
-                                                   xpwh);
+        result = new URLActionDataExecutableResult(mockObjects.getResponse(), xpwh);
 
-        validationExists = new URLActionDataValidation("exists",
-                                                       URLActionDataValidation.REGEXP,
-                                                       regexString,
-                                                       URLActionDataValidation.EXISTS,
-                                                       null,
-                                                       interpreter);
-        validationCount = new URLActionDataValidation("count",
-                                                       URLActionDataValidation.REGEXP,
-                                                       regexString,
-                                                       URLActionDataValidation.COUNT,
-                                                       "47",
-                                                       interpreter);
-        validationText = new URLActionDataValidation("text",
-                                                      URLActionDataValidation.REGEXP,
-                                                      regexString,
-                                                      URLActionDataValidation.TEXT,
-                                                      regexStringText,
-                                                      interpreter);
-        
-        validationMatches = new URLActionDataValidation("matches",
-                                                     URLActionDataValidation.REGEXP,
-                                                     regexString,
-                                                     URLActionDataValidation.MATCHES,
-                                                     regexString,
-                                                     interpreter);
-        
-        validationExistsMalicious = new URLActionDataValidation("exists",
-                                                       URLActionDataValidation.REGEXP,
-                                                       "malicious",
-                                                       URLActionDataValidation.EXISTS,
-                                                       null,
-                                                       interpreter);
-        validationCountMalicious = new URLActionDataValidation("count",
-                                                       URLActionDataValidation.REGEXP,
-                                                       regexString,
-                                                       URLActionDataValidation.COUNT,
-                                                       "5",
-                                                       interpreter);
-        validationTextMalicious = new URLActionDataValidation("text",
-                                                      URLActionDataValidation.REGEXP,
-                                                      regexString,
-                                                      URLActionDataValidation.TEXT,
-                                                      regexString,
-                                                      interpreter);
-        
-        validationMatchesMalicious = new URLActionDataValidation("matches",
-                                                     URLActionDataValidation.REGEXP,
-                                                     regexString,
-                                                     URLActionDataValidation.MATCHES,
-                                                     "[\\s]",
-                                                     interpreter);
+        validationExists = new URLActionDataValidation("exists", URLActionDataValidation.REGEXP, regexString,
+                                                       URLActionDataValidation.EXISTS, null, interpreter);
+        validationCount = new URLActionDataValidation("count", URLActionDataValidation.REGEXP, regexString, URLActionDataValidation.COUNT,
+                                                      "47", interpreter);
+        validationText = new URLActionDataValidation("text", URLActionDataValidation.REGEXP, regexString, URLActionDataValidation.TEXT,
+                                                     regexStringText, interpreter);
+
+        validationMatches = new URLActionDataValidation("matches", URLActionDataValidation.REGEXP, regexString,
+                                                        URLActionDataValidation.MATCHES, regexString, interpreter);
+
+        validationExistsMalicious = new URLActionDataValidation("exists", URLActionDataValidation.REGEXP, "malicious",
+                                                                URLActionDataValidation.EXISTS, null, interpreter);
+        validationCountMalicious = new URLActionDataValidation("count", URLActionDataValidation.REGEXP, regexString,
+                                                               URLActionDataValidation.COUNT, "5", interpreter);
+        validationTextMalicious = new URLActionDataValidation("text", URLActionDataValidation.REGEXP, regexString,
+                                                              URLActionDataValidation.TEXT, regexString, interpreter);
+
+        validationMatchesMalicious = new URLActionDataValidation("matches", URLActionDataValidation.REGEXP, regexString,
+                                                                 URLActionDataValidation.MATCHES, "[\\s]", interpreter);
     }
 
     @Test
@@ -121,53 +88,61 @@ public class URLActionDataValidationResponseHandlerTest
     {
         validationHandler = new URLActionDataValidationResponseHandler();
     }
+
     @Test
     public void testExists()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationExists, result);
     }
+
     @Test
     public void testCount()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCount, result);
     }
+
     @Test
     public void testText()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationText, result);
     }
+
     @Test
     public void testMatches()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationMatches, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testExistsMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationExistsMalicious, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testCountMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCountMalicious, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testTextMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationTextMalicious, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testMatchesMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationMatchesMalicious, result);
     }
-    
+
 }

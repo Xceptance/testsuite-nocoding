@@ -4,7 +4,6 @@ import java.net.URL;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
-import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
@@ -21,8 +20,7 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
  * @author matthias mitterreiter
  */
 
-public class LightWeightPageAction extends
-    ModifiedAbstractLightWeightPageAction implements URLActionDataExecutionable
+public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction implements URLActionDataExecutionable
 {
 
     /**
@@ -43,7 +41,7 @@ public class LightWeightPageAction extends
     /**
      * Automatically produces the {@link URLActionDataExecutableResult}
      */
-    protected URLActionDataExecutableResultFactory resultFactory;
+    protected final URLActionDataExecutableResultFactory resultFactory;
 
     /**
      * @param previousAction
@@ -57,18 +55,17 @@ public class LightWeightPageAction extends
      * @param resultFactory
      *            : produces the {@link #result}
      */
-    public LightWeightPageAction(final LightWeightPageAction previousAction,
-                                 final String name,
-                                 final WebRequest webRequest,
-                                 final Downloader downloader,
-                                 final URLActionDataExecutableResultFactory resultFactory)
+    public LightWeightPageAction(final LightWeightPageAction previousAction, final String name, final WebRequest webRequest,
+                                 final Downloader downloader, final URLActionDataExecutableResultFactory resultFactory)
     {
         super(previousAction, name);
+        ParameterUtils.isNotNull(resultFactory, "URLActionDataExecutableResultFactory");
+        this.resultFactory = resultFactory;
+        if (downloader != null)
+        {
+            this.downloader = downloader;
+        }
         setWebRequest(webRequest);
-        setDownloader(downloader);
-        setResultFactory(resultFactory);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
-
     }
 
     /**
@@ -82,22 +79,9 @@ public class LightWeightPageAction extends
      * @param resultFactory
      *            : produces the {@link #result}
      */
-    public LightWeightPageAction(final String name,
-                                 final WebRequest webRequest,
-                                 final URLActionDataExecutableResultFactory resultFactory)
+    public LightWeightPageAction(final String name, final WebRequest webRequest, final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(null, name);
-        setWebRequest(webRequest);
-        setResultFactory(resultFactory);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
-
-    }
-
-    private void setResultFactory(final URLActionDataExecutableResultFactory resultFactory)
-    {
-        ParameterUtils.isNotNull(resultFactory,
-                                 "URLActionDataExecutableResultFactory");
-        this.resultFactory = resultFactory;
+        this(null, name, webRequest, null, resultFactory);
     }
 
     public void setDownloader(final Downloader downloader)
@@ -154,14 +138,11 @@ public class LightWeightPageAction extends
     {
         try
         {
-            XltLogger.runTimeLogger.debug("Executing Action");
             this.run();
         }
         catch (final Throwable e)
         {
-            throw new IllegalArgumentException("Failed to execute Action: "
-                                               + getTimerName() + " - "
-                                               + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
         }
 
     }

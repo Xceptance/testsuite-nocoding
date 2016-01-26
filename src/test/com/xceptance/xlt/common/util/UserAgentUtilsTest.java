@@ -58,8 +58,7 @@ public class UserAgentUtilsTest
         webClient.getPage(testUrl);
 
         final String newUserAgent1 = conn.getLastWebRequest().getAdditionalHeaders().get("User-Agent");
-        Assert.assertTrue(newUserAgent1.matches("^.* UID/"
-                                                + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
+        Assert.assertTrue(newUserAgent1.matches("^.* UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
 
         // change it again
         UserAgentUtils.setUserAgentUID(webClient, true);
@@ -68,8 +67,7 @@ public class UserAgentUtilsTest
         webClient.getPage(testUrl);
 
         final String newUserAgent2 = conn.getLastWebRequest().getAdditionalHeaders().get("User-Agent");
-        Assert.assertTrue(newUserAgent2.matches("^.* UID/"
-                                                + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
+        Assert.assertTrue(newUserAgent2.matches("^.* UID/" + "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"));
         Assert.assertFalse(newUserAgent2.equals(newUserAgent1));
     }
 

@@ -15,7 +15,7 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataStoreResponseHandlerTestCookies
 {
     private final static String urlString = "http://www.amazon.de";
-    
+
     private static MockObjects mockObjects;
 
     private static ParameterInterpreter interpreter;
@@ -50,21 +50,11 @@ public class URLActionDataStoreResponseHandlerTestCookies
         mockObjects = new MockObjects(urlString);
         mockObjects.load();
         final XPathWithHtmlPage xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
-        result = new URLActionDataExecutableResult(mockObjects.getResponse(),
-                                                   xpwh);
+        result = new URLActionDataExecutableResult(mockObjects.getResponse(), xpwh);
 
-        storeItemCookie1 = new URLActionDataStore("cookie_session_id",
-                                                  URLActionDataStore.COOKIE,
-                                                  cookieName1,
-                                                  interpreter);
-        storeItemCookie2 = new URLActionDataStore("cookie_session-id-time",
-                                                  URLActionDataStore.COOKIE,
-                                                  cookieName2,
-                                                  interpreter);
-        storeItemCookie3 = new URLActionDataStore("cookie_ubid-acbde",
-                                                  URLActionDataStore.COOKIE,
-                                                  cookieName3,
-                                                  interpreter);
+        storeItemCookie1 = new URLActionDataStore("cookie_session_id", URLActionDataStore.COOKIE, cookieName1, interpreter);
+        storeItemCookie2 = new URLActionDataStore("cookie_session-id-time", URLActionDataStore.COOKIE, cookieName2, interpreter);
+        storeItemCookie3 = new URLActionDataStore("cookie_ubid-acbde", URLActionDataStore.COOKIE, cookieName3, interpreter);
     }
 
     @Test

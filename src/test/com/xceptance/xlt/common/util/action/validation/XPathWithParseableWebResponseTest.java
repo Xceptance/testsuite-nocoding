@@ -28,23 +28,17 @@ public class XPathWithParseableWebResponseTest
     {
         final WebResponse response = mockObjects.getResponse();
         @SuppressWarnings("unused")
-		final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
+        final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
     }
 
     @Test
     public void testIsParseable()
     {
-        final MockWebResponse mockWeResponseUnsupported = new MockWebResponse("some content",
-                                                                              mockObjects.getUrl(),
-                                                                              "unsupported/type");
+        final MockWebResponse mockWeResponseUnsupported = new MockWebResponse("some content", mockObjects.getUrl(), "unsupported/type");
         Assert.assertFalse(XPathWithParseableWebResponse.isWebResponseParseable(mockWeResponseUnsupported));
-        final MockWebResponse mockWeResponseHtml = new MockWebResponse("some content",
-                                                                       mockObjects.getUrl(),
-                                                                       "text/html");
+        final MockWebResponse mockWeResponseHtml = new MockWebResponse("some content", mockObjects.getUrl(), "text/html");
         Assert.assertTrue(XPathWithParseableWebResponse.isWebResponseParseable(mockWeResponseHtml));
-        final MockWebResponse mockWeResponseHtml2 = new MockWebResponse("some content",
-                                                                        mockObjects.getUrl(),
-                                                                        "text/application");
+        final MockWebResponse mockWeResponseHtml2 = new MockWebResponse("some content", mockObjects.getUrl(), "text/application");
         Assert.assertTrue(XPathWithParseableWebResponse.isWebResponseParseable(mockWeResponseHtml2));
 
     }
@@ -55,8 +49,7 @@ public class XPathWithParseableWebResponseTest
         final WebResponse response = mockObjects.getResponse();
         final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
         final List<String> xPathResults = thing.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
-        Assert.assertEquals(xPathResults.get(0),
-                            "Committed to Software Quality");
+        Assert.assertEquals(xPathResults.get(0), "Committed to Software Quality");
     }
 
 }

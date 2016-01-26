@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,6 +85,8 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     public static final String ENCODED_DEFAULT = "false";
 
+    private static final CSVFormat CSV_FORMAT;
+
     static
     {
         PERMITTEDHEADERFIELDS.add(TYPE);
@@ -104,22 +105,21 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
             PERMITTEDHEADERFIELDS.add(XPATH_GETTER_PREFIX + i);
             PERMITTEDHEADERFIELDS.add(REGEXP_GETTER_PREFIX + i);
         }
+
+        CSV_FORMAT = CSVFormat.RFC4180.toBuilder().withIgnoreEmptyLines(true).withCommentStart('#').withHeader()
+                                      .withIgnoreSurroundingSpaces(true).build();
     }
 
-    public CSVBasedURLActionDataListBuilder(final String filePath,
-                                            final ParameterInterpreter interpreter,
+    public CSVBasedURLActionDataListBuilder(final String filePath, final ParameterInterpreter interpreter,
                                             final URLActionDataBuilder actionBuilder)
     {
         super(filePath, interpreter, actionBuilder);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
     }
 
     private CSVParser createCSVParserFromFilepath(final String filePath)
     {
-        final File file = createFile(filePath);
-        final BufferedReader br = createBufferedReaderFromFile(file);
-        final CSVFormat format = createCSVFormat();
-        final CSVParser parser = createCSVParser(br, format);
+        final BufferedReader br = createBufferedReaderFromFile(new File(filePath));
+        final CSVParser parser = createCSVParser(br, CSV_FORMAT);
         return parser;
     }
 
@@ -129,65 +129,59 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         {
             if (!isPermittedHeaderField(headerField))
             {
-                throw new IllegalArgumentException(MessageFormat.format("Unsupported or misspelled header field: {0}",
-                                                                        headerField));
+                throw new IllegalArgumentException(MessageFormat.format("Unsupported or misspelled header field: {0}", headerField));
             }
         }
     }
 
     @Override
-    protected List<URLActionData> buildURLActionDataList()
+    protected Object parseData() throws IOException
     {
-
         final CSVParser parser = createCSVParserFromFilepath(this.filePath);
-        @SuppressWarnings("unchecked")
-		final Iterator<CSVRecord> csvRecords = createCSVIterator(parser);
+        checkHeaderSpelling(parser.getHeaderMap());
 
-        // verify header fields to avoid problems with incorrect spelling or spaces
-        final Map<String, Integer> headerMap = parser.getHeaderMap();
-        checkHeaderSpelling(headerMap);
+        return new ArrayList<>(parser.getRecords());
+    }
+
+    @Override
+    public List<URLActionData> buildURLActionDataList()
+    {
+        final List<URLActionData> actions = new ArrayList<URLActionData>();
 
         @SuppressWarnings("unused")
-		boolean incorrectLines = false;
+        boolean incorrectLines = false;
 
-        while (true)
+        try
         {
-            try
+            @SuppressWarnings("unchecked")
+            final List<CSVRecord> records = (List<CSVRecord>) getOrParseData();
+            for (final CSVRecord csvRecord : records)
             {
-                final boolean hasNext = csvRecords.hasNext();
-                if (!hasNext)
+
+                if (csvRecord.isConsistent())
                 {
-                    break;
+                    final URLActionData action = buildURLActionData(csvRecord);
+                    actions.add(action);
+                }
+                else
+                {
+                    XltLogger.runTimeLogger.error(new StringBuilder("Line at ").append(csvRecord.getRecordNumber())
+                                                                               .append(" has not been correctly formatted. Line is ignored: ")
+                                                                               .append(csvRecord).toString());
+                    incorrectLines = true;
                 }
             }
-            catch (final Exception e)
-            {
-                // the plus 1 is meant to correct the increment missing because of the exception
-                throw new IllegalArgumentException(MessageFormat.format("Line at {0} is invalid, because of <{1}>. Line is ignored.",
-                                                                        parser.getLineNumber() + 1,
-                                                                        e.getMessage()));
-            }
-            final CSVRecord csvRecord = csvRecords.next();
 
-            if (csvRecord.isConsistent())
-            {
-                final URLActionData action = buildURLActionData(csvRecord);
-                actions.add(action);
-            }
-            else
-            {
-                XltLogger.runTimeLogger.error(MessageFormat.format("Line at {0} has not been correctly formatted. Line is ignored: {1}",
-                                                                   parser.getLineNumber(),
-                                                                   csvRecord));
-                incorrectLines = true;
-            }
         }
-
+        catch (final Exception e)
+        {
+            throw new IllegalArgumentException(new StringBuilder("Failed to parse '").append(filePath).append("' as CSV data").toString(),
+                                               e);
+        }
         return actions;
     }
 
-    @SuppressWarnings("static-access")
-	private URLActionData buildURLActionDataFromCSVRecord(final CSVRecord csvRecord)
+    private URLActionData buildURLActionDataFromCSVRecord(final CSVRecord csvRecord)
     {
         final String urlString = csvRecord.get(URL);
         if (urlString == null)
@@ -195,21 +189,15 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
             throw new IllegalArgumentException("url null");
         }
 
-        final String name = StringUtils.defaultIfBlank(csvRecord.get(NAME),
-                                                       "Action-"
-                                                           + (csvRecord.getRecordNumber() - 1));
+        final String name = StringUtils.defaultIfBlank(csvRecord.get(NAME), "Action-" + (csvRecord.getRecordNumber() - 1));
 
-        final String type = StringUtils.defaultIfBlank(csvRecord.get(TYPE),
-                                                       TYPE_DEFAULT);
-        final String method = StringUtils.defaultIfBlank(csvRecord.get(METHOD),
-                                                         METHOD_DEFAULT);
-        final String encoded = StringUtils.defaultIfBlank(csvRecord.get(ENCODED),
-                                                          ENCODED_DEFAULT);
+        final String type = StringUtils.defaultIfBlank(csvRecord.get(TYPE), TYPE_DEFAULT);
+        final String method = StringUtils.defaultIfBlank(csvRecord.get(METHOD), METHOD_DEFAULT);
+        final String encoded = StringUtils.defaultIfBlank(csvRecord.get(ENCODED), ENCODED_DEFAULT);
 
         final String parametersString = csvRecord.get(PARAMETERS);
 
-        final String responseCode = StringUtils.defaultIfBlank(csvRecord.get(RESPONSECODE),
-                                                               RESPONSECODE_DEFAULT);
+        final String responseCode = StringUtils.defaultIfBlank(csvRecord.get(RESPONSECODE), RESPONSECODE_DEFAULT);
 
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
@@ -217,18 +205,16 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         {
             parameters = setupParameters(parametersString);
         }
-        final URLActionData action = new URLActionData(name,
-                                                       urlString,
-                                                       this.interpreter);
-        if (this.TYPE_ACTION.equals(type))
+        final URLActionData action = new URLActionData(name, urlString, this.interpreter);
+        if (TYPE_ACTION.equals(type))
         {
             action.setType(URLActionData.TYPE_ACTION);
         }
-        else if (this.TYPE_STATIC.equals(type))
+        else if (TYPE_STATIC.equals(type))
         {
             action.setType(URLActionData.TYPE_STATIC);
         }
-        else if (this.TYPE_XHR_ACTION.equals(type))
+        else if (TYPE_XHR_ACTION.equals(type))
         {
             action.setType(URLActionData.TYPE_XHR);
         }
@@ -249,8 +235,8 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         String validationMode = null;
         String validationValue = null;
 
-        final String regexpString = csvRecord.get(REGEXP);
-        final String xPath = csvRecord.get(XPATH);
+        final String regexpString = csvRecord.isSet(REGEXP) ? csvRecord.get(REGEXP) : null;
+        final String xPath = csvRecord.isSet(XPATH) ? csvRecord.get(XPATH) : null;
 
         final String text = csvRecord.get(TEXT);
 
@@ -277,18 +263,13 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         if (selectionMode != null && selectionValue != null)
         {
-            final URLActionDataValidation validation = new URLActionDataValidation("valdiation",
-                                                                                   selectionMode,
-                                                                                   selectionValue,
-                                                                                   validationMode,
-                                                                                   validationValue,
-                                                                                   this.interpreter);
+            final URLActionDataValidation validation = new URLActionDataValidation("valdiation", selectionMode, selectionValue,
+                                                                                   validationMode, validationValue, this.interpreter);
             resultList.add(validation);
 
         }
 
-        if (StringUtils.isNotBlank(regexpString)
-            && StringUtils.isNotBlank(xPath))
+        if (StringUtils.isNotBlank(regexpString) && StringUtils.isNotBlank(xPath))
         {
             throw new IllegalArgumentException("naaaaaaaaaaaaaa");
         }
@@ -302,24 +283,19 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         for (int i = 1; i <= DYNAMIC_GETTER_COUNT; i++)
         {
-            final String xpath = csvRecord.get(XPATH_GETTER_PREFIX + i);
-            if (xpath != null)
+            String key = XPATH_GETTER_PREFIX + i;
+            final String xpath = csvRecord.isSet(key) ? csvRecord.get(key) : null;
+            if (StringUtils.isNotBlank(xpath))
             {
-                final URLActionDataStore storeItem = new URLActionDataStore(XPATH_GETTER_PREFIX
-                                                                                + i,
-                                                                            URLActionDataStore.XPATH,
-                                                                            xpath,
-                                                                            this.interpreter);
+                final URLActionDataStore storeItem = new URLActionDataStore(key, URLActionDataStore.XPATH, xpath, this.interpreter);
                 resultList.add(storeItem);
             }
 
-            final String regexp = csvRecord.get(REGEXP_GETTER_PREFIX + i);
-            if (regexp != null)
+            key = REGEXP_GETTER_PREFIX + i;
+            final String regexp = csvRecord.isSet(key) ? csvRecord.get(key) : null;
+            if (StringUtils.isNotBlank(regexp))
             {
-                final URLActionDataStore storeItem = new URLActionDataStore(REGEXP_GETTER_PREFIX
-                                                                                + i,
-                                                                            URLActionDataStore.REGEXP,
-                                                                            regexp,
+                final URLActionDataStore storeItem = new URLActionDataStore(REGEXP_GETTER_PREFIX + i, URLActionDataStore.REGEXP, regexp,
                                                                             this.interpreter);
                 resultList.add(storeItem);
             }
@@ -388,44 +364,19 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         return PERMITTEDHEADERFIELDS.contains(fieldName);
     }
 
-    private File createFile(final String filePath)
-    {
-        final File file = new File(filePath);
-        return file;
-    }
-
     private BufferedReader createBufferedReaderFromFile(final File file)
     {
-        BufferedReader br = null;
-
         try
         {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-                                                          "UTF-8"));
+            return new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         }
         catch (UnsupportedEncodingException | FileNotFoundException e)
         {
-            throw new IllegalArgumentException("Failed to create a BufferedReader, because:"
-                                               + e.getMessage());
-
+            throw new IllegalArgumentException("Failed to create a BufferedReader, because:" + e.getMessage());
         }
-        return br;
     }
 
-    private CSVFormat createCSVFormat()
-    {
-        // permit # as comment, empty lines, set comma as separator, and activate the header
-        final CSVFormat csvFormat = CSVFormat.RFC4180.toBuilder()
-                                                     .withIgnoreEmptyLines(true)
-                                                     .withCommentStart('#')
-                                                     .withHeader()
-                                                     .withIgnoreSurroundingSpaces(true)
-                                                     .build();
-        return csvFormat;
-    }
-
-    private CSVParser createCSVParser(final BufferedReader br,
-                                      final CSVFormat csvFormat)
+    private CSVParser createCSVParser(final BufferedReader br, final CSVFormat csvFormat)
     {
 
         CSVParser parser = null;
@@ -435,18 +386,8 @@ public class CSVBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         catch (final IOException e)
         {
-            throw new IllegalArgumentException("Failed to create a CSVParser, because:"
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to create a CSVParser, because:" + e.getMessage());
         }
         return parser;
-    }
-
-    @SuppressWarnings("rawtypes")
-	private Iterator createCSVIterator(final CSVParser parser)
-    {
-
-        final Iterator<CSVRecord> csvRecords = parser.iterator();
-
-        return csvRecords;
     }
 }

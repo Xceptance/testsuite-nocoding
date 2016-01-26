@@ -59,8 +59,7 @@ public class ParameterInterpreter extends Interpreter
      *            the input to process
      * @return a processed string or the same, if nothing to process
      */
-    public ParameterInterpreter(final XltProperties properties,
-                                final GeneralDataProvider dataProvider)
+    public ParameterInterpreter(final XltProperties properties, final GeneralDataProvider dataProvider)
     {
         super();
         XltLogger.runTimeLogger.debug("Creating new Instance");
@@ -93,20 +92,20 @@ public class ParameterInterpreter extends Interpreter
         }
         else
         {
-            XltLogger.runTimeLogger.debug("Failed to add variable: \"" + name
-                                          + "\" = \"" + value
-                                          + "\", because its identifier was 'null'");
+            XltLogger.runTimeLogger.debug("Failed to add variable: \"" + name + "\" = \"" + value + "\", because its identifier was 'null'");
         }
     }
 
     /**
-     * Maps input on predefined value. The value can be defined dynamically during runtime
-     * or in the properties.  The lookup works the following way and breaks, when a value is found.
+     * Maps input on predefined value. The value can be defined dynamically during runtime or in the properties. The
+     * lookup works the following way and breaks, when a value is found.
      * <ol>
-     * 	<li>Map key on dynamic runtime data</li>
-     *  <li>Map key on properties</li>
+     * <li>Map key on dynamic runtime data</li>
+     * <li>Map key on properties</li>
      * </ol>
-     * @param input : key
+     * 
+     * @param input
+     *            : key
      * @return value reference, or if nothing was found the input itself
      */
     @Nullable
@@ -126,38 +125,29 @@ public class ParameterInterpreter extends Interpreter
                 {
                     if (param.trim().length() != 0)
                     {
-                    	try
+                        try
                         {
                             final Object evalResult = this.eval(param);
                             if (evalResult != null)
                             {
-                                result = StringUtils.replaceOnce(result,
-                                                                 "${"
-                                                                     + param
-                                                                     + "}",
-                                                                 evalResult.toString());
+                                result = StringUtils.replaceOnce(result, "${" + param + "}", evalResult.toString());
                             }
                         }
                         catch (final EvalError e)
                         {
-                            XltLogger.runTimeLogger.warn(MessageFormat.format("Unable to process dynamic parameter {0}",
-                                                                              "${"
-                                                                                  + param
-                                                                                  + "}"),
+                            XltLogger.runTimeLogger.warn(MessageFormat.format("Unable to process dynamic parameter {0}", "${" + param + "}"),
                                                          e);
                         }
                         // first try to map it to a property if a test case is set otherwise ask the properties directly
-                    	if(result.equals(input))
-                    	{
-                    		final String propertyValue = getPropertyValue(param);
-       
-	                        if (propertyValue != null)
-	                        {
-	                            result = StringUtils.replaceOnce(result,
-	                                                             "${" + param + "}",
-	                                                             propertyValue);
-	                        }
-                    	}
+                        if (result.equals(input))
+                        {
+                            final String propertyValue = getPropertyValue(param);
+
+                            if (propertyValue != null)
+                            {
+                                result = StringUtils.replaceOnce(result, "${" + param + "}", propertyValue);
+                            }
+                        }
                         // look into variables map
                     }
                 }
@@ -187,9 +177,7 @@ public class ParameterInterpreter extends Interpreter
 
     protected String addVariableMessage(final String name, final String value)
     {
-        final String message = MessageFormat.format("Adding Variables: \"{0}\" = \"{1}\"",
-                                                    name,
-                                                    value);
+        final String message = MessageFormat.format("Adding Variables: \"{0}\" = \"{1}\"", name, value);
         return message;
 
     }

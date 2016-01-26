@@ -49,12 +49,12 @@ public class XPathWithHtmlPage implements XPathGetable
         for (final DomNode node : htmlNodes)
         {
             final String elementAsString = getStringFromHtmlElement(node);
-            XltLogger.runTimeLogger.debug("Found Element: " + "\""
-                                          + elementAsString + "\"");
+            XltLogger.runTimeLogger.debug("Found Element: " + "\"" + elementAsString + "\"");
             resultList.add(elementAsString);
         }
         return resultList;
     }
+
     private String getStringFromHtmlElement(final DomNode node)
     {
         try
@@ -64,38 +64,31 @@ public class XPathWithHtmlPage implements XPathGetable
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to parse DomNode: "
-                                               + node.getLocalName()
-                                               + " of type: "
-                                               + node.getNodeType()
-                                               + " to String because: "
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to parse DomNode: " + node.getLocalName() + " of type: " + node.getNodeType() +
+                                               " to String because: " + e.getMessage());
         }
     }
 
     @SuppressWarnings("unchecked")
-	private List<DomNode> getHtmlElementListByXPath(final String xPath)
+    private List<DomNode> getHtmlElementListByXPath(final String xPath)
     {
         XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
-        
-        List<DomNode> htmlElements = Collections.<DomNode> emptyList();
-        
+
+        List<DomNode> htmlElements = Collections.<DomNode>emptyList();
+
         try
         {
             htmlElements = (List<DomNode>) this.htmlPage.getByXPath(xPath);
-            
+
             if (htmlElements == null)
             {
                 XltLogger.runTimeLogger.debug("No Elements found!, XPath: " + xPath);
-                htmlElements = Collections.<DomNode> emptyList();
+                htmlElements = Collections.<DomNode>emptyList();
             }
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to get Elements by XPath: "
-                                               + xPath
-                                               + ", Because: "
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to get Elements by XPath: " + xPath + ", Because: " + e.getMessage());
         }
         return htmlElements;
     }

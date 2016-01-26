@@ -40,17 +40,15 @@ public class URLActionDataExecutableResultTest
     public void testConstructor()
     {
         @SuppressWarnings("unused")
-		URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        URLActionDataExecutableResult executableResult;
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
     }
 
     @Test
     public void testGetByXPath()
     {
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
         final List<String> something = executableResult.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
 
         Assert.assertEquals(something.get(0), "Committed to Software Quality");
@@ -60,8 +58,7 @@ public class URLActionDataExecutableResultTest
     public void testGetByRegEx()
     {
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
 
         final List<String> something = executableResult.getByRegEx("href=\"[\\s\\S]*?\"");
         Assert.assertFalse(something.isEmpty());
@@ -72,8 +69,7 @@ public class URLActionDataExecutableResultTest
     public void testGetHeaders()
     {
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
         final List<NameValuePair> headers = executableResult.getHeaders();
         Assert.assertFalse(headers.isEmpty());
     }

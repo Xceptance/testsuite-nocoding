@@ -20,8 +20,8 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataRequestBuilderTest
 {
     @SuppressWarnings("unused")
-	private MockObjects mockObjects;
-    
+    private MockObjects mockObjects;
+
     private URLActionDataRequestBuilder builder;
 
     private ParameterInterpreter interpreter;
@@ -35,14 +35,14 @@ public class URLActionDataRequestBuilderTest
     private final String urlStringEmpty = "https://www.xceptance.com/?x=%45s#q=xeceptance+%2B";
 
     @SuppressWarnings("unused")
-	private String urlStringWithEncodedParameters;
+    private String urlStringWithEncodedParameters;
 
     private String urlStringWithDecodedParameters;
 
     private final String methodPost = "POST";
 
     @SuppressWarnings("unused")
-	private final String methodGet = "GET";
+    private final String methodGet = "GET";
 
     private final String bodyDecoded = "Body?=%$";
 
@@ -50,11 +50,9 @@ public class URLActionDataRequestBuilderTest
 
     private final List<NameValuePair> headers = new ArrayList<NameValuePair>();
 
-    private final NameValuePair header2 = new NameValuePair("HeaderName2",
-                                                            "HeaderValue2");
+    private final NameValuePair header2 = new NameValuePair("HeaderName2", "HeaderValue2");
 
-    private final NameValuePair header1 = new NameValuePair("HeaderName1",
-                                                            "HeaderValue1");
+    private final NameValuePair header1 = new NameValuePair("HeaderName1", "HeaderValue1");
 
     private final List<NameValuePair> parametersEmpty = new ArrayList<NameValuePair>();
 
@@ -62,23 +60,17 @@ public class URLActionDataRequestBuilderTest
 
     private final List<NameValuePair> parametersEncoded = new ArrayList<NameValuePair>();
 
-    private final NameValuePair p1Empty = new NameValuePair("parameter1",
-                                                            "parameterValue1");
+    private final NameValuePair p1Empty = new NameValuePair("parameter1", "parameterValue1");
 
-    private final NameValuePair p2Empty = new NameValuePair("parameter1",
-                                                            "parameterValue1");
+    private final NameValuePair p2Empty = new NameValuePair("parameter1", "parameterValue1");
 
-    private final NameValuePair p1Encoded = new NameValuePair("Parameter%26%25%24Name1",
-                                                              "Parameter%C2%A7%24%25%26%2BValue1");
+    private final NameValuePair p1Encoded = new NameValuePair("Parameter%26%25%24Name1", "Parameter%C2%A7%24%25%26%2BValue1");
 
-    private final NameValuePair p2Encoded = new NameValuePair("Parameter%26%25%24Name2",
-                                                              "Parameter%C2%A7%24%25%26%2BValue2");
+    private final NameValuePair p2Encoded = new NameValuePair("Parameter%26%25%24Name2", "Parameter%C2%A7%24%25%26%2BValue2");
 
-    private final NameValuePair p1Decoded = new NameValuePair("Parameter&%$Name1",
-                                                              "Parameter§$%&+Value1");
+    private final NameValuePair p1Decoded = new NameValuePair("Parameter&%$Name1", "Parameter§$%&+Value1");
 
-    private final NameValuePair p2Decoded = new NameValuePair("Parameter&%$Name2",
-                                                              "Parameter§$%&+Value2");
+    private final NameValuePair p2Decoded = new NameValuePair("Parameter&%$Name2", "Parameter§$%&+Value2");
 
     @Before
     public void setup() throws UnsupportedEncodingException
@@ -88,7 +80,7 @@ public class URLActionDataRequestBuilderTest
         interpreter = new ParameterInterpreter(properties, dataProvider);
 
         mockObjects = new MockObjects();
-        
+
         builder = new URLActionDataRequestBuilder();
 
         headers.add(header1);
@@ -103,34 +95,20 @@ public class URLActionDataRequestBuilderTest
         parametersDecoded.add(p1Decoded);
         parametersDecoded.add(p2Decoded);
 
-        urlStringWithEncodedParameters = "https://www.xceptance.com/?x=%45s&"
-                                         + parametersEncoded.get(0).getName()
-                                         + "="
-                                         + parametersEncoded.get(0).getValue()
-                                         + "&"
-                                         + parametersEncoded.get(1).getName()
-                                         + "="
-                                         + parametersEncoded.get(1).getValue()
-                                         + "#q=xeceptance+%2B";
+        urlStringWithEncodedParameters = "https://www.xceptance.com/?x=%45s&" + parametersEncoded.get(0).getName() + "=" +
+                                         parametersEncoded.get(0).getValue() + "&" + parametersEncoded.get(1).getName() + "=" +
+                                         parametersEncoded.get(1).getValue() + "#q=xeceptance+%2B";
 
-        urlStringWithDecodedParameters = "https://www.xceptance.com/?x=%45s&"
-                                         + parametersDecoded.get(0).getName()
-                                         + "="
-                                         + parametersDecoded.get(0).getValue()
-                                         + "&"
-                                         + parametersDecoded.get(1).getName()
-                                         + "="
-                                         + parametersDecoded.get(1).getValue()
-                                         + "#q=xeceptance+%2B";
+        urlStringWithDecodedParameters = "https://www.xceptance.com/?x=%45s&" + parametersDecoded.get(0).getName() + "=" +
+                                         parametersDecoded.get(0).getValue() + "&" + parametersDecoded.get(1).getName() + "=" +
+                                         parametersDecoded.get(1).getValue() + "#q=xeceptance+%2B";
 
     }
 
     @Test
     public void test_Get_NoParam__NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
@@ -141,9 +119,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_NoParam__NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
         final WebRequest request = builder.buildRequest(action);
 
@@ -155,17 +131,14 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_Get_Param_EncodeParam_NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setEncodeParameters(false);
         action.setParameters(parametersEncoded);
 
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
         Assert.assertNull(request.getRequestBody());
 
     }
@@ -173,9 +146,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_Param_EncodeParam_NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
         action.setEncodeParameters(true);
         action.setParameters(parametersDecoded);
@@ -190,36 +161,29 @@ public class URLActionDataRequestBuilderTest
 
         for (int i = 0; i < requestParameters.size(); i++)
         {
-            Assert.assertEquals(parametersDecoded.get(i).getName(),
-                                requestParameters.get(i).getName());
-            Assert.assertEquals(parametersDecoded.get(i).getValue(),
-                                requestParameters.get(i).getValue());
+            Assert.assertEquals(parametersDecoded.get(i).getName(), requestParameters.get(i).getName());
+            Assert.assertEquals(parametersDecoded.get(i).getValue(), requestParameters.get(i).getValue());
         }
     }
 
     @Test
     public void test_Get_Param_NoEncodeParam_NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setEncodeParameters(true);
         action.setParameters(parametersDecoded);
 
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
         Assert.assertNull(request.getRequestBody());
     }
 
     @Test
     public void test_POST_Param_NoEncodeParam_NoBody_()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
         action.setEncodeParameters(true);
         action.setParameters(parametersDecoded);
@@ -234,19 +198,15 @@ public class URLActionDataRequestBuilderTest
 
         for (int i = 0; i < requestParameters.size(); i++)
         {
-            Assert.assertEquals(parametersDecoded.get(i).getName(),
-                                requestParameters.get(i).getName());
-            Assert.assertEquals(parametersDecoded.get(i).getValue(),
-                                requestParameters.get(i).getValue());
+            Assert.assertEquals(parametersDecoded.get(i).getName(), requestParameters.get(i).getName());
+            Assert.assertEquals(parametersDecoded.get(i).getValue(), requestParameters.get(i).getValue());
         }
     }
 
     @Test
     public void test_Get_NoParam_Body()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setBody(bodyEncoded);
 
         final WebRequest request = builder.buildRequest(action);
@@ -259,9 +219,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_NoParam_Body_NoEncodedBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setBody(bodyEncoded);
         action.setEncodeBody(false);
         action.setMethod(methodPost);
@@ -275,9 +233,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_NoParam_Body_EncodedBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setBody(bodyDecoded);
         action.setEncodeBody(true);
         action.setMethod(methodPost);
@@ -291,9 +247,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_Param_EncodeParam_Body_NoEncodedBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
 
         action.setEncodeParameters(true);
@@ -305,8 +259,7 @@ public class URLActionDataRequestBuilderTest
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
 
         Assert.assertEquals(bodyDecoded, request.getRequestBody());
 
@@ -315,9 +268,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_Param_EncodeParam_Body_EncodedBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
 
         action.setEncodeParameters(true);
@@ -329,8 +280,7 @@ public class URLActionDataRequestBuilderTest
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
         Assert.assertEquals(bodyDecoded, request.getRequestBody());
 
     }
@@ -338,9 +288,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_Param_NoEncodeParam_Body_NoEncodeBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
 
         action.setEncodeParameters(true);
@@ -352,8 +300,7 @@ public class URLActionDataRequestBuilderTest
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
         Assert.assertEquals(bodyDecoded, request.getRequestBody());
 
     }
@@ -361,9 +308,7 @@ public class URLActionDataRequestBuilderTest
     @Test
     public void test_POST_Param_NoEncodeParam_Body_EncodeBody()
     {
-        final URLActionData action = new URLActionData(name,
-                                                       urlStringEmpty,
-                                                       interpreter);
+        final URLActionData action = new URLActionData(name, urlStringEmpty, interpreter);
         action.setMethod(methodPost);
 
         action.setEncodeParameters(false);
@@ -375,8 +320,7 @@ public class URLActionDataRequestBuilderTest
         final WebRequest request = builder.buildRequest(action);
 
         Assert.assertEquals(action.getMethod(), request.getHttpMethod());
-        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl()
-                                                                   .toString());
+        Assert.assertEquals(urlStringWithDecodedParameters, request.getUrl().toString());
         Assert.assertEquals(bodyDecoded, request.getRequestBody());
 
     }

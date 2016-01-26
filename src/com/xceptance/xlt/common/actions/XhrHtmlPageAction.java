@@ -6,31 +6,25 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 /**
- *  See {@link HtmlPageAction}. <br>
- *  Technically it does the same except that the response is NOT parsed into DOM.
- *  So this class is intended to be used for XmlHttpRequests.
+ * See {@link HtmlPageAction}. <br>
+ * Technically it does the same except that the response is NOT parsed into DOM. So this class is intended to be used
+ * for XmlHttpRequests.
  * 
  * @author matthias mitterreiter
  * @extends {@link HtmlPageAction}.
- *
  */
 
 public class XhrHtmlPageAction extends HtmlPageAction
 {
     private WebResponse xhrResponse;
 
-    public XhrHtmlPageAction(final HtmlPageAction previousAction,
-                             final String name,
-                             final WebRequest webRequest,
-                             final Downloader downloader,
-                             final URLActionDataExecutableResultFactory resultFactory)
+    public XhrHtmlPageAction(final HtmlPageAction previousAction, final String name, final WebRequest webRequest,
+                             final Downloader downloader, final URLActionDataExecutableResultFactory resultFactory)
     {
         super(previousAction, name, webRequest, downloader, resultFactory);
     }
 
-    public XhrHtmlPageAction(final String name,
-                             final WebRequest webRequest,
-                             final URLActionDataExecutableResultFactory resultFactory)
+    public XhrHtmlPageAction(final String name, final WebRequest webRequest, final URLActionDataExecutableResultFactory resultFactory)
     {
         super(name, webRequest, resultFactory);
 

@@ -16,104 +16,87 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataStoreResponseHandlerTest
 {
 
-	private static MockObjects mockObjects;
+    private static MockObjects mockObjects;
 
-	private static ParameterInterpreter interpreter;
+    private static ParameterInterpreter interpreter;
 
-	private static XltProperties properties;
+    private static XltProperties properties;
 
-	private static GeneralDataProvider dataProvider;
+    private static GeneralDataProvider dataProvider;
 
-	private static URLActionDataExecutableResult result;
+    private static URLActionDataExecutableResult result;
 
-	private static URLActionDataStoreResponseHandler storeHandler;
+    private static URLActionDataStoreResponseHandler storeHandler;
 
-	private static URLActionDataStore storeItemRegex;
+    private static URLActionDataStore storeItemRegex;
 
-	private static URLActionDataStore storeItemRegexCaptureGroup;
+    private static URLActionDataStore storeItemRegexCaptureGroup;
 
-	private static final String regexString = "href=\"[\\s\\S]*?\"";
+    private static final String regexString = "href=\"[\\s\\S]*?\"";
 
-	private static final String regexStringExpected = "href=\"/en/\"";
+    private static final String regexStringExpected = "href=\"/en/\"";
 
-	private static URLActionDataStore storeItemXPath;
+    private static URLActionDataStore storeItemXPath;
 
-	private static final String xpathString = "//*[@id='service-areas']/div[1]/div/div/h1";
+    private static final String xpathString = "//*[@id='service-areas']/div[1]/div/div/h1";
 
-	private static final String xpathStringExpected = "Committed to Software Quality";
+    private static final String xpathStringExpected = "Committed to Software Quality";
 
-	private static URLActionDataStore storeItemHeader;
+    private static URLActionDataStore storeItemHeader;
 
-	private static final String headerString = "Server";
+    private static final String headerString = "Server";
 
-	private static final String headerStringExpected = "Apache";
+    private static final String headerStringExpected = "Apache";
 
-	private static final String regexCaptureGroupStringTitle = "<title>([\\s\\S]*)</title>";
+    private static final String regexCaptureGroupStringTitle = "<title>([\\s\\S]*)</title>";
 
-	private static final String regexCaptureGroupStringTitleExpected = "Xceptance - The Software Testing Experts";
+    private static final String regexCaptureGroupStringTitleExpected = "Xceptance - The Software Testing Experts";
 
-	@BeforeClass
-	public static void setup()
-	{
-		properties = XltProperties.getInstance();
-		dataProvider = GeneralDataProvider.getInstance();
-		interpreter = new ParameterInterpreter(properties, dataProvider);
-		storeHandler = new URLActionDataStoreResponseHandler();
-		mockObjects = new MockObjects();
-		mockObjects.load();
-		final XPathWithHtmlPage xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
-		result = new URLActionDataExecutableResult(mockObjects.getResponse(),
-				xpwh);
-		storeItemRegex = new URLActionDataStore("regex",
-				URLActionDataStore.REGEXP,
-				regexString,
-				interpreter);
-		storeItemXPath = new URLActionDataStore("xpath",
-				URLActionDataStore.XPATH,
-				xpathString,
-				interpreter);
-		storeItemHeader = new URLActionDataStore("header",
-				URLActionDataStore.HEADER,
-				headerString,
-				interpreter);
-		
-		storeItemRegexCaptureGroup = new URLActionDataStore("regexcapture",
-				URLActionDataStore.REGEXP,
-				regexCaptureGroupStringTitle,
-				URLActionDataStore.REGEXGROUP,
-				"1",
-				interpreter);
-	}
+    @BeforeClass
+    public static void setup()
+    {
+        properties = XltProperties.getInstance();
+        dataProvider = GeneralDataProvider.getInstance();
+        interpreter = new ParameterInterpreter(properties, dataProvider);
+        storeHandler = new URLActionDataStoreResponseHandler();
+        mockObjects = new MockObjects();
+        mockObjects.load();
+        final XPathWithHtmlPage xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
+        result = new URLActionDataExecutableResult(mockObjects.getResponse(), xpwh);
+        storeItemRegex = new URLActionDataStore("regex", URLActionDataStore.REGEXP, regexString, interpreter);
+        storeItemXPath = new URLActionDataStore("xpath", URLActionDataStore.XPATH, xpathString, interpreter);
+        storeItemHeader = new URLActionDataStore("header", URLActionDataStore.HEADER, headerString, interpreter);
 
-	@Test
-	public void testRegex()
-	{
-		storeHandler.handleStore(storeItemRegex, result);
-		Assert.assertEquals(regexStringExpected,
-				interpreter.processDynamicData("${regex}"));
-	}
-	@Test
-	public void testRegexCaptureGroup()
-	{
-		storeHandler.handleStore(storeItemRegexCaptureGroup, result);
-		Assert.assertEquals(regexCaptureGroupStringTitleExpected,
-				interpreter.processDynamicData("${regexcapture}"));
-	}
+        storeItemRegexCaptureGroup = new URLActionDataStore("regexcapture", URLActionDataStore.REGEXP, regexCaptureGroupStringTitle,
+                                                            URLActionDataStore.REGEXGROUP, "1", interpreter);
+    }
 
-	@Test
-	public void testXPath()
-	{
-		storeHandler.handleStore(storeItemXPath, result);
-		Assert.assertEquals(xpathStringExpected,
-				interpreter.processDynamicData("${xpath}"));
-	}
+    @Test
+    public void testRegex()
+    {
+        storeHandler.handleStore(storeItemRegex, result);
+        Assert.assertEquals(regexStringExpected, interpreter.processDynamicData("${regex}"));
+    }
 
-	@Test
-	public void testHeader()
-	{
-		storeHandler.handleStore(storeItemHeader, result);
-		Assert.assertEquals(headerStringExpected,
-				interpreter.processDynamicData("${header}"));
-	}
+    @Test
+    public void testRegexCaptureGroup()
+    {
+        storeHandler.handleStore(storeItemRegexCaptureGroup, result);
+        Assert.assertEquals(regexCaptureGroupStringTitleExpected, interpreter.processDynamicData("${regexcapture}"));
+    }
+
+    @Test
+    public void testXPath()
+    {
+        storeHandler.handleStore(storeItemXPath, result);
+        Assert.assertEquals(xpathStringExpected, interpreter.processDynamicData("${xpath}"));
+    }
+
+    @Test
+    public void testHeader()
+    {
+        storeHandler.handleStore(storeItemHeader, result);
+        Assert.assertEquals(headerStringExpected, interpreter.processDynamicData("${header}"));
+    }
 
 }

@@ -19,21 +19,20 @@ public interface URLActionDataExecutionable
     public URLActionDataExecutableResult getResult();
 
     /**
-     * executes an {@link URLActionData}, which means it fires the resulting request 
-     * and creates the {@link URLActionDataExecutableResult}.
+     * executes an {@link URLActionData}, which means it fires the resulting request and creates the
+     * {@link URLActionDataExecutableResult}.
      */
     public void executeAction();
 
     /**
      * Adds {@link URLActionData} of type STATIC, which will be executes automatically.
-     * @param url 
+     * 
+     * @param url
      */
     public void addStaticRequest(final URL url);
 
     /**
-     * 
-     * @return
-     *  the request url.
+     * @return the request url.
      */
     public URL getUrl();
 }

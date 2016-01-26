@@ -37,7 +37,7 @@ public class URLActionDataExecutableResultFactoryTest
     {
         final URLActionDataExecutableResult result = resultFactory.getResult(mockObjects.getLightWeightPage());
         @SuppressWarnings("unused")
-		final List<String> something = result.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
+        final List<String> something = result.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
     }
 
     @Test

@@ -46,35 +46,27 @@ public class URLActionDataValidationResponseHandler
      * @throws IllegalArgumentException
      *             if the validation was wrong or failed.
      */
-    public void validate(final URLActionDataValidation validation,
-                         final URLActionDataExecutableResult result)
+    public void validate(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
-        XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName()
-                                      + "\"");
+        XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName() + "\"");
         try
         {
             handleValidation(validation, result);
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to validate Response : \""
-                                                   + validation.getName()
-                                                   + "\": " + e.getMessage(),
-                                               e);
+            throw new IllegalArgumentException("Failed to validate Response : \"" + validation.getName() + "\": " + e.getMessage(), e);
         }
     }
 
-    private void handleValidation(final URLActionDataValidation validation,
-                                  final URLActionDataExecutableResult result)
+    private void handleValidation(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
-        final List<String> resultSelection = selectFromResult(validation,
-                                                              result);
+        final List<String> resultSelection = selectFromResult(validation, result);
         validateContent(resultSelection, validation);
 
     }
 
-    private List<String> selectFromResult(final URLActionDataValidation validation,
-                                          final URLActionDataExecutableResult result)
+    private List<String> selectFromResult(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
         final String selectionMode = validation.getSelectionMode();
 
@@ -95,15 +87,12 @@ public class URLActionDataValidationResponseHandler
                 resultSelection = handleCookieValidationItem(validation, result);
                 break;
             default:
-                throw new IllegalArgumentException("SelectionMode: \""
-                                                   + validation.getSelectionMode()
-                                                   + "\" is not supported!");
+                throw new IllegalArgumentException("SelectionMode: \"" + validation.getSelectionMode() + "\" is not supported!");
         }
         return resultSelection;
     }
 
-    private void validateContent(final List<String> resultSelection,
-                                 final URLActionDataValidation validation)
+    private void validateContent(final List<String> resultSelection, final URLActionDataValidation validation)
     {
         final String validationMode = validation.getValidationMode();
         switch (validationMode)
@@ -121,24 +110,18 @@ public class URLActionDataValidationResponseHandler
                 validateText(resultSelection, validation);
                 break;
             default:
-                throw new IllegalArgumentException("ValidationMode: \""
-                                                   + validation.getValidationMode()
-                                                   + "\" is not supported!");
+                throw new IllegalArgumentException("ValidationMode: \"" + validation.getValidationMode() + "\" is not supported!");
         }
     }
 
-    private void validateExists(final List<String> resultSelection,
-                                final URLActionDataValidation validation)
+    private void validateExists(final List<String> resultSelection, final URLActionDataValidation validation)
     {
-        XltLogger.runTimeLogger.debug("Validating \"" + validation.getName()
-                                      + "\": EXISTANCE");
+        XltLogger.runTimeLogger.debug("Validating \"" + validation.getName() + "\": EXISTANCE");
 
-        Assert.assertFalse(getNotFoundFailMessage(validation),
-                           resultSelection.isEmpty());
+        Assert.assertFalse(getNotFoundFailMessage(validation), resultSelection.isEmpty());
     }
 
-    private void validateCount(final List<String> resultSelection,
-                               final URLActionDataValidation validation)
+    private void validateCount(final List<String> resultSelection, final URLActionDataValidation validation)
     {
 
         validateExists(resultSelection, validation);
@@ -146,27 +129,22 @@ public class URLActionDataValidationResponseHandler
         final int expectedLength = Integer.valueOf(validation.getValidationContent());
         final int actualLength = resultSelection.size();
 
-        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
-                                      + "\": COUNT:" + expectedLength + " = \""
-                                      + actualLength + "\"");
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName() + "\": COUNT:" + expectedLength + " = \"" + actualLength +
+                                      "\"");
 
-        Assert.assertEquals(getFailMessage(validation),
-                            expectedLength,
-                            actualLength);
+        Assert.assertEquals(getFailMessage(validation), expectedLength, actualLength);
 
     }
 
-    private void validateMatches(final List<String> resultSelection,
-                                 final URLActionDataValidation validation)
+    private void validateMatches(final List<String> resultSelection, final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
 
         final String matcherString = resultSelection.get(0);
         final String patternString = validation.getValidationContent();
 
-        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
-                                      + "\": MATCHES: \"" + matcherString
-                                      + "\" matches \"" + patternString + "\"");
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName() + "\": MATCHES: \"" + matcherString + "\" matches \"" +
+                                      patternString + "\"");
 
         final Pattern pattern = Pattern.compile(patternString);
         final Matcher matcher = pattern.matcher(matcherString);
@@ -175,45 +153,37 @@ public class URLActionDataValidationResponseHandler
 
     }
 
-    private void validateText(final List<String> resultSelection,
-                              final URLActionDataValidation validation)
+    private void validateText(final List<String> resultSelection, final URLActionDataValidation validation)
     {
         validateExists(resultSelection, validation);
 
         final String expectedText = validation.getValidationContent();
         final String actualText = resultSelection.get(0);
 
-        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName()
-                                      + "\": TEXT: " + "'" + expectedText + "'"
-                                      + " = " + "'" + actualText + "'");
+        XltLogger.runTimeLogger.debug("Validating  \"" + validation.getName() + "\": TEXT: " + "'" + expectedText + "'" + " = " + "'" +
+                                      actualText + "'");
 
-        Assert.assertEquals(getFailMessage(validation),
-                            expectedText,
-                            actualText);
+        Assert.assertEquals(getFailMessage(validation), expectedText, actualText);
     }
 
-    private List<String> handleCookieValidationItem(final URLActionDataValidation validation,
-                                                    final URLActionDataExecutableResult result)
+    private List<String> handleCookieValidationItem(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
         return result.getCookieAsStringByName(validation.getSelectionContent());
     }
 
-    private List<String> handleXPathValidationItem(final URLActionDataValidation validation,
-                                                   final URLActionDataExecutableResult result)
+    private List<String> handleXPathValidationItem(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
         return result.getByXPath(validation.getSelectionContent());
 
     }
 
-    private List<String> handleRegExValidationItem(final URLActionDataValidation validation,
-                                                   final URLActionDataExecutableResult result)
+    private List<String> handleRegExValidationItem(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
         return result.getByRegEx(validation.getSelectionContent());
 
     }
 
-    private List<String> handleHeaderValidationItem(final URLActionDataValidation validation,
-                                                    final URLActionDataExecutableResult result)
+    private List<String> handleHeaderValidationItem(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
     {
         return result.getHeaderByName(validation.getSelectionContent());
 
@@ -222,16 +192,13 @@ public class URLActionDataValidationResponseHandler
     private String getNotFoundFailMessage(final URLActionDataValidation validation)
     {
         final String message = MessageFormat.format("Validation \"{0}\" failed, because for {1} = \"{2}\" no Elements were found! ",
-                                                    validation.getName(),
-                                                    validation.getSelectionMode(),
-                                                    validation.getSelectionContent());
+                                                    validation.getName(), validation.getSelectionMode(), validation.getSelectionContent());
         return message;
     }
 
     private String getFailMessage(final URLActionDataValidation validation)
     {
-        final String message = MessageFormat.format("Validation \"{0}\" failed, Mode: \"{1}\":",
-                                                    validation.getName(),
+        final String message = MessageFormat.format("Validation \"{0}\" failed, Mode: \"{1}\":", validation.getName(),
                                                     validation.getValidationMode());
         return message;
     }

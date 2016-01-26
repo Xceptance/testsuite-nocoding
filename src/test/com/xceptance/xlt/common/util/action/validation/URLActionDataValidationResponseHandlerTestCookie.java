@@ -57,60 +57,29 @@ public class URLActionDataValidationResponseHandlerTestCookie
         mockObjects = new MockObjects(urlString);
         mockObjects.load();
         xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
-        result = new URLActionDataExecutableResult(mockObjects.getResponse(),
-                                                   xpwh);
+        result = new URLActionDataExecutableResult(mockObjects.getResponse(), xpwh);
 
-        validationCookieExists = new URLActionDataValidation("exists",
-                                                             URLActionDataValidation.COOKIE,
-                                                             cookieName1,
-                                                             URLActionDataValidation.EXISTS,
-                                                             null,
-                                                             interpreter);
-        validationCookieExistsMalicious = new URLActionDataValidation("exists_malicious",
-                                                             URLActionDataValidation.COOKIE,
-                                                             "non-existing-cookie",
-                                                             URLActionDataValidation.EXISTS,
-                                                             null,
-                                                             interpreter);
-        
-        validationCookieTextMalicious = new URLActionDataValidation("text_malicious",
-                                                                  URLActionDataValidation.COOKIE,
-                                                                  cookieName2,
-                                                                  URLActionDataValidation.TEXT,
-                                                                  "something stupid",
-                                                                  interpreter);
-        
-        
-        validationCookieMatches = new URLActionDataValidation("matches",
-                                                              URLActionDataValidation.COOKIE,
-                                                              cookieName2,
-                                                              URLActionDataValidation.MATCHES,
-                                                              "[\\s\\S]+",
-                                                              interpreter);
-        
-        validationCookieMatchesMalicious = new URLActionDataValidation("matches_malicious",
-                                                              URLActionDataValidation.COOKIE,
-                                                              cookieName2,
-                                                              URLActionDataValidation.MATCHES,
-                                                              "\\d",
-                                                              interpreter);
-        
-        validationCookieCount = new URLActionDataValidation("count",
-                                                            URLActionDataValidation.COOKIE,
-                                                            cookieName1,
-                                                            URLActionDataValidation.COUNT,
-                                                            "1",
-                                                            interpreter);
-        
-        validationCookieCountMalicious = new URLActionDataValidation("count_malicious",
-                                                            URLActionDataValidation.COOKIE,
-                                                            cookieName1,
-                                                            URLActionDataValidation.COUNT,
-                                                            "2",
-                                                            interpreter);
-        
-  
-           
+        validationCookieExists = new URLActionDataValidation("exists", URLActionDataValidation.COOKIE, cookieName1,
+                                                             URLActionDataValidation.EXISTS, null, interpreter);
+        validationCookieExistsMalicious = new URLActionDataValidation("exists_malicious", URLActionDataValidation.COOKIE,
+                                                                      "non-existing-cookie", URLActionDataValidation.EXISTS, null,
+                                                                      interpreter);
+
+        validationCookieTextMalicious = new URLActionDataValidation("text_malicious", URLActionDataValidation.COOKIE, cookieName2,
+                                                                    URLActionDataValidation.TEXT, "something stupid", interpreter);
+
+        validationCookieMatches = new URLActionDataValidation("matches", URLActionDataValidation.COOKIE, cookieName2,
+                                                              URLActionDataValidation.MATCHES, "[\\s\\S]+", interpreter);
+
+        validationCookieMatchesMalicious = new URLActionDataValidation("matches_malicious", URLActionDataValidation.COOKIE, cookieName2,
+                                                                       URLActionDataValidation.MATCHES, "\\d", interpreter);
+
+        validationCookieCount = new URLActionDataValidation("count", URLActionDataValidation.COOKIE, cookieName1,
+                                                            URLActionDataValidation.COUNT, "1", interpreter);
+
+        validationCookieCountMalicious = new URLActionDataValidation("count_malicious", URLActionDataValidation.COOKIE, cookieName1,
+                                                                     URLActionDataValidation.COUNT, "2", interpreter);
+
     }
 
     @Test
@@ -118,47 +87,51 @@ public class URLActionDataValidationResponseHandlerTestCookie
     {
         validationHandler = new URLActionDataValidationResponseHandler();
     }
+
     @Test
     public void testCookieExists()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieExists, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testCookieExistsMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieExistsMalicious, result);
     }
+
     @Test
     public void testCookieCount()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieCount, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testCookieCountMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieCountMalicious, result);
     }
+
     @Test(expected = AssertionError.class)
     public void testCookieTestMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieTextMalicious, result);
     }
+
     @Test
     public void testCookieMatches()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieMatches, result);
     }
-    
+
     /*
-     * This test case is broken
-     * Don't know why
-     * Actually it should throw, but it doesn't....
+     * This test case is broken Don't know why Actually it should throw, but it doesn't....
      */
     @Test
     public void testCookieMatchesMalicious()
@@ -166,6 +139,5 @@ public class URLActionDataValidationResponseHandlerTestCookie
         validationHandler = new URLActionDataValidationResponseHandler();
         validationHandler.validate(validationCookieMatchesMalicious, result);
     }
-
 
 }

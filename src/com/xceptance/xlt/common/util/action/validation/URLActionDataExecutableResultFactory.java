@@ -6,13 +6,13 @@ import com.xceptance.xlt.api.htmlunit.LightWeightPage;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
+
 /**
  * Factory <br>
- * Creates {@link URLActionDataExecutableResult} depending on the type of response
- * of the {@link URLActionDataExecutionable}.
+ * Creates {@link URLActionDataExecutableResult} depending on the type of response of the
+ * {@link URLActionDataExecutionable}.
  * 
  * @author matthias mitterreiter
- *
  */
 public class URLActionDataExecutableResultFactory
 {
@@ -22,10 +22,8 @@ public class URLActionDataExecutableResultFactory
     }
 
     /**
-     * 
      * @param htmlPage
-     * @return
-     *  a wrapper for a {@link HtmlPage}.
+     * @return a wrapper for a {@link HtmlPage}.
      */
     public URLActionDataExecutableResult getResult(final HtmlPage htmlPage)
     {
@@ -35,23 +33,19 @@ public class URLActionDataExecutableResultFactory
         return result;
     }
 
-    private URLActionDataExecutableResult createResultFromHtmlPage(
-                                                                   final HtmlPage htmlPage)
+    private URLActionDataExecutableResult createResultFromHtmlPage(final HtmlPage htmlPage)
     {
         final WebResponse webResponse = htmlPage.getWebResponse();
         final XPathWithHtmlPage xPathWithHtmlPage = new XPathWithHtmlPage(htmlPage);
-        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse,
-                                                                                       xPathWithHtmlPage);
+        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse, xPathWithHtmlPage);
         return result;
     }
 
     /**
-     * 
      * @param lightWeightPage
      * @return a wrapper for a {@link LightWeightPage}.
      */
-    public URLActionDataExecutableResult getResult(
-                                                   final LightWeightPage lightWeightPage)
+    public URLActionDataExecutableResult getResult(final LightWeightPage lightWeightPage)
     {
         ParameterUtils.isNotNullMessages(lightWeightPage, "LightWeightPage");
         final URLActionDataExecutableResult result = createResultFromLightWeightPage(lightWeightPage);
@@ -59,21 +53,17 @@ public class URLActionDataExecutableResultFactory
         return result;
     }
 
-    private URLActionDataExecutableResult createResultFromLightWeightPage(
-                                                                          final LightWeightPage lightWeightPage)
+    private URLActionDataExecutableResult createResultFromLightWeightPage(final LightWeightPage lightWeightPage)
     {
         final WebResponse webResponse = lightWeightPage.getWebResponse();
         final XPathWithLightWeightPage xPathWithLightWeightPage = new XPathWithLightWeightPage();
-        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse,
-                                                                                       xPathWithLightWeightPage);
+        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse, xPathWithLightWeightPage);
         return result;
     }
 
     /**
-     * 
      * @param webResponse
-     * @return
-     *  a wrapper for a {@link WebResponse}.
+     * @return a wrapper for a {@link WebResponse}.
      */
     public URLActionDataExecutableResult getResult(final WebResponse webResponse)
     {
@@ -83,17 +73,14 @@ public class URLActionDataExecutableResultFactory
         return result;
     }
 
-    private URLActionDataExecutableResult createResultFromWebResponse(
-                                                                      final WebResponse webResponse)
+    private URLActionDataExecutableResult createResultFromWebResponse(final WebResponse webResponse)
     {
         final XPathGetable xPathGetble = createXPathGetableFromWebResponse(webResponse);
-        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse,
-                                                                                       xPathGetble);
+        final URLActionDataExecutableResult result = new URLActionDataExecutableResult(webResponse, xPathGetble);
         return result;
     }
 
-    private XPathGetable createXPathGetableFromWebResponse(
-                                                           final WebResponse webResponse)
+    private XPathGetable createXPathGetableFromWebResponse(final WebResponse webResponse)
     {
         XPathGetable xPathGetble = null;
 

@@ -78,9 +78,7 @@ public class XPathWithParseableWebResponse implements XPathGetable
         }
         else
         {
-            throw new IllegalArgumentException("WebResponse of Type: '"
-                                               + getContentTypeFromResponse(webResponse)
-                                               + "' is not parseable!");
+            throw new IllegalArgumentException("WebResponse of Type: '" + getContentTypeFromResponse(webResponse) + "' is not parseable!");
         }
     }
 
@@ -136,12 +134,8 @@ public class XPathWithParseableWebResponse implements XPathGetable
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to parse DomNode: "
-                                               + node.getLocalName()
-                                               + " of type: "
-                                               + node.getNodeType()
-                                               + " to String because: "
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to parse DomNode: " + node.getLocalName() + " of type: " + node.getNodeType() +
+                                               " to String because: " + e.getMessage());
         }
     }
 
@@ -154,11 +148,11 @@ public class XPathWithParseableWebResponse implements XPathGetable
     }
 
     @SuppressWarnings("unchecked")
-	private List<DomNode> getHtmlElementListByXPath(final String xPath)
+    private List<DomNode> getHtmlElementListByXPath(final String xPath)
     {
         XltLogger.runTimeLogger.debug("Getting Elements by XPath: " + xPath);
 
-        List<DomNode> htmlElements = Collections.<DomNode> emptyList();
+        List<DomNode> htmlElements = Collections.<DomNode>emptyList();
 
         try
         {
@@ -166,17 +160,13 @@ public class XPathWithParseableWebResponse implements XPathGetable
 
             if (htmlElements == null)
             {
-                XltLogger.runTimeLogger.debug("No Elements found!, XPath: "
-                                              + xPath);
-                htmlElements = Collections.<DomNode> emptyList();
+                XltLogger.runTimeLogger.debug("No Elements found!, XPath: " + xPath);
+                htmlElements = Collections.<DomNode>emptyList();
             }
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to get Elements by XPath: "
-                                               + xPath
-                                               + ", Because: "
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to get Elements by XPath: " + xPath + ", Because: " + e.getMessage());
         }
         return htmlElements;
     }
@@ -187,15 +177,12 @@ public class XPathWithParseableWebResponse implements XPathGetable
         try
         {
             final URL url = webResponse.getWebRequest().getUrl();
-            final StringWebResponse response = new StringWebResponse(webResponse.getContentAsString(),
-                                                                     url);
-            this.htmlPage = HTMLParser.parseHtml(response,
-                                                 new WebClient().getCurrentWindow());
+            final StringWebResponse response = new StringWebResponse(webResponse.getContentAsString(), url);
+            this.htmlPage = HTMLParser.parseHtml(response, new WebClient().getCurrentWindow());
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to create a HtmlPage from WebResponse, because: "
-                                               + e.getMessage());
+            throw new IllegalArgumentException("Failed to create a HtmlPage from WebResponse, because: " + e.getMessage());
         }
     }
 

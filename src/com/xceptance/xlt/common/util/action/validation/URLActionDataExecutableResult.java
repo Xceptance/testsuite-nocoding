@@ -41,8 +41,7 @@ public class URLActionDataExecutableResult
      * @param xPathGetable
      *            a {@link XPathGetable}
      */
-    public URLActionDataExecutableResult(final WebResponse webResponse,
-                                         final XPathGetable xPathGetable)
+    public URLActionDataExecutableResult(final WebResponse webResponse, final XPathGetable xPathGetable)
     {
         XltLogger.runTimeLogger.debug("Creating new Instance");
         setWebResponse(webResponse);
@@ -91,6 +90,7 @@ public class URLActionDataExecutableResult
         }
         return resultList;
     }
+
     /**
      * Compiles the pattern and scans the request body for matches.
      * 
@@ -166,8 +166,7 @@ public class URLActionDataExecutableResult
         {
             if (cookie.getName().equals(cookieName))
             {
-                resultCookies.add(new NameValuePair(cookie.getName(),
-                                                    cookie.getValue()));
+                resultCookies.add(new NameValuePair(cookie.getName(), cookie.getValue()));
             }
         }
         return resultCookies;
@@ -202,8 +201,7 @@ public class URLActionDataExecutableResult
         for (final HttpCookie cookie : cookies)
         {
 
-            resultCookies.add(new NameValuePair(cookie.getName(),
-                                                cookie.getValue()));
+            resultCookies.add(new NameValuePair(cookie.getName(), cookie.getValue()));
         }
         return resultCookies;
     }

@@ -19,9 +19,9 @@ public class URLActionStoreDataBuilderTest
     String selectionMode;
 
     String selectionContent;
-    
+
     String subSelectionContent;
-    
+
     String subSelectionMode;
 
     URLActionDataStoreBuilder storeBuilder;
@@ -36,14 +36,14 @@ public class URLActionStoreDataBuilderTest
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
         interpreter = new ParameterInterpreter(properties, dataProvider);
-        
+
         name = "name";
         selectionMode = "XPath";
         selectionContent = "someXPath";
         subSelectionContent = "blabla";
         subSelectionMode = URLActionDataStore.REGEXGROUP;
         storeBuilder = new URLActionDataStoreBuilder();
-        
+
     }
 
     @Test

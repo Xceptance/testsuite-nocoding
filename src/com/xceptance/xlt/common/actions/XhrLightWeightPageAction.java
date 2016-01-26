@@ -6,28 +6,22 @@ import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableRe
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 
 /**
- *  See {@link LightWeightPageAction}. <br>
- *   
+ * See {@link LightWeightPageAction}. <br>
+ * 
  * @author matthias mitterreiter
  * @extends {@link LightWeightPageAction}.
- *
  */
 public class XhrLightWeightPageAction extends LightWeightPageAction
 {
     private WebResponse xhrResponse;
 
-    public XhrLightWeightPageAction(final LightWeightPageAction previousAction,
-                                    final String name,
-                                    final WebRequest webRequest,
-                                    final Downloader downloader,
-                                    final URLActionDataExecutableResultFactory resultFactory)
+    public XhrLightWeightPageAction(final LightWeightPageAction previousAction, final String name, final WebRequest webRequest,
+                                    final Downloader downloader, final URLActionDataExecutableResultFactory resultFactory)
     {
-        super(previousAction, name, webRequest, downloader,resultFactory);
+        super(previousAction, name, webRequest, downloader, resultFactory);
     }
 
-    public XhrLightWeightPageAction(final String name,
-                                    final WebRequest webRequest,
-                                    final URLActionDataExecutableResultFactory resultFactory)
+    public XhrLightWeightPageAction(final String name, final WebRequest webRequest, final URLActionDataExecutableResultFactory resultFactory)
     {
         super(name, webRequest, resultFactory);
     }

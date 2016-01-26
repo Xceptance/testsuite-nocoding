@@ -131,10 +131,7 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void loadNoCodingPropAdmin()
     {
-        this.propertiesAdmin = new NoCodingPropAdmin(properties,
-                                                     getTestName(),
-                                                     Session.getCurrent()
-                                                            .getUserName());
+        this.propertiesAdmin = new NoCodingPropAdmin(properties, getTestName(), Session.getCurrent().getUserName());
     }
 
     private void loadGeneralDataProvider()
@@ -189,14 +186,12 @@ public class AbstractURLTestCase extends AbstractTestCase
 
     private void setupParameterInterpreter()
     {
-        this.interpreter = new ParameterInterpreter(this.properties,
-                                                    this.dataProvider);
+        this.interpreter = new ParameterInterpreter(this.properties, this.dataProvider);
     }
 
     private void setupURLActionListFacade()
     {
-        urlActionListFacade = new URLActionDataListFacade(this.filePath,
-                                                          this.interpreter);
+        urlActionListFacade = new URLActionDataListFacade(this.filePath, this.interpreter);
     }
 
     private void setupURLActionExecutableFactory()
@@ -215,8 +210,7 @@ public class AbstractURLTestCase extends AbstractTestCase
     {
         this.storeHandler = new URLActionDataStoreResponseHandler();
         this.validationHandler = new URLActionDataValidationResponseHandler();
-        this.responseHandler = new URLActionDataResponseHandler(this.storeHandler,
-                                                                this.validationHandler);
+        this.responseHandler = new URLActionDataResponseHandler(this.storeHandler, this.validationHandler);
     }
 
     private void setupURLActionList()
@@ -227,9 +221,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to read DATA from File: "
-                                                   + e.getMessage(),
-                                               e);
+            throw new IllegalArgumentException("Failed to read DATA from File: " + e.getMessage(), e);
         }
     }
 }

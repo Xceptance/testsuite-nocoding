@@ -63,8 +63,7 @@ public class YAMLBasedURLActionDataListBuilderTest
     public void testCorrectConstructor()
     {
         @SuppressWarnings("unused")
-		final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData,
-                                                                                                    this.interpreter,
+        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData, this.interpreter,
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
@@ -74,8 +73,7 @@ public class YAMLBasedURLActionDataListBuilderTest
     public void testOutputForUnExistingFile()
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileNotExistingFile,
-                                                                                                    this.interpreter,
-                                                                                                    this.actionBuilder,
+                                                                                                    this.interpreter, this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
@@ -85,8 +83,7 @@ public class YAMLBasedURLActionDataListBuilderTest
     @Test
     public void testOutputForEmptyFile()
     {
-        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileEmptyFile,
-                                                                                                    this.interpreter,
+        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileEmptyFile, this.interpreter,
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
@@ -97,22 +94,19 @@ public class YAMLBasedURLActionDataListBuilderTest
     @Test
     public void testOutputForDefaultValues()
     {
-        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData,
-                                                                                                    this.interpreter,
+        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTestData, this.interpreter,
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         @SuppressWarnings("unused")
-		final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
     }
 
     @Test
-    public void testBuildSingleActionWithoutDefaults()
-        throws MalformedURLException
+    public void testBuildSingleActionWithoutDefaults() throws MalformedURLException
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSingleActionNoDefaultsData,
-                                                                                                    this.interpreter,
-                                                                                                    this.actionBuilder,
+                                                                                                    this.interpreter, this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
@@ -121,16 +115,13 @@ public class YAMLBasedURLActionDataListBuilderTest
         final URLActionData action = actions.get(0);
 
         Assert.assertEquals("name", action.getName());
-        Assert.assertEquals("http://www.xceptance.com", action.getUrl()
-                                                              .toString());
+        Assert.assertEquals("http://www.xceptance.com", action.getUrl().toString());
         Assert.assertEquals(URLActionData.TYPE_XHR, action.getType());
         Assert.assertTrue(action.isXHRAction());
-        Assert.assertEquals(URLActionData.METHOD_GET, action.getMethod()
-                                                            .toString());
+        Assert.assertEquals(URLActionData.METHOD_GET, action.getMethod().toString());
         Assert.assertFalse(action.encodeParameters());
         Assert.assertEquals("body", action.getBody());
-        Assert.assertEquals(400, action.getResponseCodeValidator()
-                                       .getHttpResponseCode());
+        Assert.assertEquals(400, action.getResponseCodeValidator().getHttpResponseCode());
 
         final List<NameValuePair> headers = action.getHeaders();
         Assert.assertFalse(headers.isEmpty());
@@ -173,23 +164,18 @@ public class YAMLBasedURLActionDataListBuilderTest
         final URLActionDataValidation validation1 = validations.get(0);
 
         Assert.assertEquals("validation_name_1", validation1.getName());
-        Assert.assertEquals(URLActionDataValidation.XPATH,
-                            validation1.getSelectionMode());
+        Assert.assertEquals(URLActionDataValidation.XPATH, validation1.getSelectionMode());
         Assert.assertEquals("xpath_value_1", validation1.getSelectionContent());
-        Assert.assertEquals(URLActionDataValidation.EXISTS,
-                            validation1.getValidationMode());
+        Assert.assertEquals(URLActionDataValidation.EXISTS, validation1.getValidationMode());
         Assert.assertNull(validation1.getValidationContent());
 
         final URLActionDataValidation validation2 = validations.get(1);
 
         Assert.assertEquals("validation_name_2", validation2.getName());
-        Assert.assertEquals(URLActionDataValidation.REGEXP,
-                            validation2.getSelectionMode());
+        Assert.assertEquals(URLActionDataValidation.REGEXP, validation2.getSelectionMode());
         Assert.assertEquals("regexp_value_2", validation2.getSelectionContent());
-        Assert.assertEquals(URLActionDataValidation.MATCHES,
-                            validation2.getValidationMode());
-        Assert.assertEquals("matches_value_2",
-                            validation2.getValidationContent());
+        Assert.assertEquals(URLActionDataValidation.MATCHES, validation2.getValidationMode());
+        Assert.assertEquals("matches_value_2", validation2.getValidationContent());
 
     }
 
@@ -197,8 +183,7 @@ public class YAMLBasedURLActionDataListBuilderTest
     public void testStaticSubrequestCreation() throws MalformedURLException
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileStaticSubrequests,
-                                                                                                    this.interpreter,
-                                                                                                    this.actionBuilder,
+                                                                                                    this.interpreter, this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
@@ -206,31 +191,24 @@ public class YAMLBasedURLActionDataListBuilderTest
 
         final URLActionData static_action_1 = actions.get(1);
 
-        Assert.assertEquals("https://www.xceptance.com/images/xceptance-logo-transparent-202px.png",
-                            static_action_1.getUrl().toString());
-        Assert.assertEquals(URLActionData.TYPE_STATIC,
-                            static_action_1.getType());
+        Assert.assertEquals("https://www.xceptance.com/images/xceptance-logo-transparent-202px.png", static_action_1.getUrl().toString());
+        Assert.assertEquals(URLActionData.TYPE_STATIC, static_action_1.getType());
         Assert.assertTrue(static_action_1.isStaticContent());
-        Assert.assertEquals(URLActionData.METHOD_GET,
-                            static_action_1.getMethod().toString());
+        Assert.assertEquals(URLActionData.METHOD_GET, static_action_1.getMethod().toString());
 
         final URLActionData static_action_2 = actions.get(2);
 
-        Assert.assertEquals("https://www.xceptance.com/images/xlt-logo-small.png",
-                            static_action_2.getUrl().toString());
-        Assert.assertEquals(URLActionData.TYPE_STATIC,
-                            static_action_2.getType());
+        Assert.assertEquals("https://www.xceptance.com/images/xlt-logo-small.png", static_action_2.getUrl().toString());
+        Assert.assertEquals(URLActionData.TYPE_STATIC, static_action_2.getType());
         Assert.assertTrue(static_action_2.isStaticContent());
-        Assert.assertEquals(URLActionData.METHOD_GET,
-                            static_action_2.getMethod().toString());
+        Assert.assertEquals(URLActionData.METHOD_GET, static_action_2.getMethod().toString());
     }
 
     @Test
     public void testXhrSubrequestCreation() throws MalformedURLException
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileXhrSubrequests,
-                                                                                                    this.interpreter,
-                                                                                                    this.actionBuilder,
+                                                                                                    this.interpreter, this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
@@ -242,8 +220,7 @@ public class YAMLBasedURLActionDataListBuilderTest
     public void testXomplexTestCase() throws MalformedURLException
     {
         final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileComplexTestCase,
-                                                                                                    this.interpreter,
-                                                                                                    this.actionBuilder,
+                                                                                                    this.interpreter, this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
@@ -254,13 +231,12 @@ public class YAMLBasedURLActionDataListBuilderTest
     @Test
     public void testTmp() throws MalformedURLException
     {
-        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTmp,
-                                                                                                    this.interpreter,
+        final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileTmp, this.interpreter,
                                                                                                     this.actionBuilder,
                                                                                                     this.validationBuilder,
                                                                                                     this.storeBuilder);
         @SuppressWarnings("unused")
-		final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
     }
 
 }

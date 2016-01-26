@@ -63,8 +63,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
      * @return {@link URLActionDataExecutionable}
      */
     @Override
-    public URLActionDataExecutionable createPageAction(final String name,
-                                                       final WebRequest request)
+    public URLActionDataExecutionable createPageAction(final String name, final WebRequest request)
     {
 
         HtmlPageAction action;
@@ -88,11 +87,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
         }
         else
         {
-            action = new HtmlPageAction(previousAction,
-                                        name,
-                                        request,
-                                        createDownloader(),
-                                        resultFactory);
+            action = new HtmlPageAction(previousAction, name, request, createDownloader(), resultFactory);
         }
         this.previousAction = action;
         return action;
@@ -101,14 +96,10 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
 
     private Downloader createDownloader()
     {
-        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID,
-                                                                     false);
-        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS,
-                                                                1);
+        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID, false);
+        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS, 1);
 
-        final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(),
-                                                     threadCount,
-                                                     userAgentUID);
+        final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(), threadCount, userAgentUID);
 
         return downloader;
 
@@ -132,8 +123,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
      *             Because in this case no WebClient is available.
      */
     @Override
-    public URLActionDataExecutionable createXhrPageAction(final String name,
-                                                          final WebRequest request)
+    public URLActionDataExecutionable createXhrPageAction(final String name, final WebRequest request)
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
@@ -142,11 +132,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");
         }
-        final XhrHtmlPageAction xhrAction = new XhrHtmlPageAction(previousAction,
-                                                                  name,
-                                                                  request,
-                                                                  createDownloader(),
-                                                                  resultFactory);
+        final XhrHtmlPageAction xhrAction = new XhrHtmlPageAction(previousAction, name, request, createDownloader(), resultFactory);
         previousAction = xhrAction;
 
         return xhrAction;

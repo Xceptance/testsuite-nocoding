@@ -9,65 +9,49 @@ import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * 
- * Loads all the static content stuff with a passed {@link XltWebClient}, 
- * distributed on some threads. For this the {@link StaticContentDownloader} is used.
+ * Loads all the static content stuff with a passed {@link XltWebClient}, distributed on some threads. For this the
+ * {@link StaticContentDownloader} is used.
  */
 public class Downloader
 {
     private final List<String> urls = new ArrayList<String>();
 
-    private XltWebClient webClient;
+    private final XltWebClient webClient;
 
-    private int threadCount = 1;
+    private final int threadCount;
 
-    private boolean userAgentUID = false;
+    private final boolean userAgentUID;
 
     /**
-     * 
-     * @param webClient : the {@link XltWebClient}, that fires the requests.
+     * @param webClient
+     *            : the {@link XltWebClient}, that fires the requests.
      */
     public Downloader(final XltWebClient webClient)
     {
-        setWebClient(webClient);
-        setUserAgentUID(false); // default
-        setThreadCount(1); // default
+        this(webClient, 1, false);
     }
 
     /**
-     * 
-     * @param webClient : the {@link XltWebClient}, that fires the requests.
-     * @param threadCount : amount of threads for parallel loading
+     * @param webClient
+     *            : the {@link XltWebClient}, that fires the requests.
+     * @param threadCount
+     *            : amount of threads for parallel loading
      * @param userAgentUID
      */
-    public Downloader(final XltWebClient webClient,
-                      final int threadCount,
-                      final boolean userAgentUID)
-    {
-        setUserAgentUID(userAgentUID);
-        setThreadCount(threadCount);
-        setWebClient(webClient);
-    }
-
-    private void setUserAgentUID(final boolean userAgentUID)
-    {
-        this.userAgentUID = userAgentUID;
-    }
-
-    private void setThreadCount(final int threadCount)
-    {
-        this.threadCount = threadCount < 0 ? 1 : threadCount;
-    }
-
-    private void setWebClient(final XltWebClient webClient)
+    public Downloader(final XltWebClient webClient, final int threadCount, final boolean userAgentUID)
     {
         ParameterUtils.isNotNull(webClient, "XltWebClient");
+
+        this.userAgentUID = userAgentUID;
+        this.threadCount = threadCount < 0 ? 1 : threadCount;
         this.webClient = webClient;
     }
 
     /**
      * Adds a request.
-     * @param url : request url
+     * 
+     * @param url
+     *            : request url
      */
     public void addRequest(final String url)
     {
@@ -77,8 +61,8 @@ public class Downloader
     }
 
     /**
-     * loads all the requests that were previously added via 
-     * {@link #addRequest(String)}
+     * loads all the requests that were previously added via {@link #addRequest(String)}
+     * 
      * @throws Exception
      */
     public void loadRequests() throws Exception
@@ -86,10 +70,7 @@ public class Downloader
         if (!urls.isEmpty())
         {
             // build a static content downloader only when needed
-            final StaticContentDownloader downloader = new StaticContentDownloader(
-                                                                                   webClient,
-                                                                                   threadCount,
-                                                                                   userAgentUID);
+            final StaticContentDownloader downloader = new StaticContentDownloader(webClient, threadCount, userAgentUID);
             try
             {
                 // load the additional URLs

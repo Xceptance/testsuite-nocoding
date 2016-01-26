@@ -35,7 +35,7 @@ public class URLActionDataBuilderTest
     private static String method;
 
     private static String encodeParameters;
-    
+
     private static String encodeBody;
 
     private static String httpResponceCode;
@@ -51,36 +51,36 @@ public class URLActionDataBuilderTest
     private static URLActionDataStore storeItem;
 
     private static List<NameValuePair> parameters = Collections.emptyList();
-            
+
     private static List<NameValuePair> cookies = Collections.emptyList();
 
     private static List<NameValuePair> headers = Collections.emptyList();
-            
+
     private static String d_name;
-            
+
     private static String d_type;
-            
+
     private static String d_url;
-          
+
     private static String d_method;
 
     private static String d_encode_parameters;
- 
+
     private static String d_encode_body;
- 
+
     private static String d_httpResponceCode;
- 
+
     private static String d_body;
- 
+
     private static List<URLActionDataValidation> d_validations = Collections.emptyList();
- 
+
     private static List<URLActionDataStore> d_store = Collections.emptyList();
- 
+
     private static List<NameValuePair> d_parameters = Collections.emptyList();
- 
+
     private static List<NameValuePair> d_cookies = Collections.emptyList();
- 
-    private static  List<NameValuePair> d_headers = Collections.emptyList();
+
+    private static List<NameValuePair> d_headers = Collections.emptyList();
 
     @BeforeClass
     public static void setup()
@@ -88,18 +88,11 @@ public class URLActionDataBuilderTest
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
         interpreter = new ParameterInterpreter(properties, dataProvider);
-        
-        validation = new URLActionDataValidation(
-                                                 "validation",
-                                                 URLActionDataValidation.XPATH,
-                                                 "xpath",
-                                                 URLActionDataValidation.MATCHES,
-                                                 "matcher",
-                                                 interpreter);
-        
-        storeItem = new URLActionDataStore("store",
-                                           URLActionDataStore.XPATH,
-                                           "some xpath", interpreter);
+
+        validation = new URLActionDataValidation("validation", URLActionDataValidation.XPATH, "xpath", URLActionDataValidation.MATCHES,
+                                                 "matcher", interpreter);
+
+        storeItem = new URLActionDataStore("store", URLActionDataStore.XPATH, "some xpath", interpreter);
 
         name = "name";
 
@@ -110,7 +103,7 @@ public class URLActionDataBuilderTest
         method = URLActionData.METHOD_GET;
 
         encodeParameters = "true";
-        
+
         encodeBody = "true";
 
         httpResponceCode = "400";
@@ -141,9 +134,9 @@ public class URLActionDataBuilderTest
         d_method = URLActionData.METHOD_POST;
 
         d_encode_parameters = "false";
-        
+
         d_encode_body = "false";
-        
+
         d_httpResponceCode = "500";
 
         d_body = "d_body";
@@ -210,16 +203,16 @@ public class URLActionDataBuilderTest
         Assert.assertEquals(action.encodeParameters().toString(), encodeParameters);
 
         builder.setBody(null);
-        builder.setCookies(Collections.<NameValuePair> emptyList());
+        builder.setCookies(Collections.<NameValuePair>emptyList());
         builder.setEncodeParameters(null);
         builder.setEncodeBody(null);
-        builder.setHeaders(Collections.<NameValuePair> emptyList());
+        builder.setHeaders(Collections.<NameValuePair>emptyList());
         builder.setHttpResponceCode(null);
-        builder.setValidations(Collections.<URLActionDataValidation> emptyList());
+        builder.setValidations(Collections.<URLActionDataValidation>emptyList());
         builder.setUrl(null);
         builder.setType(null);
-        builder.setStore(Collections.<URLActionDataStore> emptyList());
-        builder.setParameters(Collections.<NameValuePair> emptyList());
+        builder.setStore(Collections.<URLActionDataStore>emptyList());
+        builder.setParameters(Collections.<NameValuePair>emptyList());
         builder.setName(null);
         builder.setMethod(null);
         builder.setInterpreter(interpreter);
@@ -258,9 +251,9 @@ public class URLActionDataBuilderTest
         builder.setDefaultName(name);
         builder.setDefaultMethod(method);
         builder.setInterpreter(interpreter);
-        
+
         @SuppressWarnings("unused")
-		final URLActionData action = builder.build();
+        final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -270,7 +263,7 @@ public class URLActionDataBuilderTest
         builder.setUrl(url);
         builder.setInterpreter(interpreter);
         @SuppressWarnings("unused")
-		final URLActionData action = builder.build();
+        final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -280,7 +273,7 @@ public class URLActionDataBuilderTest
         builder.setName(name);
         builder.setInterpreter(interpreter);
         @SuppressWarnings("unused")
-		final URLActionData action = builder.build();
+        final URLActionData action = builder.build();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -290,7 +283,7 @@ public class URLActionDataBuilderTest
         builder.setUrl(url);
         builder.setName(name);
         @SuppressWarnings("unused")
-		final URLActionData action = builder.build();
+        final URLActionData action = builder.build();
     }
 
 }

@@ -28,14 +28,14 @@ public class XPathWithHtmlPageTest
     public void testConstructor()
     {
         @SuppressWarnings("unused")
-		final XPathWithHtmlPage xp = new XPathWithHtmlPage(mockObjects.getHtmlPage());
+        final XPathWithHtmlPage xp = new XPathWithHtmlPage(mockObjects.getHtmlPage());
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorNull()
     {
         @SuppressWarnings("unused")
-		final XPathWithHtmlPage xp = new XPathWithHtmlPage(null);
+        final XPathWithHtmlPage xp = new XPathWithHtmlPage(null);
     }
 
     @Test

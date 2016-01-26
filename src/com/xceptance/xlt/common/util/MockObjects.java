@@ -95,9 +95,7 @@ public class MockObjects
                 }
                 catch (final Exception e)
                 {
-                    throw new IllegalArgumentException("Failed to load 'HtmlPage': "
-                                                           + e.getMessage(),
-                                                       e);
+                    throw new IllegalArgumentException("Failed to load 'HtmlPage': " + e.getMessage(), e);
                 }
             }
             else
@@ -126,8 +124,7 @@ public class MockObjects
             }
             catch (final MalformedURLException e)
             {
-                throw new IllegalArgumentException("Failed to create URL: "
-                                                   + e.getMessage(), e);
+                throw new IllegalArgumentException("Failed to create URL: " + e.getMessage(), e);
             }
         }
         else
@@ -161,9 +158,7 @@ public class MockObjects
                 }
                 catch (final IOException e)
                 {
-                    throw new IllegalArgumentException("Failed to load Response: "
-                                                           + e.getMessage(),
-                                                       e);
+                    throw new IllegalArgumentException("Failed to load Response: " + e.getMessage(), e);
                 }
             }
             else
@@ -183,21 +178,24 @@ public class MockObjects
         System.err.println("------------WebResponse----------------");
         System.err.println("---------------------------------------");
         System.err.println("------------Headers--------------------");
-        for(final NameValuePair header : headers){
+        for (final NameValuePair header : headers)
+        {
             System.err.println(header.getName() + " : " + header.getValue());
         }
     }
+
     public void printWebResponse(final WebResponse response)
     {
         final List<NameValuePair> headers = response.getResponseHeaders();
         System.err.println("------------WebResponse----------------");
         System.err.println("---------------------------------------");
         System.err.println("------------Headers--------------------");
-        for(final NameValuePair header : headers){
+        for (final NameValuePair header : headers)
+        {
             System.err.println(header.getName() + " : " + header.getValue());
         }
         System.err.println("------------Body--------------------");
-        System.err.println("ContentType: " +response.getContentType() );
+        System.err.println("ContentType: " + response.getContentType());
         System.err.println(response.getContentAsString());
     }
 

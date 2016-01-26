@@ -17,11 +17,10 @@ import org.apache.commons.vfs2.FileType;
  * @author Jörg Werner (Xceptance Software Technologies GmbH)
  * @author Matthias Mitterreiter (Xceptance Software Technologies GmbH)
  */
-public class ParameterUtils
+public final class ParameterUtils
 {
     private ParameterUtils()
     {
-
     }
 
     /**
@@ -34,8 +33,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code>
      */
-    public static void isNotNull(final Object parameter,
-                                 final String parameterName)
+    public static void isNotNull(final Object parameter, final String parameterName)
     {
         if (parameter == null)
         {
@@ -55,9 +53,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code>
      */
-    public static void isNotNullMessages(final Object parameter,
-                                         final String parameterName,
-                                         final String... messages)
+    public static void isNotNullMessages(final Object parameter, final String parameterName, final String... messages)
     {
         if (parameter == null)
         {
@@ -78,8 +74,7 @@ public class ParameterUtils
      *             if the parameter is not of type <code>String</code>
      */
 
-    public static void isString(final Object parameter,
-                                final String parameterName)
+    public static void isString(final Object parameter, final String parameterName)
     {
         isNotNull(parameter, parameterName);
         if (!(parameter instanceof String))
@@ -98,8 +93,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is not of type <code>String</code> or is <code>null</code>.
      */
-    public static void isStringOrNull(final Object parameter,
-                                      final String parameterName)
+    public static void isStringOrNull(final Object parameter, final String parameterName)
     {
         if (parameter != null)
         {
@@ -122,9 +116,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is not of type <code>String</code>
      */
-    public static void isStringMessage(final Object parameter,
-                                       final String parameterName,
-                                       final String... messages)
+    public static void isStringMessage(final Object parameter, final String parameterName, final String... messages)
     {
         isNotNull(parameter, parameterName);
         if (!(parameter instanceof String))
@@ -143,8 +135,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code> or empty
      */
-    public static void isNotNullOrEmpty(final String parameter,
-                                        final String parameterName)
+    public static void isNotNullOrEmpty(final String parameter, final String parameterName)
     {
         isNotNull(parameter, parameterName);
         if (parameter.trim().length() == 0)
@@ -163,8 +154,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code>
      */
-    public static void isNotNullOrEmpty(final String[] parameter,
-                                        final String parameterName)
+    public static void isNotNullOrEmpty(final String[] parameter, final String parameterName)
     {
         isNotNull(parameter, parameterName);
         isGreaterThan(parameter.length, 0, parameterName);
@@ -187,8 +177,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             thrown when the given file is not a regular file, an existent file or an unreadable file.
      */
-    public static void isReadableFile(final File file,
-                                      final String parameterName)
+    public static void isReadableFile(final File file, final String parameterName)
     {
         isNotNull(file, parameterName);
 
@@ -230,8 +219,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             thrown when the given file is not a regular file, an existent file or an unreadable file.
      */
-    public static void isReadableFile(final FileObject file,
-                                      final String parameterName)
+    public static void isReadableFile(final FileObject file, final String parameterName)
     {
         isNotNull(file, parameterName);
 
@@ -278,8 +266,7 @@ public class ParameterUtils
      * @param parameterName
      *            the name of the parameter
      */
-    public static void isWritableDirectory(final File file,
-                                           final String parameterName)
+    public static void isWritableDirectory(final File file, final String parameterName)
     {
         isNotNull(file, parameterName);
         Reason reason = null;
@@ -320,8 +307,7 @@ public class ParameterUtils
      * @param parameterName
      *            the name of the parameter
      */
-    public static void isWritableFile(final File file,
-                                      final String parameterName)
+    public static void isWritableFile(final File file, final String parameterName)
     {
         isNotNull(file, parameterName);
         Reason reason = null;
@@ -378,9 +364,7 @@ public class ParameterUtils
      *            the name of the parameter
      * @see #isValidArray(Object, String)
      */
-    public static void isValidArrayOfMinSize(final Object arr,
-                                             final int minSize,
-                                             final String parameterName)
+    public static void isValidArrayOfMinSize(final Object arr, final int minSize, final String parameterName)
     {
         isValidArray(arr, parameterName);
         if (((Object[]) arr).length < minSize)
@@ -399,8 +383,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter is <code>null</code> or an empty string
      */
-    public static void isNonEmptyString(final String str,
-                                        final String parameterName)
+    public static void isNonEmptyString(final String str, final String parameterName)
     {
         isNotNull(str, parameterName);
         if (!(str.trim().length() > 0))
@@ -421,9 +404,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter value is not greater than the limit
      */
-    public static void isGreaterThan(final int value,
-                                     final int limit,
-                                     final String parameterName)
+    public static void isGreaterThan(final int value, final int limit, final String parameterName)
     {
         if (!(value > limit))
         {
@@ -443,9 +424,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter value is not greater than the limit
      */
-    public static void isLessThan(final int value,
-                                  final int limit,
-                                  final String parameterName)
+    public static void isLessThan(final int value, final int limit, final String parameterName)
     {
         if (!(value < limit))
         {
@@ -481,8 +460,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter path is not a relative path.
      */
-    public static void isRelativePath(final String path,
-                                      final String parameterName)
+    public static void isRelativePath(final String path, final String parameterName)
     {
         isNonEmptyString(path, parameterName);
 
@@ -504,9 +482,7 @@ public class ParameterUtils
      * @throws IllegalArgumentException
      *             if the parameter path is not of type {@link ArrayList}.
      */
-    public static void isArrayList(final Object object,
-                                        final String parameterName,
-                                        final String... messages)
+    public static void isArrayList(final Object object, final String parameterName, final String... messages)
     {
 
         isNotNull(object, parameterName);
@@ -516,9 +492,8 @@ public class ParameterUtils
             doThrow(parameterName, Reason.NOT_ARRAYLIST, messages);
         }
     }
-    public static void isArrayListMessage(final Object o,
-                                   final String name,
-                                   final String... messages)
+
+    public static void isArrayListMessage(final Object o, final String name, final String... messages)
     {
 
         isNotNullMessages(o, name, messages);
@@ -542,9 +517,7 @@ public class ParameterUtils
      *             if the parameter path is not of type {@link LinkedHashMap}.
      */
 
-    public static void isLinkedHashMap(final Object object,
-                                            final String parameterName,
-                                            final String... messages)
+    public static void isLinkedHashMap(final Object object, final String parameterName, final String... messages)
     {
         isNotNull(object, parameterName);
 
@@ -563,14 +536,10 @@ public class ParameterUtils
      *            the parameter name
      * @param messages
      *            additional messages in case of error
-     *            
      * @throws IllegalArgumentException
      *             if the parameter path is not of type {@link LinkedHashMap}.
-     *             
      */
-    public static void isLinkedHashMapMessage(final Object object,
-                                       final String parameterName,
-                                       final String... messages)
+    public static void isLinkedHashMapMessage(final Object object, final String parameterName, final String... messages)
     {
         isNotNullMessages(object, parameterName, messages);
 
@@ -592,12 +561,9 @@ public class ParameterUtils
      *            additional arguments
      * @throws IllegalArgumentException
      */
-    public static void doThrow(final String parameterName,
-                               final Reason reason,
-                               final String... arguments)
+    public static void doThrow(final String parameterName, final Reason reason, final String... arguments)
     {
-        String s = "Parameter '" + parameterName + "' is invalid, because "
-                   + reason.toString();
+        String s = "Parameter '" + parameterName + "' is invalid, because " + reason.toString();
         if (arguments != null && arguments.length > 0)
         {
             s += " -> " + Arrays.toString(arguments);
@@ -617,12 +583,9 @@ public class ParameterUtils
      *            additional messages
      * @throws IllegalArgumentException
      */
-    public static void doThrowMessages(final String parameterName,
-                                       final Reason reason,
-                                       final String... messages)
+    public static void doThrowMessages(final String parameterName, final Reason reason, final String... messages)
     {
-        String s = "Parameter '" + parameterName + "' is invalid, because "
-                   + reason.toString();
+        String s = "Parameter '" + parameterName + "' is invalid, because " + reason.toString();
         if (messages != null && messages.length > 0)
         {
             for (final String message : messages)
@@ -632,6 +595,7 @@ public class ParameterUtils
         }
         throw new IllegalArgumentException(s);
     }
+
     /**
      * Throws an IllegalArgumentException. The exception message is constructed using the given parameter name, reason
      * and additional arguments.
@@ -639,21 +603,16 @@ public class ParameterUtils
      * @param parameterName
      *            parameter name
      * @param value
-     *  the illegal value
-     *  
+     *            the illegal value
      * @param reason
      *            reason
      * @param messages
      *            additional messages
      * @throws IllegalArgumentException
      */
-    public static void doThrow(final String parameterName,
-                               final String value,
-                               final Reason reason,
-                               final String... messages)
+    public static void doThrow(final String parameterName, final String value, final Reason reason, final String... messages)
     {
-        String s = "Parameter '" + parameterName + "' = '" + value
-                   + "' is invalid, because " + reason.toString();
+        String s = "Parameter '" + parameterName + "' = '" + value + "' is invalid, because " + reason.toString();
         for (final String message : messages)
         {
             s += "\n\t\t" + message;

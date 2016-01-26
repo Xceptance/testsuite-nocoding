@@ -27,8 +27,7 @@ import com.xceptance.xlt.engine.XltWebClient;
  * 
  * @author matthias mitterreiter
  */
-public class LightWeightPageActionFactory extends
-    URLActionDataExecutionableFactory
+public class LightWeightPageActionFactory extends URLActionDataExecutionableFactory
 {
     private NoCodingPropAdmin propAdmin;
 
@@ -55,8 +54,7 @@ public class LightWeightPageActionFactory extends
     }
 
     @Override
-    public URLActionDataExecutionable createPageAction(final String name,
-                                                       final WebRequest request)
+    public URLActionDataExecutionable createPageAction(final String name, final WebRequest request)
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
@@ -72,11 +70,7 @@ public class LightWeightPageActionFactory extends
         }
         else
         {
-            action = new LightWeightPageAction(previousAction,
-                                               name,
-                                               request,
-                                               createDownloader(),
-                                               resultFactory);
+            action = new LightWeightPageAction(previousAction, name, request, createDownloader(), resultFactory);
         }
         this.previousAction = action;
         return action;
@@ -84,14 +78,10 @@ public class LightWeightPageActionFactory extends
 
     private Downloader createDownloader()
     {
-        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID,
-                                                                     false);
-        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS,
-                                                                1);
+        final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID, false);
+        final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS, 1);
 
-        final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(),
-                                                     threadCount,
-                                                     userAgentUID);
+        final Downloader downloader = new Downloader((XltWebClient) previousAction.getWebClient(), threadCount, userAgentUID);
 
         return downloader;
 
@@ -103,8 +93,7 @@ public class LightWeightPageActionFactory extends
     }
 
     @Override
-    public URLActionDataExecutionable createXhrPageAction(final String name,
-                                                          final WebRequest request)
+    public URLActionDataExecutionable createXhrPageAction(final String name, final WebRequest request)
     {
         ParameterUtils.isNotNull(name, "name");
         ParameterUtils.isNotNull(request, "WebRequest");
@@ -113,10 +102,7 @@ public class LightWeightPageActionFactory extends
         {
             throw new IllegalArgumentException("Xhr action cannot be the first action");
         }
-        final XhrLightWeightPageAction xhrAction = new XhrLightWeightPageAction(previousAction,
-                                                                                name,
-                                                                                request,
-                                                                                createDownloader(),
+        final XhrLightWeightPageAction xhrAction = new XhrLightWeightPageAction(previousAction, name, request, createDownloader(),
                                                                                 resultFactory);
 
         previousAction = xhrAction;

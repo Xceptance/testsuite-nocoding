@@ -10,11 +10,11 @@ import com.xceptance.xlt.engine.XltWebClient;
 
 public class NoCodingPropAdmin
 {
-    private String fullTestCaseName;
+    private final String fullTestCaseName;
 
-    private String testName;
+    private final String testName;
 
-    private XltProperties xltProperties;
+    private final XltProperties xltProperties;
 
     public static final String JAVASCRIPTENABLED = "com.xceptance.xlt.javaScriptEnabled";
 
@@ -40,31 +40,14 @@ public class NoCodingPropAdmin
 
     public static final String TLSVERSION = "com.xceptance.xlt.nocoding.TLSVersion";
 
-    public NoCodingPropAdmin(final XltProperties xltProperties,
-                             final String fullTestCaseName,
-                             final String testName)
-    {
-        setFullTestName(fullTestCaseName);
-        setProperties(xltProperties);
-        setTestName(testName);
-        XltLogger.runTimeLogger.debug("Creating new Instance");
-    }
-
-    private void setProperties(final XltProperties xltProperties)
-    {
-        ParameterUtils.isNotNull(xltProperties, "XltProperties");
-        this.xltProperties = xltProperties;
-    }
-
-    private void setFullTestName(final String fullTestCaseName)
+    public NoCodingPropAdmin(final XltProperties xltProperties, final String fullTestCaseName, final String testName)
     {
         ParameterUtils.isNotNull(fullTestCaseName, "fullTestCaseName");
-        this.fullTestCaseName = fullTestCaseName;
-    }
-
-    private void setTestName(final String testName)
-    {
+        ParameterUtils.isNotNull(xltProperties, "XltProperties");
         ParameterUtils.isNotNull(testName, "testName");
+
+        this.fullTestCaseName = fullTestCaseName;
+        this.xltProperties = xltProperties;
         this.testName = testName;
     }
 
@@ -87,26 +70,22 @@ public class NoCodingPropAdmin
                 {
                     tlsVersion
                 });
-            XltLogger.runTimeLogger.debug(getConfigWebClient("TLSVersion",
-                                                             tlsVersion));
+            XltLogger.runTimeLogger.debug(getConfigWebClient("TLSVersion", tlsVersion));
         }
     }
 
     private void setJavaScriptEnabled(final XltWebClient webClient)
     {
         final String property = getPropertyByKey(JAVASCRIPTENABLED);
-        if (property.equalsIgnoreCase("true")
-            || property.equalsIgnoreCase("false"))
+        if (property.equalsIgnoreCase("true") || property.equalsIgnoreCase("false"))
         {
             final boolean bool = Boolean.valueOf(property);
             webClient.getOptions().setJavaScriptEnabled(bool);
-            XltLogger.runTimeLogger.debug(getConfigWebClient("JavaScriptEnabled",
-                                                             String.valueOf(bool)));
+            XltLogger.runTimeLogger.debug(getConfigWebClient("JavaScriptEnabled", String.valueOf(bool)));
         }
         else
         {
-            throw new IllegalArgumentException(getIllegalPropertyValue(property,
-                                                                       JAVASCRIPTENABLED));
+            throw new IllegalArgumentException(getIllegalPropertyValue(property, JAVASCRIPTENABLED));
         }
     }
 
@@ -114,18 +93,15 @@ public class NoCodingPropAdmin
     {
         final String property = getPropertyByKey(CSSENABLED);
 
-        if (property.equalsIgnoreCase("true")
-            || property.equalsIgnoreCase("false"))
+        if (property.equalsIgnoreCase("true") || property.equalsIgnoreCase("false"))
         {
             final boolean bool = Boolean.valueOf(property);
             webClient.getOptions().setCssEnabled(bool);
-            XltLogger.runTimeLogger.debug(getConfigWebClient("CssEnabled",
-                                                             String.valueOf(bool)));
+            XltLogger.runTimeLogger.debug(getConfigWebClient("CssEnabled", String.valueOf(bool)));
         }
         else
         {
-            throw new IllegalArgumentException(getIllegalPropertyValue(property,
-                                                                       CSSENABLED));
+            throw new IllegalArgumentException(getIllegalPropertyValue(property, CSSENABLED));
         }
     }
 
@@ -133,18 +109,15 @@ public class NoCodingPropAdmin
     {
         final String property = getPropertyByKey(LOADSTATICCONTENT);
 
-        if (property.equalsIgnoreCase("true")
-            || property.equalsIgnoreCase("false"))
+        if (property.equalsIgnoreCase("true") || property.equalsIgnoreCase("false"))
         {
             final boolean bool = Boolean.valueOf(property);
             webClient.setLoadStaticContent(bool);
-            XltLogger.runTimeLogger.debug(getConfigWebClient("LoadStaticContent",
-                                                             String.valueOf(bool)));
+            XltLogger.runTimeLogger.debug(getConfigWebClient("LoadStaticContent", String.valueOf(bool)));
         }
         else
         {
-            throw new IllegalArgumentException(getIllegalPropertyValue(property,
-                                                                       LOADSTATICCONTENT));
+            throw new IllegalArgumentException(getIllegalPropertyValue(property, LOADSTATICCONTENT));
         }
     }
 
@@ -156,10 +129,8 @@ public class NoCodingPropAdmin
         {
             final String userPass = name + ":" + password;
             final String userPassBase64 = Base64.encodeBase64String(userPass.getBytes());
-            webClient.addRequestHeader("Authorization", "Basic "
-                                                        + userPassBase64);
-            XltLogger.runTimeLogger.debug(getConfigWebClient("Credentials",
-                                                             userPass));
+            webClient.addRequestHeader("Authorization", "Basic " + userPassBase64);
+            XltLogger.runTimeLogger.debug(getConfigWebClient("Credentials", userPass));
         }
     }
 
@@ -179,18 +150,15 @@ public class NoCodingPropAdmin
     {
         final String property = getPropertyByKey(REDIRECTENABLED);
 
-        if (property.equalsIgnoreCase("true")
-            || property.equalsIgnoreCase("false"))
+        if (property.equalsIgnoreCase("true") || property.equalsIgnoreCase("false"))
         {
             final boolean bool = Boolean.valueOf(property);
             webClient.getOptions().setRedirectEnabled(bool);
-            XltLogger.runTimeLogger.debug(getConfigWebClient("Redirect",
-                                                             String.valueOf(bool)));
+            XltLogger.runTimeLogger.debug(getConfigWebClient("Redirect", String.valueOf(bool)));
         }
         else
         {
-            throw new IllegalArgumentException(getIllegalPropertyValue(property,
-                                                                       REDIRECTENABLED));
+            throw new IllegalArgumentException(getIllegalPropertyValue(property, REDIRECTENABLED));
         }
     }
 
@@ -204,32 +172,28 @@ public class NoCodingPropAdmin
     public String getPropertyByKey(final String key, final String defaultValue)
     {
         final String effectiveKey = getEffectiveKey(key);
-        final String property = this.xltProperties.getProperty(effectiveKey,
-                                                               defaultValue);
+        final String property = this.xltProperties.getProperty(effectiveKey, defaultValue);
         return property;
     }
 
     public int getPropertyByKey(final String key, final int defaultValue)
     {
         final String effectiveKey = getEffectiveKey(key);
-        final int property = this.xltProperties.getProperty(effectiveKey,
-                                                            defaultValue);
+        final int property = this.xltProperties.getProperty(effectiveKey, defaultValue);
         return property;
     }
 
     public boolean getPropertyByKey(final String key, final boolean defaultValue)
     {
         final String effectiveKey = getEffectiveKey(key);
-        final boolean property = this.xltProperties.getProperty(effectiveKey,
-                                                                defaultValue);
+        final boolean property = this.xltProperties.getProperty(effectiveKey, defaultValue);
         return property;
     }
 
     public long getPropertyByKey(final String key, final long defaultValue)
     {
         final String effectiveKey = getEffectiveKey(key);
-        final long property = this.xltProperties.getProperty(effectiveKey,
-                                                             defaultValue);
+        final long property = this.xltProperties.getProperty(effectiveKey, defaultValue);
         return property;
     }
 
@@ -260,8 +224,7 @@ public class NoCodingPropAdmin
         else
         {
             // 2. use the current class name as prefix
-            final String classNameQualifiedKey = this.fullTestCaseName + "."
-                                                 + bareKey;
+            final String classNameQualifiedKey = this.fullTestCaseName + "." + bareKey;
             if (this.xltProperties.containsKey(classNameQualifiedKey))
             {
                 effectiveKey = classNameQualifiedKey;
@@ -281,20 +244,15 @@ public class NoCodingPropAdmin
         return this.xltProperties;
     }
 
-    private String getIllegalPropertyValue(final String value,
-                                           final String property)
+    private String getIllegalPropertyValue(final String value, final String property)
     {
-        final String message = MessageFormat.format("Illegal value: \"{0}\" for Property: \"{1}\"",
-                                                    value,
-                                                    property);
+        final String message = MessageFormat.format("Illegal value: \"{0}\" for Property: \"{1}\"", value, property);
         return message;
     }
 
     private String getConfigWebClient(final String option, final String value)
     {
-        final String message = MessageFormat.format("Config WebClient: \"{0}\" = \"{1}\"",
-                                                    option,
-                                                    value);
+        final String message = MessageFormat.format("Config WebClient: \"{0}\" = \"{1}\"", option, value);
         return message;
     }
 }

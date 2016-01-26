@@ -45,8 +45,7 @@ public class ParameterInterpreterRandom
 
     public String String(final String characters, final int length)
     {
-        return RandomStringUtils.random(length,
-                                        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+        return RandomStringUtils.random(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
     }
 
     public String DigitString(final int length)
@@ -58,10 +57,12 @@ public class ParameterInterpreterRandom
     {
         return String(5) + "@" + String(5) + ".com";
     }
+
     public String Email(final int i)
     {
         return String(i) + "@" + String(i) + ".com";
     }
+
     public String Email(final int i, final int j)
     {
         return String(i) + "@" + String(j) + ".com";

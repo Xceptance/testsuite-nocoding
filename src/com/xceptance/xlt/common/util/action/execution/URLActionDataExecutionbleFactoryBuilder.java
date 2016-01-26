@@ -43,8 +43,7 @@ public class URLActionDataExecutionbleFactoryBuilder
      * @param mode
      *            {@link mode}
      */
-    public URLActionDataExecutionbleFactoryBuilder(final NoCodingPropAdmin propAdmin,
-                                                 final String mode)
+    public URLActionDataExecutionbleFactoryBuilder(final NoCodingPropAdmin propAdmin, final String mode)
     {
         setMode(mode);
         setPropertiesAdmin(propAdmin);
@@ -53,6 +52,7 @@ public class URLActionDataExecutionbleFactoryBuilder
 
     /**
      * builds a {@link URLActionDataExecutionableFactory} depending on the {@link #mode}, set in the Constructor.
+     * 
      * @return {@link URLActionDataExecutionableFactory}
      */
     public URLActionDataExecutionableFactory buildFactory()
@@ -75,8 +75,7 @@ public class URLActionDataExecutionbleFactoryBuilder
         }
         else
         {
-            throw new IllegalArgumentException(MessageFormat.format("Running mode : \"{0}\" is not supported!",
-                                                                    mode));
+            throw new IllegalArgumentException(MessageFormat.format("Running mode : \"{0}\" is not supported!", mode));
         }
     }
 

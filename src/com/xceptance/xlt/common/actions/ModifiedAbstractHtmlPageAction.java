@@ -19,16 +19,14 @@ import com.xceptance.xlt.engine.SessionImpl;
 import com.xceptance.xlt.engine.XltWebClient;
 
 /**
- * This class is simply a variant of the {@link AbstractHtmlPageAction}.
- * They distinguish in the method {@link #loadPage(WebRequest)}. In this class it is possible to
- * pass a {@link WebRequest}, which is cozy.
- *
+ * This class is simply a variant of the {@link AbstractHtmlPageAction}. They distinguish in the method
+ * {@link #loadPage(WebRequest)}. In this class it is possible to pass a {@link WebRequest}, which is cozy.
  */
 public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
 {
 
-    private static final String PROP_JS_BACKGROUND_ACTIVITY_WAITINGTIME = XltConstants.XLT_PACKAGE_PATH
-                                                                          + ".js.backgroundActivity.waitingTime";
+    private static final String PROP_JS_BACKGROUND_ACTIVITY_WAITINGTIME = XltConstants.XLT_PACKAGE_PATH +
+                                                                          ".js.backgroundActivity.waitingTime";
 
     private static final long DEFAULT_JS_BACKGROUND_ACTIVITY_WAITINGTIME = XltProperties.getInstance()
                                                                                         .getProperty(PROP_JS_BACKGROUND_ACTIVITY_WAITINGTIME,
@@ -36,9 +34,7 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
 
     private HtmlPage htmlPage;
 
-
-    protected ModifiedAbstractHtmlPageAction(final ModifiedAbstractHtmlPageAction previousAction,
-                                             final String timerName)
+    protected ModifiedAbstractHtmlPageAction(final ModifiedAbstractHtmlPageAction previousAction, final String timerName)
     {
         super(previousAction, timerName);
     }
@@ -48,14 +44,12 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
         this(null, timerName);
     }
 
-    protected void loadPage(final WebRequest webRequest)
-        throws FailingHttpStatusCodeException, IOException
+    protected void loadPage(final WebRequest webRequest) throws FailingHttpStatusCodeException, IOException
     {
         loadPage(webRequest, DEFAULT_JS_BACKGROUND_ACTIVITY_WAITINGTIME);
     }
 
-    protected void loadPage(final WebRequest webRequest, final long waitingTime)
-        throws FailingHttpStatusCodeException, IOException
+    protected void loadPage(final WebRequest webRequest, final long waitingTime) throws FailingHttpStatusCodeException, IOException
     {
         final Page result = getWebClient().getPage(webRequest);
 
@@ -68,13 +62,11 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
         if (page instanceof SgmlPage)
         {
             final XltWebClient webClient = (XltWebClient) ((SgmlPage) page).getWebClient();
-            webClient.waitForBackgroundThreads(page.getEnclosingWindow().getTopWindow()
-                                                   .getEnclosedPage(), waitingTime);
+            webClient.waitForBackgroundThreads(page.getEnclosingWindow().getTopWindow().getEnclosedPage(), waitingTime);
         }
 
         // something might have changed, including a reload via location
-        final HtmlPage newHtmlPage = (HtmlPage) page.getEnclosingWindow().getTopWindow()
-                                                    .getEnclosedPage();
+        final HtmlPage newHtmlPage = (HtmlPage) page.getEnclosingWindow().getTopWindow().getEnclosedPage();
 
         // check for any new static content to load
         ((XltWebClient) newHtmlPage.getWebClient()).loadNewStaticContent(newHtmlPage);
@@ -96,17 +88,18 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
     {
         return this.htmlPage;
     }
+
     protected List<NetworkData> getNetworkDataSet()
     {
         return netStats;
     }
-    
+
     @Override
     public ModifiedAbstractHtmlPageAction getPreviousAction()
     {
         return (ModifiedAbstractHtmlPageAction) super.getPreviousAction();
     }
-    
+
     @Override
     public void run() throws Throwable
     {
@@ -124,13 +117,11 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
             Session.getCurrent().getNetworkDataManager().clear();
         }
     }
-    
 
     public void setHtmlPage(final HtmlPage htmlPage)
     {
         setHtmlPage(htmlPage, DEFAULT_JS_BACKGROUND_ACTIVITY_WAITINGTIME);
     }
-    
 
     public void setHtmlPage(final HtmlPage htmlPage, final long waitingTime)
     {
@@ -138,7 +129,7 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
 
         this.htmlPage = waitForPageIsComplete(htmlPage, waitingTime);
     }
-    
+
     private void dumpPage(final HtmlPage htmlPage)
     {
         if (htmlPage != null)
@@ -147,6 +138,5 @@ public abstract class ModifiedAbstractHtmlPageAction extends AbstractWebAction
             ((SessionImpl) Session.getCurrent()).getRequestHistory().add(timerName, htmlPage);
         }
     }
-    
-    
+
 }

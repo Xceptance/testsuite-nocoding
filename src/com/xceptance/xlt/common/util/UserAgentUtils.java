@@ -23,7 +23,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 /**
  * Helper for dynamically adjusting the user agent if needed.
  */
-public class UserAgentUtils
+public final class UserAgentUtils
 {
     /**
      * Constant to identify the UID in the user agent string

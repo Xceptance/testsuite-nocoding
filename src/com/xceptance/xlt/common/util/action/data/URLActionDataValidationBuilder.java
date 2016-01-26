@@ -43,18 +43,12 @@ public class URLActionDataValidationBuilder
 
         try
         {
-            validation = new URLActionDataValidation(getName(),
-                                                     getSelectionMode(),
-                                                     getSelectionContent(),
-                                                     getValidationMode(),
-                                                     getValidationContent(),
-                                                     getInterpreter());
+            validation = new URLActionDataValidation(getName(), getSelectionMode(), getSelectionContent(), getValidationMode(),
+                                                     getValidationContent(), getInterpreter());
         }
         catch (final IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("Failed to create URLActionValidation: "
-                                                   + e.getMessage(),
-                                               e);
+            throw new IllegalArgumentException("Failed to create URLActionValidation: " + e.getMessage(), e);
         }
         reset();
 
@@ -93,8 +87,7 @@ public class URLActionDataValidationBuilder
     public void setSelectionMode(final String selectionMode)
     {
         this.selectionMode = selectionMode;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionMode",
-                                                        selectionMode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionMode", selectionMode));
     }
 
     public String getSelectionContent()
@@ -105,8 +98,7 @@ public class URLActionDataValidationBuilder
     public void setSelectionContent(final String selectionContent)
     {
         this.selectionContent = selectionContent;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionContent",
-                                                        selectionContent));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("selectionContent", selectionContent));
     }
 
     public String getValidationMode()
@@ -117,8 +109,7 @@ public class URLActionDataValidationBuilder
     public void setValidationMode(final String validationMode)
     {
         this.validationMode = validationMode;
-        XltLogger.runTimeLogger.debug(infoSetTagToValue("validationMode",
-                                                        validationMode));
+        XltLogger.runTimeLogger.debug(infoSetTagToValue("validationMode", validationMode));
     }
 
     public String getValidationContent()
@@ -145,9 +136,7 @@ public class URLActionDataValidationBuilder
 
     private String infoSetTagToValue(final String tag, final String value)
     {
-        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ",
-                                                    tag,
-                                                    value);
+        final String message = MessageFormat.format("Set tag \"{0}\" = \"{1}\" ", tag, value);
         return message;
     }
 

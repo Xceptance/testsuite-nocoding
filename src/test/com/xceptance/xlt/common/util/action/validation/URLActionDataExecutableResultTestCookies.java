@@ -13,6 +13,7 @@ import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.XPathGetable;
 import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
+
 public class URLActionDataExecutableResultTestCookies
 {
     static XPathGetable xPathGetable;
@@ -40,8 +41,7 @@ public class URLActionDataExecutableResultTestCookies
     {
 
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
         executableResult.getCookie();
         Assert.assertEquals(executableResult.getCookie().size(), 3);
     }
@@ -50,8 +50,7 @@ public class URLActionDataExecutableResultTestCookies
     public void testGetHttpCookies()
     {
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
         Assert.assertEquals(executableResult.getCookie().size(), 3);
     }
 
@@ -59,10 +58,9 @@ public class URLActionDataExecutableResultTestCookies
     public void testGetCookiesByName()
     {
         URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(),
-                                                             xPathGetable);
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
         final List<NameValuePair> cookies = executableResult.getCookieByName("session-id");
         Assert.assertEquals(1, cookies.size());
-        
+
     }
 }

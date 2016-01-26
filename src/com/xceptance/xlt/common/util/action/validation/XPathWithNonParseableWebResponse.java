@@ -26,6 +26,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ConcreteNodeList;
 import com.xceptance.xlt.common.util.ParameterUtils;
+
 /**
  * <p>
  * Implementation of {@link XPathGetable}. <br>
@@ -33,10 +34,8 @@ import com.xceptance.xlt.common.util.ParameterUtils;
  * can NOT be parsed into a {@link HtmlPage}. E.g, XML or JSON content. <br>
  * </p>
  * <p>
- * In this case it is tried to offer alternative parsing possibilities to allow
- * the selection of elements by xpath.  
- * If this is also not possible and it is tried to select elements by xpah,
- * it throws an IllegalArgumentException.
+ * In this case it is tried to offer alternative parsing possibilities to allow the selection of elements by xpath. If
+ * this is also not possible and it is tried to select elements by xpah, it throws an IllegalArgumentException.
  * </p>
  * <ul>
  * <li>Parses WebResponse only if the mime-type is supported (see {@link #SUPPORTEDHEADERCONTENTTYPES supported types}).
@@ -90,19 +89,17 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         }
         else
         {
-            throw new IllegalArgumentException("Parsing content of type: '"
-                                               + contentType
-                                               + "' is not supported");
+            throw new IllegalArgumentException("Parsing content of type: '" + contentType + "' is not supported");
         }
     }
 
     /**
-     * Parses the {@link WebResponse} in a format that allows to select
-     * elements by xpath, but only if necessary and only once. <br>
+     * Parses the {@link WebResponse} in a format that allows to select elements by xpath, but only if necessary and
+     * only once. <br>
      * The elements then get parsed to Strings <br>
-     * @throws IllegalArgumentException
-     *  if it is not possible to parse and select.
      * 
+     * @throws IllegalArgumentException
+     *             if it is not possible to parse and select.
      */
     @Override
     public List<String> getByXPath(final String xPath)
@@ -115,15 +112,13 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to fetch Elements: "
-                                               + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to fetch Elements: " + e.getMessage(), e);
         }
         return resultList;
     }
 
     private List<String> getByXPathFromInputSource(final String xPath)
-        throws XPathExpressionException, ParserConfigurationException,
-        SAXException, IOException
+        throws XPathExpressionException, ParserConfigurationException, SAXException, IOException
     {
         loadContentFromWebResponseIfNecessary();
         final NodeList nodeList = createNodeListByXPathFromInputSource(xPath);
@@ -131,15 +126,13 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         return resultList;
     }
 
-    private void loadContentFromWebResponseIfNecessary()
-        throws ParserConfigurationException, SAXException, IOException
+    private void loadContentFromWebResponseIfNecessary() throws ParserConfigurationException, SAXException, IOException
     {
         loadXMLSourceFromWebResponseIfNecessary();
         createXPathIfNecessary();
     }
 
-    private void loadXMLSourceFromWebResponseIfNecessary()
-        throws ParserConfigurationException, SAXException, IOException
+    private void loadXMLSourceFromWebResponseIfNecessary() throws ParserConfigurationException, SAXException, IOException
     {
         if (this.xmlInputSource == null)
         {
@@ -174,14 +167,11 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         NodeList list = new ConcreteNodeList();
         try
         {
-            list = (NodeList) this.xPath.compile(xPath)
-                                        .evaluate(this.xmlInputSource,
-                                                  XPathConstants.NODESET);
+            list = (NodeList) this.xPath.compile(xPath).evaluate(this.xmlInputSource, XPathConstants.NODESET);
         }
         catch (final Exception e)
         {
-            XltLogger.runTimeLogger.debug("Failed to get Elements: "
-                                          + e.getMessage());
+            XltLogger.runTimeLogger.debug("Failed to get Elements: " + e.getMessage());
         }
         return list;
     }
@@ -193,8 +183,7 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         this.xPath = xpathFactory.newXPath();
     }
 
-    private void createXMLSourceFromWebResponseContent()
-        throws ParserConfigurationException, SAXException, IOException
+    private void createXMLSourceFromWebResponseContent() throws ParserConfigurationException, SAXException, IOException
     {
         XltLogger.runTimeLogger.debug("Loading content from WebResponse");
         final String contentType = getContentTypeFromWebResponse();
@@ -223,8 +212,7 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
 
     }
 
-    private Document createXMLSourceFromJson(final String json)
-        throws ParserConfigurationException, SAXException, IOException
+    private Document createXMLSourceFromJson(final String json) throws ParserConfigurationException, SAXException, IOException
     {
         XltLogger.runTimeLogger.debug("Converting Json Content to XML");
         String xmlString;
@@ -236,8 +224,7 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
         return document;
     }
 
-    private Document createDocumentFromXmlString(final String xmlString)
-        throws SAXException, IOException, ParserConfigurationException
+    private Document createDocumentFromXmlString(final String xmlString) throws SAXException, IOException, ParserConfigurationException
     {
         final InputSource source = new InputSource(new StringReader(xmlString));
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -254,8 +241,8 @@ public class XPathWithNonParseableWebResponse implements XPathGetable
     }
 
     /**
-     * 
-     * @param contentType mime-type of the WebResponse
+     * @param contentType
+     *            mime-type of the WebResponse
      * @return true only if the content can be parsed so that elements can be selected by xpath.
      */
     public boolean isXPathable(final String contentType)

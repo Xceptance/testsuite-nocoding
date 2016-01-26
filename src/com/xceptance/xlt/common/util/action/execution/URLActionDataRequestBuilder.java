@@ -54,8 +54,7 @@ public class URLActionDataRequestBuilder
     {
         ParameterUtils.isNotNull(action, "URLAction");
 
-        XltLogger.runTimeLogger.debug("Building WebRequest for action: '"
-                                      + action.getName() + "'");
+        XltLogger.runTimeLogger.debug("Building WebRequest for action: '" + action.getName() + "'");
 
         final WebRequest resultRequest;
 
@@ -65,18 +64,15 @@ public class URLActionDataRequestBuilder
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to create WebRequest for action: "
-                                                   + action.getName()
-                                                   + " Reason: "
-                                                   + e.getMessage(),
+            throw new IllegalArgumentException(
+                                               "Failed to create WebRequest for action: " + action.getName() + " Reason: " + e.getMessage(),
                                                e);
         }
         logWebRequest(resultRequest);
         return resultRequest;
     }
 
-    private WebRequest createWebRequestFromURLAction(final URLActionData action)
-        throws MalformedURLException, UnsupportedEncodingException
+    private WebRequest createWebRequestFromURLAction(final URLActionData action) throws MalformedURLException, UnsupportedEncodingException
     {
 
         final WebRequest resultRequest;
@@ -85,16 +81,11 @@ public class URLActionDataRequestBuilder
         fillWebRequestWithMethod(resultRequest, action.getMethod());
         if (action.hasBody())
         {
-            fillWebRequestWithBody(resultRequest,
-                                   action.getBody(),
-                                   action.encodeBody());
+            fillWebRequestWithBody(resultRequest, action.getBody(), action.encodeBody());
         }
         fillWebRequestWithHeaders(resultRequest, action.getHeaders());
         fillWebRequestWithCookies(resultRequest, action.getCookies());
-        fillWebRequestWithParameters(resultRequest,
-                                     action.getParameters(),
-                                     action.encodeParameters(),
-                                     action.getMethod());
+        fillWebRequestWithParameters(resultRequest, action.getParameters(), action.encodeParameters(), action.getMethod());
         return resultRequest;
     }
 
@@ -110,56 +101,41 @@ public class URLActionDataRequestBuilder
      * @throws IllegalArgumentException
      *             if failed to create a WebRequest
      */
-    public WebRequest buildXhrRequest(final URLActionData action,
-                                      final URL refererUrl)
+    public WebRequest buildXhrRequest(final URLActionData action, final URL refererUrl)
     {
-        XltLogger.runTimeLogger.debug("Building XhrWebRequest for action: "
-                                      + action.getName());
+        XltLogger.runTimeLogger.debug("Building XhrWebRequest for action: " + action.getName());
 
         WebRequest resultXhrRequest = null;
         try
         {
-            resultXhrRequest = buildXhrRequestFromURLActionData(action,
-                                                                refererUrl);
+            resultXhrRequest = buildXhrRequestFromURLActionData(action, refererUrl);
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to create XhrWebRequest for action: "
-                                                   + action.getName()
-                                                   + e.getMessage(),
-                                               e);
+            throw new IllegalArgumentException("Failed to create XhrWebRequest for action: " + action.getName() + e.getMessage(), e);
         }
         return resultXhrRequest;
     }
 
-    private WebRequest buildXhrRequestFromURLActionData(final URLActionData action,
-                                                        final URL refererUrl)
+    private WebRequest buildXhrRequestFromURLActionData(final URLActionData action, final URL refererUrl)
         throws UnsupportedEncodingException, MalformedURLException
     {
         final WebRequest resultXhrRequest = createWebRequestFromUrl(action.getUrl());
         fillWebRequestWithMethod(resultXhrRequest, action.getMethod());
         if (action.hasBody())
         {
-            fillWebRequestWithBody(resultXhrRequest,
-                                   action.getBody(),
-                                   action.encodeBody());
+            fillWebRequestWithBody(resultXhrRequest, action.getBody(), action.encodeBody());
         }
         fillWebRequestWithHeaders(resultXhrRequest, action.getHeaders());
-        resultXhrRequest.setAdditionalHeader("X-Requested-With",
-                                             "XMLHttpRequest");
-        resultXhrRequest.setAdditionalHeader("Referer",
-                                             refererUrl.toExternalForm());
+        resultXhrRequest.setAdditionalHeader("X-Requested-With", "XMLHttpRequest");
+        resultXhrRequest.setAdditionalHeader("Referer", refererUrl.toExternalForm());
         fillWebRequestWithCookies(resultXhrRequest, action.getCookies());
-        fillWebRequestWithParameters(resultXhrRequest,
-                                     action.getParameters(),
-                                     action.encodeParameters(),
-                                     action.getMethod());
+        fillWebRequestWithParameters(resultXhrRequest, action.getParameters(), action.encodeParameters(), action.getMethod());
         logWebRequest(resultXhrRequest);
         return resultXhrRequest;
     }
 
-    private void fillWebRequestWithHeaders(final WebRequest request,
-                                           final List<NameValuePair> headers)
+    private void fillWebRequestWithHeaders(final WebRequest request, final List<NameValuePair> headers)
     {
         if (!headers.isEmpty())
         {
@@ -170,23 +146,20 @@ public class URLActionDataRequestBuilder
         }
     }
 
-    private void fillWebRequestWithCookies(final WebRequest request,
-                                           final List<NameValuePair> cookies)
+    private void fillWebRequestWithCookies(final WebRequest request, final List<NameValuePair> cookies)
     {
         if (!cookies.isEmpty())
         {
             String cookieString = "";
             for (final NameValuePair cookie : cookies)
             {
-                cookieString = cookieString + cookie.getName() + "="
-                               + cookie.getValue() + ";";
+                cookieString = cookieString + cookie.getName() + "=" + cookie.getValue() + ";";
             }
             request.setAdditionalHeader("Cookie", cookieString);
         }
     }
 
-    private void fillWebRequestWithMethod(final WebRequest request,
-                                          final HttpMethod method)
+    private void fillWebRequestWithMethod(final WebRequest request, final HttpMethod method)
     {
         request.setHttpMethod(method);
     }
@@ -196,9 +169,7 @@ public class URLActionDataRequestBuilder
         return new WebRequest(url);
     }
 
-    private void fillWebRequestWithBody(final WebRequest request,
-                                        final String body,
-                                        final Boolean encodeBody)
+    private void fillWebRequestWithBody(final WebRequest request, final String body, final Boolean encodeBody)
         throws UnsupportedEncodingException
     {
         String resultBody = body;
@@ -206,17 +177,14 @@ public class URLActionDataRequestBuilder
         {
             resultBody = decodeRequestBody(body);
         }
-        if (request.getHttpMethod().equals(HttpMethod.POST)
-            || request.getHttpMethod().equals(HttpMethod.PUT))
+        if (request.getHttpMethod().equals(HttpMethod.POST) || request.getHttpMethod().equals(HttpMethod.PUT))
         {
             request.setRequestBody(resultBody);
         }
     }
 
-    private void fillWebRequestWithParameters(final WebRequest request,
-                                              final List<NameValuePair> parameters,
-                                              final boolean encodeParameters,
-                                              final HttpMethod httpMethod)
+    private void fillWebRequestWithParameters(final WebRequest request, final List<NameValuePair> parameters,
+                                              final boolean encodeParameters, final HttpMethod httpMethod)
         throws UnsupportedEncodingException, MalformedURLException
     {
         if (!parameters.isEmpty())
@@ -226,8 +194,7 @@ public class URLActionDataRequestBuilder
             {
                 resultParameters = decodeRequestParameters(resultParameters);
             }
-            if (!httpMethod.equals(HttpMethod.POST)
-                || request.getRequestBody() != null)
+            if (!httpMethod.equals(HttpMethod.POST) || request.getRequestBody() != null)
             {
                 addParametersToUrl(request, resultParameters);
             }
@@ -239,9 +206,7 @@ public class URLActionDataRequestBuilder
 
     }
 
-    private void addParametersToUrl(final WebRequest request,
-                                    final List<NameValuePair> parameters)
-        throws MalformedURLException
+    private void addParametersToUrl(final WebRequest request, final List<NameValuePair> parameters) throws MalformedURLException
     {
         String urlString = request.getUrl().toString();
         urlString = StringUtils.replace(urlString, "&amp;", "&");
@@ -249,8 +214,7 @@ public class URLActionDataRequestBuilder
         final String oldQueryString = newUrl.getQuery();
         final StringBuilder newQueryString = new StringBuilder();
 
-        final boolean insertLeadingAmp = oldQueryString != null
-                                         && !oldQueryString.isEmpty();
+        final boolean insertLeadingAmp = oldQueryString != null && !oldQueryString.isEmpty();
 
         if (insertLeadingAmp)
         {
@@ -260,53 +224,43 @@ public class URLActionDataRequestBuilder
         {
             final NameValuePair nameValuePair = parameters.get(index);
             /*
-             * For each pair except the first, an & has to be appended. For the first pair it depends
-             *  on whether there is already a query (in which case insertLeadingAmp is true).
+             * For each pair except the first, an & has to be appended. For the first pair it depends on whether there
+             * is already a query (in which case insertLeadingAmp is true).
              */
             if (index > 0 || insertLeadingAmp)
             {
                 newQueryString.append('&');
             }
-            newQueryString.append(nameValuePair.getName()).append('=')
-                          .append(nameValuePair.getValue());
+            newQueryString.append(nameValuePair.getName()).append('=').append(nameValuePair.getValue());
         }
 
-        final URL newNewUrl = UrlUtils.getUrlWithNewQuery(newUrl,
-                                                          newQueryString.toString());
+        final URL newNewUrl = UrlUtils.getUrlWithNewQuery(newUrl, newQueryString.toString());
         request.setUrl(newNewUrl);
     }
 
-    private String decodeRequestBody(final String body)
-        throws UnsupportedEncodingException
+    private String decodeRequestBody(final String body) throws UnsupportedEncodingException
     {
         final String decodedBody = URLDecoder.decode(body, "UTF-8");
         return decodedBody;
     }
 
     @SuppressWarnings("unused")
-	private String encodeRequestBody(final String body)
-        throws UnsupportedEncodingException
+    private String encodeRequestBody(final String body) throws UnsupportedEncodingException
     {
         final String encodedBody = URLEncoder.encode(body, "UTF-8");
         return encodedBody;
     }
 
     @SuppressWarnings("unused")
-	private List<NameValuePair> encodeRequestParameters(final List<NameValuePair> parameters)
-        throws UnsupportedEncodingException
+    private List<NameValuePair> encodeRequestParameters(final List<NameValuePair> parameters) throws UnsupportedEncodingException
     {
         final List<NameValuePair> encodedParameters = new ArrayList<NameValuePair>();
         for (final NameValuePair parameter : parameters)
         {
-            final String encodedName = parameter.getName() != null ? URLEncoder.encode(parameter.getName(),
-                                                                                       "UTF-8")
-                                                                  : null;
-            final String encodedValue = parameter.getValue() != null ? URLEncoder.encode(parameter.getValue(),
-                                                                                         "UTF-8")
-                                                                    : null;
+            final String encodedName = parameter.getName() != null ? URLEncoder.encode(parameter.getName(), "UTF-8") : null;
+            final String encodedValue = parameter.getValue() != null ? URLEncoder.encode(parameter.getValue(), "UTF-8") : null;
 
-            final NameValuePair encodedParameter = new NameValuePair(encodedName,
-                                                                     encodedValue);
+            final NameValuePair encodedParameter = new NameValuePair(encodedName, encodedValue);
 
             encodedParameters.add(encodedParameter);
 
@@ -314,21 +268,15 @@ public class URLActionDataRequestBuilder
         return encodedParameters;
     }
 
-    private List<NameValuePair> decodeRequestParameters(final List<NameValuePair> parameters)
-        throws UnsupportedEncodingException
+    private List<NameValuePair> decodeRequestParameters(final List<NameValuePair> parameters) throws UnsupportedEncodingException
     {
         final List<NameValuePair> decodedParameters = new ArrayList<NameValuePair>();
         for (final NameValuePair parameter : parameters)
         {
-            final String decodedName = parameter.getName() != null ? URLDecoder.decode(parameter.getName(),
-                                                                                       "UTF-8")
-                                                                  : null;
-            final String decodedValue = parameter.getValue() != null ? URLDecoder.decode(parameter.getValue(),
-                                                                                         "UTF-8")
-                                                                    : null;
+            final String decodedName = parameter.getName() != null ? URLDecoder.decode(parameter.getName(), "UTF-8") : null;
+            final String decodedValue = parameter.getValue() != null ? URLDecoder.decode(parameter.getValue(), "UTF-8") : null;
 
-            final NameValuePair decodedParameter = new NameValuePair(decodedName,
-                                                                     decodedValue);
+            final NameValuePair decodedParameter = new NameValuePair(decodedName, decodedValue);
 
             decodedParameters.add(decodedParameter);
 
@@ -389,8 +337,7 @@ public class URLActionDataRequestBuilder
             XltLogger.runTimeLogger.debug("Parameters: ");
             for (final NameValuePair parameter : parameters)
             {
-                XltLogger.runTimeLogger.debug("\t" + parameter.getName()
-                                              + " = " + parameter.getValue());
+                XltLogger.runTimeLogger.debug("\t" + parameter.getName() + " = " + parameter.getValue());
             }
         }
         final Map<String, String> headers = request.getAdditionalHeaders();
@@ -399,16 +346,14 @@ public class URLActionDataRequestBuilder
             XltLogger.runTimeLogger.debug("Headers: ");
             for (final Map.Entry<String, String> entry : headers.entrySet())
             {
-                XltLogger.runTimeLogger.debug("\t" + entry.getKey() + " : "
-                                              + entry.getValue());
+                XltLogger.runTimeLogger.debug("\t" + entry.getKey() + " : " + entry.getValue());
             }
         }
 
         final Credentials credentials = request.getCredentials();
         if (credentials != null)
         {
-            XltLogger.runTimeLogger.debug("Credentials: "
-                                          + credentials.toString());
+            XltLogger.runTimeLogger.debug("Credentials: " + credentials.toString());
         }
 
     }

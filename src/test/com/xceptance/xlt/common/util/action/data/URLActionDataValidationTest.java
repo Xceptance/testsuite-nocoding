@@ -14,6 +14,7 @@ import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
 public class URLActionDataValidationTest
 {
     ParameterInterpreter interpreter;
+
     private XltProperties properties;
 
     private GeneralDataProvider dataProvider;
@@ -30,7 +31,7 @@ public class URLActionDataValidationTest
         properties = XltProperties.getInstance();
         dataProvider = GeneralDataProvider.getInstance();
         interpreter = new ParameterInterpreter(properties, dataProvider);
-        
+
         selectionModes = new ArrayList<String>();
         validationModes = new ArrayList<String>();
 
@@ -38,91 +39,84 @@ public class URLActionDataValidationTest
         validationModes.addAll(URLActionDataValidation.PERMITTEDVALIDATIONMODE);
 
     }
-    @Test 
-    public void constructorTest(){
+
+    @Test
+    public void constructorTest()
+    {
         for (final String selectionMode : selectionModes)
         {
             for (final String validationMode : validationModes)
             {
-                @SuppressWarnings({
+                @SuppressWarnings(
+                    {
                         "unused"
                     })
-                final URLActionDataValidation validation = new URLActionDataValidation("name",
-                                                                               selectionMode,
-                                                                               "content",
-                                                                               validationMode,
-                                                                               "content",
-                                                                               interpreter);
+                final URLActionDataValidation validation = new URLActionDataValidation("name", selectionMode, "content", validationMode,
+                                                                                       "content", interpreter);
 
             }
         }
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void illegalSetupName()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
-        final URLActionDataValidation validation = new URLActionDataValidation(null, null, null, null,
-                                                                       null, null);
+        final URLActionDataValidation validation = new URLActionDataValidation(null, null, null, null, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalSetupSelectionMode()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
-        final URLActionDataValidation validation = new URLActionDataValidation("name", null, "something",
-                                                                       URLActionDataValidation.EXISTS,
-                                                                       null, interpreter);
+        final URLActionDataValidation validation = new URLActionDataValidation("name", null, "something", URLActionDataValidation.EXISTS,
+                                                                               null, interpreter);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalSetupValidationMode()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
-        final URLActionDataValidation validation = new URLActionDataValidation("name",
-                                                                       URLActionDataValidation.XPATH,
-                                                                       "something", null, null,
-                                                                       interpreter);
+        final URLActionDataValidation validation = new URLActionDataValidation("name", URLActionDataValidation.XPATH, "something", null,
+                                                                               null, interpreter);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalInterpreter()
     {
-        @SuppressWarnings({
+        @SuppressWarnings(
+            {
                 "unused"
             })
-        final URLActionDataValidation validation = new URLActionDataValidation("name",
-                                                                       URLActionDataValidation.XPATH,
-                                                                       "something",
-                                                                       URLActionDataValidation.MATCHES,
-                                                                       null, null);
+        final URLActionDataValidation validation = new URLActionDataValidation("name", URLActionDataValidation.XPATH, "something",
+                                                                               URLActionDataValidation.MATCHES, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalSelectionMode()
     {
-        final URLActionDataValidation validation = new URLActionDataValidation("name", "x", "something",
-                                                                       URLActionDataValidation.MATCHES,
-                                                                       null, interpreter);
+        final URLActionDataValidation validation = new URLActionDataValidation("name", "x", "something", URLActionDataValidation.MATCHES,
+                                                                               null, interpreter);
         @SuppressWarnings("unused")
-		final String selectionMode = validation.getSelectionMode();
-
+        final String selectionMode = validation.getSelectionMode();
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalValidationMode()
     {
-        final URLActionDataValidation validation = new URLActionDataValidation("name",
-                                                                       URLActionDataValidation.XPATH,
-                                                                       "something", "x", null,
-                                                                       interpreter);
+        final URLActionDataValidation validation = new URLActionDataValidation("name", URLActionDataValidation.XPATH, "something", "x",
+                                                                               null, interpreter);
         @SuppressWarnings("unused")
-		final String validationMode = validation.getValidationMode();
+        final String validationMode = validation.getValidationMode();
     }
 }

@@ -11,7 +11,7 @@ import com.xceptance.xlt.engine.XltWebClient;
 
 public class DownloaderTest
 {
-    private static  XltWebClient client;
+    private static XltWebClient client;
 
     private static boolean userAgentUID;
 
@@ -37,7 +37,7 @@ public class DownloaderTest
     public void testConstructors()
     {
         @SuppressWarnings("unused")
-		Downloader downloader;
+        Downloader downloader;
         downloader = new Downloader(client);
         downloader = new Downloader(client, threadCount, userAgentUID);
     }

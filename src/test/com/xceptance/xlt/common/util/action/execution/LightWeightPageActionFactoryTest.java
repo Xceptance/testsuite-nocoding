@@ -32,7 +32,7 @@ public class LightWeightPageActionFactoryTest
     public void testConstructor()
     {
         @SuppressWarnings("unused")
-		final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
+        final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
 
     }
 
@@ -40,8 +40,7 @@ public class LightWeightPageActionFactoryTest
     public void testCreatePageAction()
     {
         final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
-        final URLActionDataExecutionable executionable = factory.createPageAction("Action",
-                                                                                  request);
+        final URLActionDataExecutionable executionable = factory.createPageAction("Action", request);
         executionable.executeAction();
 
     }
@@ -50,8 +49,7 @@ public class LightWeightPageActionFactoryTest
     public void testCreateXhrPageAction()
     {
         final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
-        URLActionDataExecutionable executionable = factory.createPageAction("Action",
-                                                                            request);
+        URLActionDataExecutionable executionable = factory.createPageAction("Action", request);
         executionable.executeAction();
         executionable = factory.createXhrPageAction("Xhr", request);
         executionable.executeAction();
@@ -62,7 +60,6 @@ public class LightWeightPageActionFactoryTest
     {
         final LightWeightPageActionFactory factory = new LightWeightPageActionFactory(propAdmin);
         @SuppressWarnings("unused")
-		final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr",
-                                                                                     request);
+        final URLActionDataExecutionable executionable = factory.createXhrPageAction("Xhr", request);
     }
 }
