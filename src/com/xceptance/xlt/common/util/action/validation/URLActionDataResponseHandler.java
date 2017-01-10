@@ -92,7 +92,7 @@ public class URLActionDataResponseHandler
         final List<URLActionDataValidation> validations = action.getValidations();
         for (final URLActionDataValidation validation : validations)
         {
-            validationHandler.validate(validation, result);
+            validationHandler.validate(validation, result, action);
         }
     }
 

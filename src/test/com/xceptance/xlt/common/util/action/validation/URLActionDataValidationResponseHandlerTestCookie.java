@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.xceptance.xlt.api.data.GeneralDataProvider;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.common.util.MockObjects;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataValidationResponseHandler;
@@ -29,6 +30,8 @@ public class URLActionDataValidationResponseHandlerTestCookie
     private static URLActionDataExecutableResult result;
 
     private static XPathWithHtmlPage xpwh;
+
+    private static URLActionData action;
 
     private static URLActionDataValidation validationCookieExists;
 
@@ -92,42 +95,42 @@ public class URLActionDataValidationResponseHandlerTestCookie
     public void testCookieExists()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieExists, result);
+        validationHandler.validate(validationCookieExists, result, action);
     }
 
     @Test(expected = AssertionError.class)
     public void testCookieExistsMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieExistsMalicious, result);
+        validationHandler.validate(validationCookieExistsMalicious, result, action);
     }
 
     @Test
     public void testCookieCount()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieCount, result);
+        validationHandler.validate(validationCookieCount, result, action);
     }
 
     @Test(expected = AssertionError.class)
     public void testCookieCountMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieCountMalicious, result);
+        validationHandler.validate(validationCookieCountMalicious, result, action);
     }
 
     @Test(expected = AssertionError.class)
     public void testCookieTestMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieTextMalicious, result);
+        validationHandler.validate(validationCookieTextMalicious, result, action);
     }
 
     @Test
     public void testCookieMatches()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieMatches, result);
+        validationHandler.validate(validationCookieMatches, result, action);
     }
 
     /*
@@ -137,7 +140,7 @@ public class URLActionDataValidationResponseHandlerTestCookie
     public void testCookieMatchesMalicious()
     {
         validationHandler = new URLActionDataValidationResponseHandler();
-        validationHandler.validate(validationCookieMatchesMalicious, result);
+        validationHandler.validate(validationCookieMatchesMalicious, result, action);
     }
 
 }

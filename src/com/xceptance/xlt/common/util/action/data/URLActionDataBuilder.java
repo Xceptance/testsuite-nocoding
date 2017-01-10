@@ -241,7 +241,7 @@ public class URLActionDataBuilder
         }
         catch (final IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("Failed to create URLAction : " + e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to create URLAction for action \"" + this.name + "\". " + e.getMessage(), e);
         }
 
         reset();
