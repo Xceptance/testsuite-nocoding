@@ -42,7 +42,7 @@
     Response :
         Validate :
             - Validate registration-form Existance :
-                Regex : "<form\\sid=\"formRegister\"\\sclass=\"form-horizontal\"\\saction=\"/posters/registration\"\\smethod=\"post\">"
+                Regex : "<form\\sid=\"formRegister\"[\\s\\S]+?>"
                 
 - Action :
     Name : Register
@@ -108,7 +108,7 @@
     Response :
         Validate :
             - Validate title :
-                Regex : "<h1\\sid=\"titleCategoryName\">Dining</h1>"
+                Regex : "<div\\sid=\"titleCategoryName\"[\\s\\S]+?>"
     Subrequests :
         - Xhr :
             Name : Navigate to second product page.
@@ -122,7 +122,7 @@
                 Validate :
                     - Validate Product Pizza :
                         XPath : "/json/products[2]/name"
-                        Matches : "Frozen Pizza"
+                        Matches : "Peperoni Sandwich"
                         
                         
 - Action :
