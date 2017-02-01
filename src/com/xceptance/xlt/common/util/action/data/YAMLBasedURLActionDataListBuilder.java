@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.yaml.snakeyaml.Yaml;
 
 import bsh.EvalError;
-
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.common.util.ParameterUtils;
@@ -91,6 +91,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
     static private final String SPECIFICATION = "YAMLSyntaxSpecification.txt";
 
     static private final String SEESPEC = "See " + SPECIFICATION + " for the correct Syntax!";
+    
+    private String actionName = null;
+    
+	private final TagsLists tester = new TagsLists();
 
     /**
      * Default static URLs
@@ -173,13 +177,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
                                                e);
         }
     }
-
+    
+    
     @Override
     protected Object parseData() throws IOException
     {
+
+    	
         final InputStream input = new FileInputStream(new File(this.filePath));
         final Yaml yaml = new Yaml();
-        Object o = yaml.load(input);
+        Object o = yaml.load(input); 
+        //preValidate (o);
         if (o != null)
         {
             ParameterUtils.isArrayListMessage(o, "YAML-Data", "See the no-coding syntax sepecification!");
@@ -193,7 +201,50 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         return o;
     }
-
+    
+    private void checkForInvalidTags (final LinkedHashMap<String, Object> lhm, String parentTag)
+    {
+        final Set<?> entrySet = lhm.entrySet();
+        final Iterator<?> it = entrySet.iterator();
+        if (parentTag.equals(ACTION) || parentTag.equals(XHR))
+        {
+            final Object nameObject = lhm.get(NAME);
+            if (nameObject == null)
+            {
+            	throw new IllegalArgumentException(MessageFormat.format("Name of \"{0}\" can not be Null", parentTag));
+            }
+            else
+            {
+            	actionName = nameObject.toString();
+            }
+        }
+        		
+        for (int i = 0; i < entrySet.size(); i++)
+        {  	
+            final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
+    		String key =  entry.getKey().toString();
+    		switch (parentTag) {
+			case ACTION:
+	    		Assert.assertTrue(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\"", key, actionName), tester.mappy.get("actionTags").contains(key));
+				break;
+			case REQUEST:
+	    		Assert.assertTrue(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\"", key, actionName), tester.mappy.get("requestTags").contains(key));
+				break;
+			case RESPONSE:
+	    		Assert.assertTrue(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\"", key, actionName), tester.mappy.get("responseTags").contains(key));
+				break;
+			case SUBREQUESTS:
+	    		Assert.assertTrue(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\"", key, actionName), tester.mappy.get("subRequestTags").contains(key));
+				break;
+			case XHR:
+	    		Assert.assertTrue(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\"", key, actionName), tester.mappy.get("actionTags").contains(key));
+				break;
+			default:
+				throw new IllegalArgumentException(MessageFormat.format("Key: \"{0}\" is not a valid Tag", key));
+			}
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     private void createActionList(final List<Object> dataList)
     {
@@ -259,6 +310,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
                 break;
             default:
                 XltLogger.runTimeLogger.warn(MessageFormat.format("Ignoring invalid list item : \"{0}\"", tagName));
+                throw new IllegalArgumentException(MessageFormat.format("Invalid Listitem: \"{0}\"", tagName));
         }
     }
 
@@ -450,11 +502,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else if (parametersObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) parametersObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) parametersObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
@@ -488,11 +537,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else if (cookiesObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) cookiesObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) cookiesObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
@@ -528,11 +574,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else if (headersObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) headersObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) headersObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
@@ -566,11 +609,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else if (staticObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) staticObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) staticObject;
             final List<String> newList = new ArrayList<String>();
             for (final Object object : objectList)
             {
@@ -602,11 +642,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else if (storeObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) storeObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) storeObject;
             @SuppressWarnings("unused")
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
@@ -640,9 +677,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         ParameterUtils.isLinkedHashMapMessage(actionObject, ACTION, "Missing Content");
         @SuppressWarnings("unchecked")
         final LinkedHashMap<String, Object> rawAction = (LinkedHashMap<String, Object>) actionObject;
+        checkForInvalidTags(rawAction, ACTION);
 
         fillURLActionBuilder(rawAction);
-
         final URLActionData action = actionBuilder.build();
         this.actions.add(action);
 
@@ -666,8 +703,14 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<String, Object> subrequest = (LinkedHashMap<String, Object>) subrequestItem;
+                Assert.assertTrue(MessageFormat.format("Incorrect syntax at \"Subrequest\" of Aciton: \"{0}\" ", actionName), subrequest.entrySet().size() <= 1);
+                checkForInvalidTags(subrequest, SUBREQUESTS);
                 createSubrequest(subrequest);
             }
+        }
+        else
+        {
+        	XltLogger.runTimeLogger.warn(MessageFormat.format("Subrequest of Action: \"{0}\" is null", rawAction.get(NAME)));
         }
     }
 
@@ -706,6 +749,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void handleXhrSubrequests(final LinkedHashMap<String, Object> xhrSubrequest)
     {
+    	checkForInvalidTags(xhrSubrequest, XHR);
         fillURLActionBuilder(xhrSubrequest);
         actionBuilder.setType(URLActionData.TYPE_XHR);
         final URLActionData xhrAction = actionBuilder.build();
@@ -730,8 +774,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             actionBuilder.setInterpreter(this.interpreter);
             actions.add(actionBuilder.build());
         }
-    }
-
+    }  
+    
     private void fillURLActionBuilder(final LinkedHashMap<String, Object> rawAction)
     {
         actionBuilder.reset();
@@ -762,7 +806,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             ParameterUtils.isLinkedHashMapMessage(requestObject, REQUEST, "");
             @SuppressWarnings("unchecked")
             final LinkedHashMap<String, Object> rawRequest = (LinkedHashMap<String, Object>) requestObject;
-
+            checkForInvalidTags(rawRequest, REQUEST);
+            
             fillURLActionBuilderWithBodyData(rawRequest);
             fillURLActionBuilderWithHeaderData(rawRequest);
             fillURLActionBuilderWithEncodeParametersData(rawRequest);
@@ -795,9 +840,9 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             {
                 @SuppressWarnings(
                     {
-                        "unchecked", "rawtypes"
+                        "unchecked"
                     })
-                final List<Object> objectList = (ArrayList) headersObject;
+                final List<Object> objectList = (ArrayList<Object>) headersObject;
 
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
 
@@ -825,11 +870,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         {
             if (parametersObject instanceof ArrayList)
             {
-                @SuppressWarnings(
-                    {
-                        "unchecked", "rawtypes"
-                    })
-                final List<Object> objectList = (ArrayList) parametersObject;
+                @SuppressWarnings("unchecked")
+                final List<Object> objectList = (ArrayList<Object>) parametersObject;
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
                 for (final Object object : objectList)
                 {
@@ -855,11 +897,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         {
             if (cookiesObject instanceof ArrayList)
             {
-                @SuppressWarnings(
-                    {
-                        "rawtypes", "unchecked"
-                    })
-                final List<Object> objectList = (ArrayList) cookiesObject;
+                @SuppressWarnings("unchecked")
+                final List<Object> objectList = (ArrayList<Object>) cookiesObject;
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
                 for (final Object object : objectList)
                 {
@@ -982,7 +1021,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             ParameterUtils.isLinkedHashMapMessage(responseObject, RESPONSE, "");
             @SuppressWarnings("unchecked")
             final LinkedHashMap<String, Object> rawResponse = (LinkedHashMap<String, Object>) responseObject;
-
+            checkForInvalidTags(rawResponse, RESPONSE);
+            
             fillURLActionBuilderWithHttpResponseCodeData(rawResponse);
             fillURLActionBuilderWithValidationData(rawResponse);
             fillURLActionBuilderWithStoreData(rawResponse);
@@ -1024,6 +1064,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
                 ParameterUtils.isLinkedHashMapMessage(validationObject, VALIDATION, "");
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<String, Object> validationItem = (LinkedHashMap<String, Object>) validationObject;
+                Assert.assertTrue(MessageFormat.format("Incorrect syntax at \"Validate\" of Aciton: \"{0}\" ", actionName), validationItem.entrySet().size() <= 1);
                 fillURLActionValidationBuilder(validationItem);
                 final URLActionDataValidation validation = validationBuilder.build();
                 actionBuilder.addValidation(validation);
@@ -1050,13 +1091,14 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(VALIDATION, validationName, Reason.UNCOMPLETE);
+            throw new IllegalArgumentException (MessageFormat.format("Validation Item: \"{0}\" at Action: \"{1}\" failed because: \"{2}\"", validationName, actionName, Reason.UNCOMPLETE));
         }
     }
 
     private void fillURLActionValidationBuilderWithDataFromLinkedHashMap(final LinkedHashMap<String, Object> rawValidateSubItem)
     {
         final Set<?> entrySet = rawValidateSubItem.entrySet();
+        Assert.assertTrue(MessageFormat.format("Validation Item: \"{0}\" of Action: \"{1}\" have more than one selection- or validationMode ", validationBuilder.getName(), actionName), entrySet.size() <=2);
         final Iterator<?> it = entrySet.iterator();
         Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
         final String selectionMode = (String) entry.getKey();
