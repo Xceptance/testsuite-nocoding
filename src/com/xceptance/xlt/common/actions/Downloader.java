@@ -70,7 +70,7 @@ public class Downloader
         if (!urls.isEmpty())
         {
             // build a static content downloader only when needed
-            final StaticContentDownloader downloader = new StaticContentDownloader(webClient, threadCount, userAgentUID);
+            final StaticContentDownloader downloader = new StaticContentDownloader(webClient, getThreadCount(), isUserAgentUID());
             try
             {
                 // load the additional URLs
@@ -90,4 +90,12 @@ public class Downloader
             }
         }
     }
+
+	public int getThreadCount() {
+		return threadCount;
+	}
+
+	public boolean isUserAgentUID() {
+		return userAgentUID;
+	}
 }

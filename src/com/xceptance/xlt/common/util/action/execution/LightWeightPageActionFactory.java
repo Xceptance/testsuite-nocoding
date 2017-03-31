@@ -108,4 +108,12 @@ public class LightWeightPageActionFactory extends URLActionDataExecutionableFact
         previousAction = xhrAction;
         return xhrAction;
     }
+
+	public NoCodingPropAdmin getPropAdmin() {
+		return propAdmin;
+	}
+
+	public URLActionDataExecutableResultFactory getResultFactory() {
+		return resultFactory;
+	}
 }

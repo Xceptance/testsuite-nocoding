@@ -7,28 +7,19 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
+
+import test.com.xceptance.xlt.common.util.MockObjects;
 
 public class XPathWithHtmlPageTest
 {
-
-    private static final String urlString = "https://www.xceptance.com/en/";
-
     private static MockObjects mockObjects;
 
     @BeforeClass
     public static void setup() throws MalformedURLException
     {
-        mockObjects = new MockObjects(urlString);
+        mockObjects = new MockObjects();
         mockObjects.load();
-    }
-
-    @Test
-    public void testConstructor()
-    {
-        @SuppressWarnings("unused")
-        final XPathWithHtmlPage xp = new XPathWithHtmlPage(mockObjects.getHtmlPage());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -42,7 +33,7 @@ public class XPathWithHtmlPageTest
     public void testGetByXPath()
     {
         final XPathWithHtmlPage xp = new XPathWithHtmlPage(mockObjects.getHtmlPage());
-        final List<String> something = xp.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
-        Assert.assertEquals(something.get(0), "Committed to Software Quality");
+        final List<String> something = xp.getByXPath(mockObjects.xPathString);
+        Assert.assertEquals(mockObjects.xpathStringExpected, something.get(0));
     }
 }

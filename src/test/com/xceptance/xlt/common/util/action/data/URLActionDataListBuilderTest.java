@@ -53,11 +53,11 @@ public class URLActionDataListBuilderTest
     @Test
     public void testParseOnlyOnce_DifferentBuilder() throws Throwable
     {
-        final DummyBuilder builder1 = new DummyBuilder("doesnotexist.txt", new ParameterInterpreter(XltProperties.getInstance(),
+        final DummyBuilder builder1 = new DummyBuilder("doesnotexist1.txt", new ParameterInterpreter(XltProperties.getInstance(),
                                                                                                     GeneralDataProvider.getInstance()),
                                                        new URLActionDataBuilder());
 
-        final DummyBuilder builder2 = new DummyBuilder("doesnotexist.txt", new ParameterInterpreter(XltProperties.getInstance(),
+        final DummyBuilder builder2 = new DummyBuilder("doesnotexist1.txt", new ParameterInterpreter(XltProperties.getInstance(),
                                                                                                     GeneralDataProvider.getInstance()),
                                                        new URLActionDataBuilder());
 

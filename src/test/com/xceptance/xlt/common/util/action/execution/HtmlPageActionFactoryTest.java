@@ -1,14 +1,16 @@
 package test.com.xceptance.xlt.common.util.action.execution;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.xceptance.xlt.api.util.XltProperties;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.NoCodingPropAdmin;
 import com.xceptance.xlt.common.util.action.execution.HtmlPageActionFactory;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
+
+import test.com.xceptance.xlt.common.util.MockObjects;
 
 public class HtmlPageActionFactoryTest
 {
@@ -23,17 +25,17 @@ public class HtmlPageActionFactoryTest
     {
         propAdmin = new NoCodingPropAdmin(XltProperties.getInstance(), "", "");
         mockObjects = new MockObjects();
+        mockObjects.setUrlString(mockObjects.urlStringDemoHtml);
         mockObjects.initURL();
         mockObjects.initWebRequest();
         request = mockObjects.getRequest();
     }
 
-    @Test
+	@Test
     public void testConstructor()
     {
-        @SuppressWarnings("unused")
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
-
+        Assert.assertEquals(propAdmin, factory.getPropAdmin());
     }
 
     @Test
@@ -42,7 +44,7 @@ public class HtmlPageActionFactoryTest
         final HtmlPageActionFactory factory = new HtmlPageActionFactory(propAdmin);
         final URLActionDataExecutionable executionable = factory.createPageAction("Action", request);
         executionable.executeAction();
-
+        Assert.assertNotNull(executionable.getResult());
     }
 
     @Test
@@ -53,6 +55,7 @@ public class HtmlPageActionFactoryTest
         executionable.executeAction();
         executionable = factory.createXhrPageAction("Xhr", request);
         executionable.executeAction();
+        Assert.assertNotNull(executionable.getResult());
     }
 
     @Test(expected = IllegalArgumentException.class)

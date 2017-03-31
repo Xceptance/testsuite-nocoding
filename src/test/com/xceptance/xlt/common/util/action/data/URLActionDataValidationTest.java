@@ -3,6 +3,7 @@ package test.com.xceptance.xlt.common.util.action.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,13 +48,13 @@ public class URLActionDataValidationTest
         {
             for (final String validationMode : validationModes)
             {
-                @SuppressWarnings(
-                    {
-                        "unused"
-                    })
                 final URLActionDataValidation validation = new URLActionDataValidation("name", selectionMode, "content", validationMode,
                                                                                        "content", interpreter);
-
+                Assert.assertEquals(validation.getName(), "name");
+                Assert.assertEquals(validation.getSelectionMode(), selectionMode);
+                Assert.assertEquals(validation.getSelectionContent(), "content");
+                Assert.assertEquals(validation.getValidationMode(), validationMode);
+                Assert.assertEquals(validation.getValidationContent(), "content");
             }
         }
     }

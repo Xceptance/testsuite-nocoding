@@ -252,8 +252,20 @@ public class URLActionDataBuilderTest
         builder.setDefaultMethod(method);
         builder.setInterpreter(interpreter);
 
-        @SuppressWarnings("unused")
         final URLActionData action = builder.build();
+        
+        Assert.assertEquals(action.getName(), name);
+        Assert.assertEquals(action.getBody(), body);
+        Assert.assertEquals(action.getType(), type);
+        Assert.assertEquals(action.getMethod().toString(), method);
+        Assert.assertEquals(action.getUrlString(), url);
+        Assert.assertEquals(action.getValidations(), validations);
+        Assert.assertEquals(action.getStore(), store);
+        Assert.assertEquals(action.getHeaders(), headers);
+        Assert.assertEquals(action.getParameters(), parameters);
+        Assert.assertEquals(action.getCookies(), cookies);
+        Assert.assertEquals(action.encodeBody().toString(), encodeBody);
+        Assert.assertEquals(action.encodeParameters().toString(), encodeParameters);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -113,4 +113,12 @@ public class URLActionDataExecutionbleFactoryBuilder
     {
         return PERMITTEDMODES.contains(item);
     }
+
+	public String getMode() {
+		return mode;
+	}
+
+	public NoCodingPropAdmin getPropAdmin() {
+		return propAdmin;
+	}
 }

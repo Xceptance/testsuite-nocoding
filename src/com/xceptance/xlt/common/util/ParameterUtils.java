@@ -9,8 +9,6 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 
-import com.xceptance.xlt.common.util.action.data.URLActionData;
-
 /**
  * Adaption of the (final) class {@link com.xceptance.common.util.ParameterCheckUtils ParameterCheckUtils}. <br>
  * Some methods were added. <br>

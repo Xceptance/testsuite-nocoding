@@ -1,5 +1,7 @@
 package com.xceptance.xlt.common.tests;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
@@ -32,6 +34,10 @@ public class URLTestCase extends AbstractURLTestCase
     protected URLActionDataExecutionable previousExecutable;
 
     protected URLActionData previousActionData;
+    
+	private ArrayList<URLActionData> xhrActionList;
+    
+    private ArrayList <WebRequest> requestList;
 
     /**
      * The first and the last action are treated differently: <br>
@@ -49,6 +55,9 @@ public class URLTestCase extends AbstractURLTestCase
             {
                 if (action.isAction())
                 {
+                	handleLastAction();
+                	xhrActionList = new ArrayList <URLActionData>();
+                	requestList = new ArrayList<WebRequest>();
                     handleAction(action);
                 }
                 else if (action.isXHRAction())
@@ -70,6 +79,8 @@ public class URLTestCase extends AbstractURLTestCase
 
     protected void handleFirstAction()
     {
+    	xhrActionList = new ArrayList <URLActionData>();
+    	requestList = new ArrayList<WebRequest>();
         final URLActionData action = getFirstURLActionToExecute();
         checkIfFirstActionIsExecutable(action);
         final WebRequest request = createActionWebRequest(action);
@@ -82,7 +93,7 @@ public class URLTestCase extends AbstractURLTestCase
     protected void handleLastAction()
     {
         executePreviousExecutionable();
-        handleResponse();
+        handleStore();
     }
 
     protected void removeActionFromActionList(final URLActionData action)
@@ -120,23 +131,20 @@ public class URLTestCase extends AbstractURLTestCase
 
     protected void handleAction(final URLActionData action)
     {
-        executePreviousExecutionable();
-        handleResponse();
-
         final WebRequest request = createActionWebRequest(action);
         final URLActionDataExecutionable executable = createExecutionableFromAction(action, request);
         setPreviousURLAction(action);
         setPreviousExecutionable(executable);
     }
 
-    protected void handleResponse()
+    protected void handleStore()
     {
-        responseHandler.handleURLActionResponse(previousActionData, previousExecutable.getResult());
+        responseHandler.handleStore(previousActionData, previousExecutable.getResult());
     }
 
     protected void executePreviousExecutionable()
     {
-        previousExecutable.executeAction();
+        previousExecutable.executeAction(this);
     }
 
     protected URLActionDataExecutionable createExecutionableFromAction(final URLActionData action, final WebRequest request)
@@ -147,11 +155,8 @@ public class URLTestCase extends AbstractURLTestCase
     protected void handleXhrAction(final URLActionData xhrAction)
     {
         final WebRequest request = createXhrWebRequest(xhrAction);
-        final URLActionDataExecutionable executable = createExecutionableFromXhr(xhrAction, request);
-        executePreviousExecutionable();
-        handleResponse();
-        setPreviousURLAction(xhrAction);
-        setPreviousExecutionable(executable);
+        requestList.add(request);
+        xhrActionList.add(xhrAction);
     }
 
     protected WebRequest createXhrWebRequest(final URLActionData xhrAction)
@@ -167,6 +172,30 @@ public class URLTestCase extends AbstractURLTestCase
     protected void handleStaticAction(final URLActionData staticAction)
     {
         previousExecutable.addStaticRequest(staticAction.getUrl());
+    }
+    
+    
+    //----------------------------------------------------------------
+    //Getters
+    
+    public ArrayList <WebRequest> getRequestList()
+    {
+    	return requestList;
+    }
+    
+    public URLActionData getPreviousActionData()
+    {
+    	return previousActionData;
+    }
+    
+    public ArrayList <URLActionData> getXhrActionList()
+    {
+    	return xhrActionList;
+    }
+    
+    public URLActionDataResponseHandler getReponseHandler()
+    {
+    	return responseHandler;
     }
 
 }
