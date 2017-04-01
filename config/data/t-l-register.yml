@@ -41,7 +41,7 @@
     Response :
         Validate :
             - Validate registration-form Existance :
-                Regex : "<form\\sid=\"formRegister\"\\sclass=\"form-horizontal\"\\saction=\"/posters/registration\"\\smethod=\"post\">"
+                Regex : "<form\\sid=\"formRegister\"[\\s\\S]+?>"
                 
 - Action :
     Name : Register

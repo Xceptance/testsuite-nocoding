@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.data.GeneralDataProvider;
@@ -45,6 +47,24 @@ public class YAMLBasedURLActionDataListBuilderTest
 
     private final String fileComplexTestCase = path + "complexTestCase.yml";
 
+    private final String fileSyntaxErrorRoot = path + "syntaxErrorRoot.yml";
+    
+    private final String fileSyntaxErrorAction = path + "syntaxErrorAction.yml";
+    
+    private final String fileSyntaxErrorRequest = path + "syntaxErrorRequest.yml";
+    
+    private final String fileSyntaxErrorResponse = path + "syntaxErrorResponse.yml";
+    
+    private final String fileSyntaxErrorSubrequests = path + "syntaxErrorSubrequests.yml";
+    
+    private final String fileSyntaxErrorXhr = path + "syntaxErrorXhr.yml";
+    
+	private final String fileSyntaxErrorStatic = path + "syntaxErrorStatic.yml";
+
+	private final String fileSyntaxErrorActionNameNull = path + "syntaxErrorActionNameNull.yml";
+
+	private final String fileSyntaxErrorUrlNull = path + "syntaxErrorUrlNull.yml";
+
     private final URLActionDataBuilder actionBuilder = new URLActionDataBuilder();
 
     private final URLActionDataStoreBuilder storeBuilder = new URLActionDataStoreBuilder();
@@ -59,6 +79,9 @@ public class YAMLBasedURLActionDataListBuilderTest
         interpreter = new ParameterInterpreter(properties, dataProvider);
     }
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+    
     @Test
     public void testCorrectConstructor()
     {
@@ -239,4 +262,148 @@ public class YAMLBasedURLActionDataListBuilderTest
         final List<URLActionData> actions = listBuilder.buildURLActionDataList();
     }
 
+    @Test
+    public void testSyntaxErrorRoot() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Invalid list item");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorRoot, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorAction() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("is not a valid child of \"Action\"");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorAction, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorActionNameNull() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Name of \"Action\" cannot be Null");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorActionNameNull, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+
+    @Test
+    public void testSyntaxErrorRequest() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("is not a valid child of \"Request\"");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorRequest, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorUrlNull() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("'Url' cannot be null");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorUrlNull, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorResponse() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("is not a valid child of \"Response\"");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorResponse, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorSubrequests() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("is not a valid child of \"Subrequests\"");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorSubrequests, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorXhr() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("is not a valid child of \"Xhr\"");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorXhr, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
+    @Test
+    public void testSyntaxErrorStatic() throws MalformedURLException
+    {
+    	expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("its value is not an array list");
+        
+    	final YAMLBasedURLActionDataListBuilder listBuilder = new YAMLBasedURLActionDataListBuilder(this.fileSyntaxErrorStatic, 
+																					    			this.interpreter, 
+																					    			this.actionBuilder, 
+																					    			this.validationBuilder, 
+																					    			this.storeBuilder);
+        
+    	@SuppressWarnings("unused")
+        final List<URLActionData> actions = listBuilder.buildURLActionDataList();
+    }
+    
 }

@@ -12,10 +12,11 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.data.GeneralDataProvider;
 import com.xceptance.xlt.api.util.XltProperties;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataRequestBuilder;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
+
+import test.com.xceptance.xlt.common.util.MockObjects;
 
 public class URLActionDataRequestBuilderTest
 {

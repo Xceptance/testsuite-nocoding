@@ -19,6 +19,7 @@ import bsh.EvalError;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.util.Constants;
 import com.xceptance.xlt.common.util.ParameterUtils;
 import com.xceptance.xlt.common.util.ParameterUtils.Reason;
 import com.xceptance.xlt.common.util.bsh.ParameterInterpreter;
@@ -47,50 +48,11 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     protected final URLActionDataStoreBuilder storeBuilder;
 
-    /*
-     * The Following are the allowed syntactic tags. See "syntax.yml" for the structure.
-     */
-    private static final String ACTION = "Action";
-
-    private static final String REQUEST = "Request";
-
-    private static final String RESPONSE = "Response";
-
-    private static final String BODY = "Body";
-
-    private static final String STORE = "Store";
-
-    private static final String SUBREQUESTS = "Subrequests";
-
-    private static final String NAME = "Name";
-
-    private static final String URL = "Url";
-
-    private static final String METHOD = "Method";
-
-    private static final String ENCODEPARAMETERS = "Encode-Parameters";
-
-    private static final String ENCODEBODY = "Encode-Body";
-
-    private static final String XHR = "Xhr";
-
-    private static final String PARAMETERS = "Parameters";
-
-    private static final String HTTPCODE = "Httpcode";
-
-    private static final String VALIDATION = "Validate";
-
-    private static final String STATIC = "Static";
-
-    private static final String COOKIES = "Cookies";
-
-    private static final String HEADERS = "Headers";
-
-    private static final String DELETE = "Delete";
-
     static private final String SPECIFICATION = "YAMLSyntaxSpecification.txt";
 
     static private final String SEESPEC = "See " + SPECIFICATION + " for the correct Syntax!";
+    
+    private String actionName = null;
 
     /**
      * Default static URLs
@@ -155,7 +117,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
      * 
      * @return List<{@link #URLActionData}>
      */
-    public List<URLActionData> buildURLActionDataList()
+    @Override
+	public List<URLActionData> buildURLActionDataList()
     {
         try
         {
@@ -169,17 +132,19 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException(new StringBuilder("Failed to parse file '").append(filePath).append("' as YAML").toString(),
-                                               e);
+            throw new IllegalArgumentException(new StringBuilder("Failed to parse file '").append(filePath).append("' as YAML. ").append(e.getMessage()).toString(), e);
         }
     }
-
+    
+    
     @Override
     protected Object parseData() throws IOException
     {
+
+    	
         final InputStream input = new FileInputStream(new File(this.filePath));
         final Yaml yaml = new Yaml();
-        Object o = yaml.load(input);
+        Object o = yaml.load(input); 
         if (o != null)
         {
             ParameterUtils.isArrayListMessage(o, "YAML-Data", "See the no-coding syntax sepecification!");
@@ -193,7 +158,70 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
         return o;
     }
+    
+    private void checkForInvalidTags (final LinkedHashMap<String, Object> lhm, String parentItemName)
+    {
+        final Set<?> entrySet = lhm.entrySet();
+        final Iterator<?> it = entrySet.iterator();
+        if (parentItemName.equals(Constants.ACTION) || parentItemName.equals(Constants.XHR))
+        {
+            final Object nameObject = lhm.get(Constants.NAME);
+            if (nameObject == null)
+            {
+            	throw new IllegalArgumentException(MessageFormat.format("Name of \"{0}\" cannot be Null", parentItemName));
+            }
+            else
+            {
+            	actionName = nameObject.toString();
+            }
+        }
 
+        for (int i = 0; i < entrySet.size(); i++)
+        {  	      	
+            final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
+    		String itemName =  entry.getKey().toString();
+			XltLogger.runTimeLogger.debug("Handling tag: " + itemName);
+    		switch (parentItemName) {
+			case Constants.ACTION:
+				if (!Constants.isPermittedActionItem(itemName))
+				{
+					throw new IllegalArgumentException(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\". \"{0}\" is not a valid child of \"Action\"", itemName, actionName));
+				}
+				break;
+			case Constants.REQUEST:
+				if (!Constants.isPermittedRequestItem(itemName))
+				{
+					throw new IllegalArgumentException(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\". \"{0}\" is not a valid child of \"Request\"", itemName, actionName));
+				}
+				break;
+			case Constants.RESPONSE:
+				if (!Constants.isPermittedResponseItem(itemName))
+				{
+					throw new IllegalArgumentException(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\". \"{0}\" is not a valid child of \"Response\"", itemName, actionName));
+				}
+				break;
+			case Constants.SUBREQUESTS:
+                if (!(entrySet.size() <= 1))
+                {
+                	throw new IllegalArgumentException(MessageFormat.format("Incorrect syntax at item: \"Subrequest\" of Aciton: \"{0}\". Please mind the whitespaces.", actionName));
+                }
+                else if (!Constants.isPermittedSubRequestItem(itemName))
+				{
+					throw new IllegalArgumentException(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\". \"{0}\" is not a valid child of \"Subrequests\"", itemName, actionName));
+				}
+				break;
+			case Constants.XHR:
+				if (!Constants.isPermittedActionItem(itemName))
+				{
+					throw new IllegalArgumentException(MessageFormat.format("Invalid tag: \"{0}\" at Action \"{1}\". \"{0}\" is not a valid child of \"Xhr\"", itemName, actionName));
+				}
+				break;
+			default:
+				throw new IllegalArgumentException(MessageFormat.format("Key: \"{0}\" is not a valid Tag", itemName));
+			} 
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     private void createActionList(final List<Object> dataList)
     {
@@ -209,65 +237,67 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void handleListItem(final LinkedHashMap<String, Object> listItem)
     {
-        final String tagName = determineTagName(listItem);
-
-        XltLogger.runTimeLogger.debug("Handling tag: " + tagName);
-
-        switch (tagName)
+        final String itemName = determineTagName(listItem);
+        XltLogger.runTimeLogger.debug("Handling tag: " + itemName);
+        if (!Constants.isPermittedListItem(itemName))
         {
-            case ACTION:
+            throw new IllegalArgumentException(MessageFormat.format("Invalid list item: \"{0}\"", itemName));
+        }
+        switch (itemName)
+        {
+            case Constants.ACTION:
                 handleActionListItem(listItem);
                 break;
-            case NAME:
+            case Constants.NAME:
                 setDefaultName(listItem);
                 break;
-            case BODY:
+            case Constants.BODY:
                 setDefaultBody(listItem);
                 break;
-            case HTTPCODE:
+            case Constants.HTTPCODE:
                 setDefaultHttpCode(listItem);
                 break;
-            case URL:
+            case Constants.URL:
                 setDefaultUrl(listItem);
                 break;
-            case METHOD:
+            case Constants.METHOD:
                 setDefaultMethod(listItem);
                 break;
-            case ENCODEPARAMETERS:
+            case Constants.ENCODEPARAMETERS:
                 setDefaultEncodeParameters(listItem);
                 break;
-            case ENCODEBODY:
+            case Constants.ENCODEBODY:
                 setDefaultEncodeBody(listItem);
                 break;
-            case XHR:
+            case Constants.XHR:
                 setDefaultXhr(listItem);
                 break;
-            case PARAMETERS:
+            case Constants.PARAMETERS:
                 setDefaultParameters(listItem);
                 break;
-            case COOKIES:
+            case Constants.COOKIES:
                 setDefaultCookies(listItem);
                 break;
-            case STATIC:
+            case Constants.STATIC:
                 setDefaultStatic(listItem);
                 break;
-            case HEADERS:
+            case Constants.HEADERS:
                 setDefaultHeaders(listItem);
                 break;
-            case STORE:
+            case Constants.STORE:
                 setDynamicStoreVariables(listItem);
                 break;
             default:
-                XltLogger.runTimeLogger.warn(MessageFormat.format("Ignoring invalid list item : \"{0}\"", tagName));
+                break;
         }
     }
 
     private void setDefaultName(final LinkedHashMap<String, Object> nameItem)
     {
-        final Object nameObject = nameItem.get(NAME);
-        ParameterUtils.isString(nameObject, NAME);
+        final Object nameObject = nameItem.get(Constants.NAME);
+        ParameterUtils.isString(nameObject, Constants.NAME);
         final String name = (String) nameObject;
-        if (name.equals(DELETE))
+        if (name.equals(Constants.DELETE))
         {
             actionBuilder.setDefaultName(null);
         }
@@ -279,10 +309,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void setDefaultBody(final LinkedHashMap<String, Object> bodyItem)
     {
-        final Object bodyObject = bodyItem.get(BODY);
-        ParameterUtils.isString(bodyObject, BODY);
+        final Object bodyObject = bodyItem.get(Constants.BODY);
+        ParameterUtils.isString(bodyObject, Constants.BODY);
         final String body = (String) bodyObject;
-        if (body.equals(DELETE))
+        if (body.equals(Constants.DELETE))
         {
             actionBuilder.setDefaultBody(null);
         }
@@ -294,7 +324,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void setDefaultHttpCode(final LinkedHashMap<String, Object> codeItem)
     {
-        final Object codeObject = codeItem.get(HTTPCODE);
+        final Object codeObject = codeItem.get(Constants.HTTPCODE);
         if (codeObject instanceof Integer)
         {
             final Integer code = (Integer) codeObject;
@@ -303,7 +333,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         else if (codeObject instanceof String)
         {
             final String code = (String) codeObject;
-            if (code.equals(DELETE))
+            if (code.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultHttpResponceCode(null);
             }
@@ -314,16 +344,16 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(HTTPCODE, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.HTTPCODE, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultUrl(final LinkedHashMap<String, Object> urlItem)
     {
-        final Object urlObject = urlItem.get(URL);
-        ParameterUtils.isString(urlObject, URL);
+        final Object urlObject = urlItem.get(Constants.URL);
+        ParameterUtils.isString(urlObject, Constants.URL);
         final String url = (String) urlObject;
-        if (url.equals(DELETE))
+        if (url.equals(Constants.DELETE))
         {
             actionBuilder.setDefaultUrl(null);
         }
@@ -335,10 +365,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void setDefaultMethod(final LinkedHashMap<String, Object> methodItem)
     {
-        final Object methodObject = methodItem.get(METHOD);
-        ParameterUtils.isString(methodObject, METHOD);
+        final Object methodObject = methodItem.get(Constants.METHOD);
+        ParameterUtils.isString(methodObject, Constants.METHOD);
         final String method = (String) methodObject;
-        if (method.equals(DELETE))
+        if (method.equals(Constants.DELETE))
         {
             actionBuilder.setDefaultMethod(null);
         }
@@ -350,7 +380,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void setDefaultEncodeParameters(final LinkedHashMap<String, Object> encodedItem)
     {
-        final Object encodedObject = encodedItem.get(ENCODEPARAMETERS);
+        final Object encodedObject = encodedItem.get(Constants.ENCODEPARAMETERS);
         if (encodedObject instanceof Boolean)
         {
             final Boolean encoded = (Boolean) encodedObject;
@@ -359,7 +389,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         else if (encodedObject instanceof String)
         {
             final String encoded = (String) encodedObject;
-            if (encoded.equals(DELETE))
+            if (encoded.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultEncodeParameters(null);
             }
@@ -370,13 +400,13 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultEncodeBody(final LinkedHashMap<String, Object> encodedItem)
     {
-        final Object encodedObject = encodedItem.get(ENCODEBODY);
+        final Object encodedObject = encodedItem.get(Constants.ENCODEBODY);
         if (encodedObject instanceof Boolean)
         {
             final Boolean encoded = (Boolean) encodedObject;
@@ -385,7 +415,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         else if (encodedObject instanceof String)
         {
             final String encoded = (String) encodedObject;
-            if (encoded.equals(DELETE))
+            if (encoded.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultEncodeBody(null);
             }
@@ -396,13 +426,13 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(ENCODEBODY, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.ENCODEBODY, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultXhr(final LinkedHashMap<String, Object> xhrItem)
     {
-        final Object xhrObject = xhrItem.get(XHR);
+        final Object xhrObject = xhrItem.get(Constants.XHR);
         if (xhrObject instanceof Boolean)
         {
             final Boolean xhr = (Boolean) xhrObject;
@@ -418,7 +448,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         else if (xhrObject instanceof String)
         {
             final String xhr = (String) xhrObject;
-            if (xhr.equals(DELETE))
+            if (xhr.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultType(null);
             }
@@ -429,36 +459,33 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(XHR, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.XHR, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultParameters(final LinkedHashMap<String, Object> parametersItem)
     {
-        final Object parametersObject = parametersItem.get(PARAMETERS);
+        final Object parametersObject = parametersItem.get(Constants.PARAMETERS);
         if (parametersObject instanceof String)
         {
             final String parameters = (String) parametersObject;
-            if (parameters.equals(DELETE))
+            if (parameters.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultParameters(Collections.<NameValuePair>emptyList());
             }
             else
             {
-                ParameterUtils.doThrow(PARAMETERS, parameters, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(Constants.PARAMETERS, parameters, Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (parametersObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) parametersObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) parametersObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
-                ParameterUtils.isLinkedHashMap(object, PARAMETERS);
+                ParameterUtils.isLinkedHashMap(object, Constants.PARAMETERS);
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                 newList.add(createPairfromLinkedHashMap(lhm));
@@ -467,36 +494,33 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(PARAMETERS, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.PARAMETERS, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultCookies(final LinkedHashMap<String, Object> cookiesItem)
     {
-        final Object cookiesObject = cookiesItem.get(COOKIES);
+        final Object cookiesObject = cookiesItem.get(Constants.COOKIES);
         if (cookiesObject instanceof String)
         {
             final String cookies = (String) cookiesObject;
-            if (cookies.equals(DELETE))
+            if (cookies.equals(Constants.DELETE))
             {
                 actionBuilder.setDefaultCookies(Collections.<NameValuePair>emptyList());
             }
             else
             {
-                ParameterUtils.doThrow(COOKIES, cookies, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(Constants.COOKIES, cookies, Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (cookiesObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) cookiesObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) cookiesObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
-                ParameterUtils.isLinkedHashMap(object, COOKIES);
+                ParameterUtils.isLinkedHashMap(object, Constants.COOKIES);
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                 newList.add(createPairfromLinkedHashMap(lhm));
@@ -505,17 +529,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(COOKIES, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.COOKIES, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultHeaders(final LinkedHashMap<String, Object> headersItem)
     {
-        final Object headersObject = headersItem.get(HEADERS);
+        final Object headersObject = headersItem.get(Constants.HEADERS);
         if (headersObject instanceof String)
         {
             final String headersString = (String) headersObject;
-            if (headersString.equals(DELETE))
+            if (headersString.equals(Constants.DELETE))
             {
 
                 actionBuilder.setDefaultHeaders(Collections.<NameValuePair>emptyList());
@@ -523,20 +547,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(HEADERS, headersString, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(Constants.HEADERS, headersString, Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (headersObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) headersObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) headersObject;
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
-                ParameterUtils.isLinkedHashMap(object, HEADERS);
+                ParameterUtils.isLinkedHashMap(object, Constants.HEADERS);
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                 newList.add(createPairfromLinkedHashMap(lhm));
@@ -545,73 +566,67 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(HEADERS, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.HEADERS, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDefaultStatic(final LinkedHashMap<String, Object> headersItem)
     {
-        final Object staticObject = headersItem.get(STATIC);
+        final Object staticObject = headersItem.get(Constants.STATIC);
         if (staticObject instanceof String)
         {
             final String staticString = (String) staticObject;
-            if (staticString.equals(DELETE))
+            if (staticString.equals(Constants.DELETE))
             {
                 this.d_static = Collections.emptyList();
             }
             else
             {
-                ParameterUtils.doThrow(STATIC, staticString, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(Constants.STATIC, staticString, Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (staticObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) staticObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) staticObject;
             final List<String> newList = new ArrayList<String>();
             for (final Object object : objectList)
             {
-                ParameterUtils.isString(object, STATIC);
+                ParameterUtils.isString(object, Constants.STATIC);
                 newList.add((String) object);
             }
             this.d_static = newList;
         }
         else
         {
-            ParameterUtils.doThrow(HEADERS, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.HEADERS, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void setDynamicStoreVariables(final LinkedHashMap<String, Object> headersItem)
     {
-        final Object storeObject = headersItem.get(STORE);
+        final Object storeObject = headersItem.get(Constants.STORE);
         if (storeObject instanceof String)
         {
             final String storeString = (String) storeObject;
-            if (storeString.equals(DELETE))
+            if (storeString.equals(Constants.DELETE))
             {
                 XltLogger.runTimeLogger.warn("CANNOT DELETE DATA IN STORE (YET)");
             }
             else
             {
-                ParameterUtils.doThrow(STORE, storeString, Reason.UNSUPPORTED_VALUE);
+                ParameterUtils.doThrow(Constants.STORE, storeString, Reason.UNSUPPORTED_VALUE);
             }
         }
         else if (storeObject instanceof ArrayList)
         {
-            @SuppressWarnings(
-                {
-                    "unchecked", "rawtypes"
-                })
-            final List<Object> objectList = (ArrayList) storeObject;
+            @SuppressWarnings("unchecked")
+            final List<Object> objectList = (ArrayList<Object>) storeObject;
             @SuppressWarnings("unused")
             final List<NameValuePair> newList = new ArrayList<NameValuePair>();
             for (final Object object : objectList)
             {
-                ParameterUtils.isLinkedHashMap(object, STORE);
+                ParameterUtils.isLinkedHashMap(object, Constants.STORE);
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                 final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
@@ -629,20 +644,20 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(STORE, Reason.UNSUPPORTED_TYPE);
+            ParameterUtils.doThrow(Constants.STORE, Reason.UNSUPPORTED_TYPE);
         }
     }
 
     private void handleActionListItem(final LinkedHashMap<String, Object> listItem)
     {
-        final Object actionObject = listItem.get(ACTION);
-        ParameterUtils.isNotNull(actionObject, ACTION);
-        ParameterUtils.isLinkedHashMapMessage(actionObject, ACTION, "Missing Content");
+        final Object actionObject = listItem.get(Constants.ACTION);
+        ParameterUtils.isNotNull(actionObject, Constants.ACTION);
+        ParameterUtils.isLinkedHashMapMessage(actionObject, Constants.ACTION, "Missing Content");
         @SuppressWarnings("unchecked")
         final LinkedHashMap<String, Object> rawAction = (LinkedHashMap<String, Object>) actionObject;
+        checkForInvalidTags(rawAction, Constants.ACTION);
 
         fillURLActionBuilder(rawAction);
-
         final URLActionData action = actionBuilder.build();
         this.actions.add(action);
 
@@ -652,31 +667,36 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void handleSubrequests(final LinkedHashMap<String, Object> rawAction)
     {
-        final Object subrequestObject = rawAction.get(SUBREQUESTS);
+        final Object subrequestObject = rawAction.get(Constants.SUBREQUESTS);
         if (subrequestObject != null)
         {
-            ParameterUtils.isArrayListMessage(subrequestObject, SUBREQUESTS, "");
+            ParameterUtils.isArrayListMessage(subrequestObject, Constants.SUBREQUESTS, "");
 
             @SuppressWarnings("unchecked")
             final List<Object> subrequests = (List<Object>) subrequestObject;
 
             for (final Object subrequestItem : subrequests)
             {
-                ParameterUtils.isLinkedHashMapMessage(subrequestItem, STATIC, "");
+                ParameterUtils.isLinkedHashMapMessage(subrequestItem, Constants.STATIC, "");
 
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<String, Object> subrequest = (LinkedHashMap<String, Object>) subrequestItem;
+                checkForInvalidTags(subrequest, Constants.SUBREQUESTS);
                 createSubrequest(subrequest);
             }
+        }
+        else
+        {
+        	XltLogger.runTimeLogger.warn(MessageFormat.format("Subrequest of Action: \"{0}\" is null", rawAction.get(Constants.NAME)));
         }
     }
 
     private void createSubrequest(final LinkedHashMap<String, Object> subrequest)
     {
-        final Object staticSubrequestObject = subrequest.get(STATIC);
+        final Object staticSubrequestObject = subrequest.get(Constants.STATIC);
         if (staticSubrequestObject != null)
         {
-            ParameterUtils.isArrayListMessage(staticSubrequestObject, SUBREQUESTS, "");
+            ParameterUtils.isArrayListMessage(staticSubrequestObject, Constants.SUBREQUESTS, "");
             @SuppressWarnings("unchecked")
             final List<Object> staticSubrequest = (List<Object>) staticSubrequestObject;
             handleStaticSubrequests(staticSubrequest);
@@ -694,10 +714,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
                 actions.add(actionBuilder.build());
             }
         }
-        final Object xhrSubrequestObject = subrequest.get(XHR);
+        final Object xhrSubrequestObject = subrequest.get(Constants.XHR);
         if (xhrSubrequestObject != null)
         {
-            ParameterUtils.isLinkedHashMapMessage(xhrSubrequestObject, SUBREQUESTS, "");
+            ParameterUtils.isLinkedHashMapMessage(xhrSubrequestObject, Constants.SUBREQUESTS, "");
             @SuppressWarnings("unchecked")
             final LinkedHashMap<String, Object> xhrSubrequest = (LinkedHashMap<String, Object>) xhrSubrequestObject;
             handleXhrSubrequests(xhrSubrequest);
@@ -706,6 +726,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void handleXhrSubrequests(final LinkedHashMap<String, Object> xhrSubrequest)
     {
+    	checkForInvalidTags(xhrSubrequest, Constants.XHR);
+        actionBuilder.reset();
         fillURLActionBuilder(xhrSubrequest);
         actionBuilder.setType(URLActionData.TYPE_XHR);
         final URLActionData xhrAction = actionBuilder.build();
@@ -718,7 +740,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         for (int i = 0; i < staticUrls.size(); i++)
         {
             final Object o = staticUrls.get(i);
-            ParameterUtils.isStringMessage(o, STATIC, "");
+            ParameterUtils.isStringMessage(o, Constants.STATIC, "");
 
             final String urlString = (String) o;
 
@@ -730,8 +752,8 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             actionBuilder.setInterpreter(this.interpreter);
             actions.add(actionBuilder.build());
         }
-    }
-
+    }  
+    
     private void fillURLActionBuilder(final LinkedHashMap<String, Object> rawAction)
     {
         actionBuilder.reset();
@@ -744,10 +766,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillUrlActionBuilderWithName(final LinkedHashMap<String, Object> rawAction)
     {
-        final Object nameObject = rawAction.get(NAME);
+        final Object nameObject = rawAction.get(Constants.NAME);
         if (nameObject != null)
         {
-            ParameterUtils.isString(nameObject, NAME);
+            ParameterUtils.isString(nameObject, Constants.NAME);
             final String name = (String) nameObject;
             actionBuilder.setName(name);
         }
@@ -756,13 +778,14 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillUrlActionBuilderWithRequestData(final LinkedHashMap<String, Object> rawAction)
     {
-        final Object requestObject = rawAction.get(REQUEST);
+        final Object requestObject = rawAction.get(Constants.REQUEST);
         if (requestObject != null)
         {
-            ParameterUtils.isLinkedHashMapMessage(requestObject, REQUEST, "");
+            ParameterUtils.isLinkedHashMapMessage(requestObject, Constants.REQUEST, "");
             @SuppressWarnings("unchecked")
             final LinkedHashMap<String, Object> rawRequest = (LinkedHashMap<String, Object>) requestObject;
-
+            checkForInvalidTags(rawRequest, Constants.REQUEST);
+            
             fillURLActionBuilderWithBodyData(rawRequest);
             fillURLActionBuilderWithHeaderData(rawRequest);
             fillURLActionBuilderWithEncodeParametersData(rawRequest);
@@ -777,10 +800,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithBodyData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object bodyObject = rawRequest.get(BODY);
+        final Object bodyObject = rawRequest.get(Constants.BODY);
         if (bodyObject != null)
         {
-            ParameterUtils.isString(bodyObject, BODY);
+            ParameterUtils.isString(bodyObject, Constants.BODY);
             final String body = (String) bodyObject;
             actionBuilder.setBody(body);
         }
@@ -788,22 +811,22 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithHeaderData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object headersObject = rawRequest.get(HEADERS);
+        final Object headersObject = rawRequest.get(Constants.HEADERS);
         if (headersObject != null)
         {
             if (headersObject instanceof ArrayList)
             {
                 @SuppressWarnings(
                     {
-                        "unchecked", "rawtypes"
+                        "unchecked"
                     })
-                final List<Object> objectList = (ArrayList) headersObject;
+                final List<Object> objectList = (ArrayList<Object>) headersObject;
 
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
 
                 for (final Object object : objectList)
                 {
-                    ParameterUtils.isLinkedHashMap(object, HEADERS);
+                    ParameterUtils.isLinkedHashMap(object, Constants.HEADERS);
                     @SuppressWarnings("unchecked")
                     final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                     final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
@@ -813,27 +836,24 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(HEADERS, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.HEADERS, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithParameterData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object parametersObject = rawRequest.get(PARAMETERS);
+        final Object parametersObject = rawRequest.get(Constants.PARAMETERS);
         if (parametersObject != null)
         {
             if (parametersObject instanceof ArrayList)
             {
-                @SuppressWarnings(
-                    {
-                        "unchecked", "rawtypes"
-                    })
-                final List<Object> objectList = (ArrayList) parametersObject;
+                @SuppressWarnings("unchecked")
+                final List<Object> objectList = (ArrayList<Object>) parametersObject;
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
                 for (final Object object : objectList)
                 {
-                    ParameterUtils.isLinkedHashMap(object, PARAMETERS);
+                    ParameterUtils.isLinkedHashMap(object, Constants.PARAMETERS);
                     @SuppressWarnings("unchecked")
                     final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                     final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
@@ -843,27 +863,24 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(PARAMETERS, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.PARAMETERS, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithCookieData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object cookiesObject = rawRequest.get(COOKIES);
+        final Object cookiesObject = rawRequest.get(Constants.COOKIES);
         if (cookiesObject != null)
         {
             if (cookiesObject instanceof ArrayList)
             {
-                @SuppressWarnings(
-                    {
-                        "rawtypes", "unchecked"
-                    })
-                final List<Object> objectList = (ArrayList) cookiesObject;
+                @SuppressWarnings("unchecked")
+                final List<Object> objectList = (ArrayList<Object>) cookiesObject;
                 final List<NameValuePair> newList = new ArrayList<NameValuePair>();
                 for (final Object object : objectList)
                 {
-                    ParameterUtils.isLinkedHashMap(object, COOKIES);
+                    ParameterUtils.isLinkedHashMap(object, Constants.COOKIES);
                     @SuppressWarnings("unchecked")
                     final LinkedHashMap<Object, Object> lhm = (LinkedHashMap<Object, Object>) object;
                     final NameValuePair nvp = createPairfromLinkedHashMap(lhm);
@@ -873,14 +890,14 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(COOKIES, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.COOKIES, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithXhrData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object xhrObject = rawRequest.get(XHR);
+        final Object xhrObject = rawRequest.get(Constants.XHR);
         if (xhrObject != null)
         {
             if (xhrObject instanceof Boolean)
@@ -903,17 +920,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(XHR, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.XHR, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithMethodData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object methodObject = rawRequest.get(METHOD);
+        final Object methodObject = rawRequest.get(Constants.METHOD);
         if (methodObject != null)
         {
-            ParameterUtils.isString(methodObject, METHOD);
+            ParameterUtils.isString(methodObject, Constants.METHOD);
             final String method = (String) methodObject;
             actionBuilder.setMethod(method);
         }
@@ -921,10 +938,10 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithUrlData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object urlObject = rawRequest.get(URL);
+        final Object urlObject = rawRequest.get(Constants.URL);
         if (urlObject != null)
         {
-            ParameterUtils.isString(urlObject, URL);
+            ParameterUtils.isString(urlObject, Constants.URL);
             final String url = (String) urlObject;
             actionBuilder.setUrl(url);
         }
@@ -932,7 +949,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithEncodeParametersData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object encodedObject = rawRequest.get(ENCODEPARAMETERS);
+        final Object encodedObject = rawRequest.get(Constants.ENCODEPARAMETERS);
         if (encodedObject != null)
         {
             if (encodedObject instanceof Boolean)
@@ -947,14 +964,14 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.ENCODEPARAMETERS, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithEncodeBodyData(final LinkedHashMap<String, Object> rawRequest)
     {
-        final Object encodedObject = rawRequest.get(ENCODEBODY);
+        final Object encodedObject = rawRequest.get(Constants.ENCODEBODY);
         if (encodedObject != null)
         {
             if (encodedObject instanceof Boolean)
@@ -969,20 +986,21 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(ENCODEBODY, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.ENCODEBODY, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillUrlActionBuilderWithResponseData(final LinkedHashMap<String, Object> rawAction)
     {
-        final Object responseObject = rawAction.get(RESPONSE);
+        final Object responseObject = rawAction.get(Constants.RESPONSE);
         if (responseObject != null)
         {
-            ParameterUtils.isLinkedHashMapMessage(responseObject, RESPONSE, "");
+            ParameterUtils.isLinkedHashMapMessage(responseObject, Constants.RESPONSE, "");
             @SuppressWarnings("unchecked")
             final LinkedHashMap<String, Object> rawResponse = (LinkedHashMap<String, Object>) responseObject;
-
+            checkForInvalidTags(rawResponse, Constants.RESPONSE);
+            
             fillURLActionBuilderWithHttpResponseCodeData(rawResponse);
             fillURLActionBuilderWithValidationData(rawResponse);
             fillURLActionBuilderWithStoreData(rawResponse);
@@ -991,7 +1009,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithHttpResponseCodeData(final LinkedHashMap<String, Object> rawResponse)
     {
-        final Object codeObject = rawResponse.get(HTTPCODE);
+        final Object codeObject = rawResponse.get(Constants.HTTPCODE);
         if (codeObject != null)
         {
             if (codeObject instanceof Integer)
@@ -1006,24 +1024,28 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             }
             else
             {
-                ParameterUtils.doThrow(HTTPCODE, Reason.UNSUPPORTED_TYPE);
+                ParameterUtils.doThrow(Constants.HTTPCODE, Reason.UNSUPPORTED_TYPE);
             }
         }
     }
 
     private void fillURLActionBuilderWithValidationData(final LinkedHashMap<String, Object> rawResponse)
     {
-        final Object validationsObject = rawResponse.get(VALIDATION);
+        final Object validationsObject = rawResponse.get(Constants.VALIDATION);
         if (validationsObject != null)
         {
-            ParameterUtils.isArrayListMessage(validationsObject, VALIDATION, "");
+            ParameterUtils.isArrayListMessage(validationsObject, Constants.VALIDATION, "");
             @SuppressWarnings("unchecked")
             final List<Object> validations = (List<Object>) validationsObject;
             for (final Object validationObject : validations)
             {
-                ParameterUtils.isLinkedHashMapMessage(validationObject, VALIDATION, "");
+                ParameterUtils.isLinkedHashMapMessage(validationObject, Constants.VALIDATION, "");
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<String, Object> validationItem = (LinkedHashMap<String, Object>) validationObject;
+                if (!(validationItem.entrySet().size() <= 1))
+                {
+                	throw new IllegalArgumentException(MessageFormat.format("Incorrect syntax at \"Validate\" of Aciton: \"{0}\". Please mind the whitespaces.", actionName));
+                }
                 fillURLActionValidationBuilder(validationItem);
                 final URLActionDataValidation validation = validationBuilder.build();
                 actionBuilder.addValidation(validation);
@@ -1050,13 +1072,17 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(VALIDATION, validationName, Reason.UNCOMPLETE);
+            throw new IllegalArgumentException (MessageFormat.format("Validation Item: \"{0}\" at Action: \"{1}\" failed because: \"{2}\"", validationName, actionName, Reason.UNCOMPLETE));
         }
     }
 
     private void fillURLActionValidationBuilderWithDataFromLinkedHashMap(final LinkedHashMap<String, Object> rawValidateSubItem)
     {
         final Set<?> entrySet = rawValidateSubItem.entrySet();
+	    if (entrySet.size() >2) 
+	    { 
+	    	throw new IllegalArgumentException (MessageFormat.format("Validation Item: \"{0}\" of Action: \"{1}\" has too manny selection- or validationMode ", validationBuilder.getName(), actionName)); 
+	    }         
         final Iterator<?> it = entrySet.iterator();
         Map.Entry<?, ?> entry = (Map.Entry<?, ?>) it.next();
         final String selectionMode = (String) entry.getKey();
@@ -1068,7 +1094,36 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         {
             entry = (Map.Entry<?, ?>) it.next();
             validationMode = entry.getKey().toString();
-            validationContent = entry.getValue().toString();
+            Object validationContentObject = entry.getValue();
+		    switch (validationMode) 
+		    { 
+		    case Constants.EXISTS: 
+		    	if (validationContentObject == null)
+		    	{
+					  throw new IllegalArgumentException(MessageFormat.format("Validation Item: \"{0}\" of Action: \"{1}\". Validation content of \"{2}\" can not be null", validationBuilder.getName(), actionName, validationMode)); 
+		    	}
+		    	else
+		    	{
+					if (validationContentObject.toString().equals("false"))
+					{
+						  throw new IllegalArgumentException(MessageFormat.format("Validation Item: \"{0}\" of Action: \"{1}\". Validation content of \"{2}\" can not be \"false\"", validationBuilder.getName(), actionName, validationMode)); 						
+					}
+		            XltLogger.runTimeLogger.warn("Validation mode \"Exists\" is implicit in every validation. The exlpicit delacration of this mode is deprecated and will be removed soon.");
+					validationContent = validationContentObject.toString();             
+		    	}
+				break; 
+		    default: 
+			    if (!Constants.isPermittedValidationMode(validationMode)) 
+			    { 
+			    	throw new IllegalArgumentException(MessageFormat.format("Invalid ValidationMode: \"{0}\" at Validation Item: \"{1}\" of Action \"{2}\"", validationMode, validationBuilder.getName(), actionName)); 
+			    } 
+			    else if (validationContentObject == null) 
+			    { 
+			    	throw new IllegalArgumentException(MessageFormat.format("Validation Item: \"{0}\" of Action: \"{1}\" have more than one selection- or validationMode ", validationBuilder.getName(), actionName, validationMode)); 
+			    }  
+				validationContent = validationContentObject.toString();             
+			    break;
+		    }
         }
         if (validationMode == null)
         {
@@ -1082,15 +1137,15 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
 
     private void fillURLActionBuilderWithStoreData(final LinkedHashMap<String, Object> rawResponse)
     {
-        final Object storeObject = rawResponse.get(STORE);
+        final Object storeObject = rawResponse.get(Constants.STORE);
         if (storeObject != null)
         {
-            ParameterUtils.isArrayListMessage(storeObject, STORE, "");
+            ParameterUtils.isArrayListMessage(storeObject, Constants.STORE, "");
             @SuppressWarnings("unchecked")
             final List<Object> storeObjects = (List<Object>) storeObject;
             for (final Object storeObjectsItem : storeObjects)
             {
-                ParameterUtils.isLinkedHashMapMessage(storeObjectsItem, STORE, "");
+                ParameterUtils.isLinkedHashMapMessage(storeObjectsItem, Constants.STORE, "");
                 @SuppressWarnings("unchecked")
                 final LinkedHashMap<String, Object> storeItem = (LinkedHashMap<String, Object>) storeObjectsItem;
 
@@ -1121,7 +1176,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
         }
         else
         {
-            ParameterUtils.doThrow(STORE, storeName, Reason.UNCOMPLETE);
+            ParameterUtils.doThrow(Constants.STORE, storeName, Reason.UNCOMPLETE);
         }
 
     }
@@ -1151,7 +1206,7 @@ public class YAMLBasedURLActionDataListBuilder extends URLActionDataListBuilder
             storeBuilder.setSubSelectionContent(subSelectionContent);
         }
     }
-
+    
     private String determineTagName(final LinkedHashMap<String, Object> tag)
     {
         return getNameOfFirstElementFromLinkedHashMap(tag);

@@ -45,7 +45,7 @@ Since the source is open and licensed under the Apache License V2.0, feel free t
 * Offers various validation modes in order to validate data.
 * Supports two modes to run the test-cases:
   * DOM : the response are parsed into the DOM, which allows to select elements by xpath for validation purpose
-  * LIGHT : there exsists no DIM, which makes the test case fast to execute.
+  * LIGHT : there exsists no DOM, which makes the test case fast to execute.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
 * None of the XLT features are disabled.

@@ -3,13 +3,13 @@ package test.com.xceptance.xlt.common.util.action.validation;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import test.com.xceptance.xlt.common.util.MockObjects;
+
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.XPathGetable;
 import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
@@ -25,15 +25,10 @@ public class URLActionDataExecutableResultTestCookies
     @BeforeClass
     public static void setupBeforeClass()
     {
-        mockObjects = new MockObjects("http://www.amazon.de");
+        mockObjects = new MockObjects();
         mockObjects.load();
         page = mockObjects.getHtmlPage();
         xPathGetable = new XPathWithHtmlPage(page);
-    }
-
-    @Before
-    public void setup()
-    {
     }
 
     @Test

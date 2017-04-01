@@ -4,9 +4,10 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import test.com.xceptance.xlt.common.util.MockObjects;
+
 import com.xceptance.xlt.api.data.GeneralDataProvider;
 import com.xceptance.xlt.api.util.XltProperties;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataStoreResponseHandler;
@@ -32,25 +33,17 @@ public class URLActionDataStoreResponseHandlerTest
 
     private static URLActionDataStore storeItemRegexCaptureGroup;
 
-    private static final String regexString = "href=\"[\\s\\S]*?\"";
-
-    private static final String regexStringExpected = "href=\"/en/\"";
-
     private static URLActionDataStore storeItemXPath;
-
-    private static final String xpathString = "//*[@id='service-areas']/div[1]/div/div/h1";
-
-    private static final String xpathStringExpected = "Committed to Software Quality";
 
     private static URLActionDataStore storeItemHeader;
 
-    private static final String headerString = "Server";
+    private static final String headerString = "Content-Type";
 
-    private static final String headerStringExpected = "Apache";
+    private static final String headerStringExpected = "text/html";
 
     private static final String regexCaptureGroupStringTitle = "<title>([\\s\\S]*)</title>";
 
-    private static final String regexCaptureGroupStringTitleExpected = "Xceptance - The Software Testing Experts";
+    private static final String regexCaptureGroupStringTitleExpected = "A demo html site for this test suite";
 
     @BeforeClass
     public static void setup()
@@ -63,8 +56,8 @@ public class URLActionDataStoreResponseHandlerTest
         mockObjects.load();
         final XPathWithHtmlPage xpwh = new XPathWithHtmlPage(mockObjects.getHtmlPage());
         result = new URLActionDataExecutableResult(mockObjects.getResponse(), xpwh);
-        storeItemRegex = new URLActionDataStore("regex", URLActionDataStore.REGEXP, regexString, interpreter);
-        storeItemXPath = new URLActionDataStore("xpath", URLActionDataStore.XPATH, xpathString, interpreter);
+        storeItemRegex = new URLActionDataStore("regex", URLActionDataStore.REGEXP, mockObjects.regexString, interpreter);
+        storeItemXPath = new URLActionDataStore("xpath", URLActionDataStore.XPATH, mockObjects.xPathString, interpreter);
         storeItemHeader = new URLActionDataStore("header", URLActionDataStore.HEADER, headerString, interpreter);
 
         storeItemRegexCaptureGroup = new URLActionDataStore("regexcapture", URLActionDataStore.REGEXP, regexCaptureGroupStringTitle,
@@ -75,7 +68,7 @@ public class URLActionDataStoreResponseHandlerTest
     public void testRegex()
     {
         storeHandler.handleStore(storeItemRegex, result);
-        Assert.assertEquals(regexStringExpected, interpreter.processDynamicData("${regex}"));
+        Assert.assertEquals(mockObjects.regexStringExpected, interpreter.processDynamicData("${regex}"));
     }
 
     @Test
@@ -89,7 +82,7 @@ public class URLActionDataStoreResponseHandlerTest
     public void testXPath()
     {
         storeHandler.handleStore(storeItemXPath, result);
-        Assert.assertEquals(xpathStringExpected, interpreter.processDynamicData("${xpath}"));
+        Assert.assertEquals(mockObjects.xpathStringExpected, interpreter.processDynamicData("${xpath}"));
     }
 
     @Test

@@ -1,0 +1,101 @@
+#########################################
+#   TestSuite-NoCoding - YAML Cheatsheet
+#########################################
+
+- Action :
+    Name : Cheataction  #mandatory
+    Request :    #mandatory
+        Url : http://www.xceptance.com  #mandatory
+        Method : POST #HTTPMETHOD, default = GET
+        Xhr : false #Boolean, default = false
+        Encode-Parameters : false #Boolean, default = true
+        Parameters : #optional
+            - parameter_1 : value_1
+            - parameter 2 : value_2
+        Headers : #optional
+            - header_1 : value_1
+            - header_2 : value_2
+            - header_3 : value_3
+        Body : some body #optional
+        Encode-Body : #Boolean, default = true
+
+    Response : #optional
+        Httpcode : #Integer, default = 200
+        Validate : # Optional
+            - validation_name_0 : 
+                XPath : value
+            - validation_name_1 :
+                XPath : value
+                Matches : value
+            - validation_name_2:
+                XPath : value
+                Count : value
+            - validation_name_3 :
+                Regex : value
+                Text : value
+            - validation_name_4 :
+                Header : value
+            - validation_name_5 :
+                Header : value
+                Text : value
+            - validation_name_6 :
+                Header : value
+                Count : value
+            - validation_name_7 :
+                Cookie : value
+            - validation_name_8 :
+                Cookie : value
+                Matches : value
+
+        Store : #Optional
+            - variable_1 :
+                XPath : path
+            - variable_2 :
+                Regexp : path
+                Group : 1 # Optional to capture a group from regex
+            - variable_3 :
+               Header : header
+            - variable_4 :
+                Cookie : cookie
+    Subrequests :
+        - Xhr :
+            Name : Xhr subrequest
+            Request:
+                Url: http://www.xceptance.com
+        - Static :
+            - https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400
+            - https://www.xceptance.com/js/jquery-1.11.1.min.js
+            - https://www.xceptance.com/images/xceptance-logo-transparent-202px.png
+
+# Variable Pool for dynamic data processing
+- Store :
+    - variable_1 : value_1
+    - variable_2 : value_2
+
+# Define new default values:
+- Name : name 
+- Httpcode : 400
+- Url : https://www.xceptance.com
+- Method : POST
+- Xhr : false
+- Encode-Parameters: true
+- Encode-Body : true
+
+- Headers :
+    - header_1 : value
+    - header_2 : value
+    - header_3 : value
+
+- Parameters :
+    - p_1 : v_1
+    - p_2 : v_2    
+
+
+#Delete default values
+- Cookies : delete
+- Variables : delete
+- Header : delete
+- Httpcode : delete
+- Url : delete
+- Method : delete
+- Xhr : delete

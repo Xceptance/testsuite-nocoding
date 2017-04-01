@@ -1,13 +1,19 @@
 package com.xceptance.xlt.common.actions;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.tests.URLTestCase;
 import com.xceptance.xlt.common.util.ParameterUtils;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
 
 /**
  * All it does, is loading a WebResponse for a passed WebRequest. The WebResponse in form of a {@link HtmlPage} is
@@ -31,12 +37,13 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
      * The WebRequest that is fired.
      */
     protected WebRequest webRequest;
-
+    
     /**
      * The Wrapper for the WebResponse.
      */
     protected URLActionDataExecutableResult result;
-
+    
+    private URLTestCase testCase;
     /**
      * Automatically produces the {@link URLActionDataExecutableResult}
      */
@@ -102,16 +109,52 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
     @Override
     protected void execute() throws Exception
     {
+
         loadPage(this.webRequest);
 
         // now download explicitly added static content
         downloader.loadRequests();
+        
+        this.result = resultFactory.getResult(getHtmlPage());
+        
+        if (testCase != null)
+        {
+	        //get the responseHandler
+	    	URLActionDataResponseHandler responseHandler = testCase.getReponseHandler();
+	    	URLActionData mainActionData = testCase.getPreviousActionData();
+	    	
+	        //handle response of main request
+	        responseHandler.handleURLActionResponse(mainActionData, this.result);
+	         
+	    
+	        //the list of xhrActions belonging to the main action
+	        ArrayList<URLActionData> xhrActionData = testCase.getXhrActionList();
+	        ArrayList<WebRequest> xhrRequestsList = testCase.getRequestList();
+	
+	        //load all xhr request
+	        if (xhrActionData != null && !xhrActionData.isEmpty())
+	        {
+	        	for (int i = 0; i< xhrActionData.size(); i++)
+	        	{
+	        		WebRequest xhrWebRequest = xhrRequestsList.get(i);
+	        		WebResponse xhrResponse = getWebClient().loadWebResponse(xhrWebRequest);
+	        		URLActionDataExecutableResult xhrResult = this.resultFactory.getResult(xhrResponse);
+	        		URLActionData xhrAction = xhrActionData.get(i);
+	
+	        		//handle response of subrequests
+	                responseHandler.handleURLActionResponse(xhrAction, xhrResult);
+	        	}
+	        }
+        }
+        else 
+        {
+        	XltLogger.runTimeLogger.debug("No testcase found.");
+        }
     }
 
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = resultFactory.getResult(getHtmlPage());
     }
 
     @Override
@@ -138,7 +181,19 @@ public class HtmlPageAction extends ModifiedAbstractHtmlPageAction implements UR
             throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
         }
     }
-
+    @Override
+    public void executeAction(URLTestCase urlTestCase)
+    {
+        try
+        {
+        	this.testCase = urlTestCase;
+            this.run();
+        }
+        catch (final Throwable e)
+        {
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
+        }
+    }
     /**
      * Adds a static content request, which gets loaded by the {@link Downloader}.
      */

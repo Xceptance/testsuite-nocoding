@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 
 import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.data.URLActionDataStore;
 import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
 
@@ -26,6 +27,7 @@ import com.xceptance.xlt.common.util.action.data.URLActionDataValidation;
  */
 public class URLActionDataValidationResponseHandler
 {
+	private String actionName;
     public URLActionDataValidationResponseHandler()
     {
         XltLogger.runTimeLogger.debug("Creating new Instance");
@@ -46,16 +48,22 @@ public class URLActionDataValidationResponseHandler
      * @throws IllegalArgumentException
      *             if the validation was wrong or failed.
      */
-    public void validate(final URLActionDataValidation validation, final URLActionDataExecutableResult result)
+    public void validate(final URLActionDataValidation validation, final URLActionDataExecutableResult result, final URLActionData action)
     {
         XltLogger.runTimeLogger.debug("Validating: \"" + validation.getName() + "\"");
+        
+        if(action != null){
+            actionName = action.getName();
+            XltLogger.runTimeLogger.debug("Action name is not specified");
+        }
+
         try
         {
             handleValidation(validation, result);
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to validate Response : \"" + validation.getName() + "\": " + e.getMessage(), e);
+            throw new IllegalArgumentException(e.getMessage() + " at Action: \"" + actionName + "\"", e);
         }
     }
 
@@ -191,14 +199,14 @@ public class URLActionDataValidationResponseHandler
 
     private String getNotFoundFailMessage(final URLActionDataValidation validation)
     {
-        final String message = MessageFormat.format("Validation \"{0}\" failed, because for {1} = \"{2}\" no Elements were found! ",
-                                                    validation.getName(), validation.getSelectionMode(), validation.getSelectionContent());
+        final String message = MessageFormat.format("Validation \"{0}\" failed for action \"{1}\", because for {2} = \"{3}\" no Elements were found! ",
+                                                    validation.getName(), actionName, validation.getSelectionMode(), validation.getSelectionContent());
         return message;
     }
 
     private String getFailMessage(final URLActionDataValidation validation)
     {
-        final String message = MessageFormat.format("Validation \"{0}\" failed, Mode: \"{1}\":", validation.getName(),
+        final String message = MessageFormat.format("Validation \"{0}\" failed for action \"{1}\", Mode: \"{2}\":", validation.getName(), actionName,
                                                     validation.getValidationMode());
         return message;
     }

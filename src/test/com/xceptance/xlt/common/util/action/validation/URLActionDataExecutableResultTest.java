@@ -3,16 +3,16 @@ package test.com.xceptance.xlt.common.util.action.validation;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.XPathGetable;
 import com.xceptance.xlt.common.util.action.validation.XPathWithHtmlPage;
+
+import test.com.xceptance.xlt.common.util.MockObjects;
 
 public class URLActionDataExecutableResultTest
 {
@@ -31,27 +31,38 @@ public class URLActionDataExecutableResultTest
         xPathGetable = new XPathWithHtmlPage(page);
     }
 
-    @Before
-    public void setup()
-    {
-    }
-
-    @Test
-    public void testConstructor()
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullConstructor()
     {
         @SuppressWarnings("unused")
-        URLActionDataExecutableResult executableResult;
-        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
+		URLActionDataExecutableResult executableResult;
+        executableResult = new URLActionDataExecutableResult(null, null);
     }
-
+    
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullWebResponse()
+    {
+        @SuppressWarnings("unused")
+		URLActionDataExecutableResult executableResult;
+        executableResult = new URLActionDataExecutableResult(null, xPathGetable);
+    }
+    
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullXpath()
+    {
+        @SuppressWarnings("unused")
+		URLActionDataExecutableResult executableResult;
+        executableResult = new URLActionDataExecutableResult(page.getWebResponse(), null);
+    }
+    
     @Test
     public void testGetByXPath()
     {
         URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
-        final List<String> something = executableResult.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
+        final List<String> something = executableResult.getByXPath(mockObjects.xPathString);
 
-        Assert.assertEquals(something.get(0), "Committed to Software Quality");
+        Assert.assertEquals(mockObjects.xpathStringExpected, something.get(0));
     }
 
     @Test
@@ -60,9 +71,9 @@ public class URLActionDataExecutableResultTest
         URLActionDataExecutableResult executableResult;
         executableResult = new URLActionDataExecutableResult(page.getWebResponse(), xPathGetable);
 
-        final List<String> something = executableResult.getByRegEx("href=\"[\\s\\S]*?\"");
+        final List<String> something = executableResult.getByRegEx(mockObjects.regexString);
         Assert.assertFalse(something.isEmpty());
-        Assert.assertEquals("href=\"/en/\"", something.get(0));
+        Assert.assertEquals(mockObjects.regexStringExpected, something.get(0));
     }
 
     @Test

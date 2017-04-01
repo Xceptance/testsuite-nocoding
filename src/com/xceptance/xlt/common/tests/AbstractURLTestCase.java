@@ -221,7 +221,7 @@ public class AbstractURLTestCase extends AbstractTestCase
         }
         catch (final Exception e)
         {
-            throw new IllegalArgumentException("Failed to read DATA from File: " + e.getMessage(), e);
+            throw new IllegalArgumentException(e.getMessage() + ". Because: " + e.getCause().getMessage(), e);
         }
     }
 }

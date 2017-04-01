@@ -44,11 +44,13 @@ public class URLActionDataStoreTest
     {
         for (final String selectionMode : selectionModes)
         {
-            @SuppressWarnings(
-                {
-                    "unused"
-                })
             final URLActionDataStore store = new URLActionDataStore("name", selectionMode, "content", interpreter);
+            Assert.assertEquals(store.getName(), "name");
+            Assert.assertEquals(store.getSelectionContent(), "content");
+            Assert.assertEquals(store.getSelectionMode(), selectionMode);
+            Assert.assertEquals(store.getSubSelectionMode(), null);
+            Assert.assertEquals(store.getSubSelectionContent(), null);
+            Assert.assertEquals(store.getInterpreter(), interpreter);
         }
     }
 
@@ -59,14 +61,17 @@ public class URLActionDataStoreTest
         {
             for (final String subSelectionMode : subSelectionModes)
             {
-                @SuppressWarnings(
-                    {
-                        "unused"
-                    })
                 final URLActionDataStore store = new URLActionDataStore("name", selectionMode, "content", subSelectionMode, "nananan",
                                                                         interpreter);
+                Assert.assertEquals(store.getName(), "name");
+                Assert.assertEquals(store.getSelectionContent(), "content");
+                Assert.assertEquals(store.getSelectionMode(), selectionMode);
+                Assert.assertEquals(store.getSubSelectionMode(), subSelectionMode);
+                Assert.assertEquals(store.getSubSelectionContent(), "nananan");
+                Assert.assertEquals(store.getInterpreter(), interpreter);
             }
         }
+        
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -123,23 +128,5 @@ public class URLActionDataStoreTest
         final String subSelectionMode = store.getSubSelectionMode();
         @SuppressWarnings("unused")
         final String subSelectionContent = store.getSubSelectionContent();
-    }
-
-    @Test
-    public void rightSubSelectionModeSetup()
-    {
-        final String name = "name";
-        final String selectionMode = URLActionDataStore.REGEXP;
-        final String selectionContent = "blabla";
-        final String subSelectionMode = URLActionDataStore.REGEXGROUP;
-        final String subSelectionContent = "blablablabla";
-
-        final URLActionDataStore store = new URLActionDataStore(name, selectionMode, selectionContent, subSelectionMode,
-                                                                subSelectionContent, interpreter);
-        Assert.assertEquals(store.getName(), name);
-        Assert.assertEquals(store.getSelectionContent(), selectionContent);
-        Assert.assertEquals(store.getSelectionMode(), selectionMode);
-        Assert.assertEquals(store.getSubSelectionMode(), subSelectionMode);
-        Assert.assertEquals(store.getSubSelectionContent(), subSelectionContent);
     }
 }

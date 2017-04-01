@@ -33,13 +33,15 @@ public class XhrHtmlPageAction extends HtmlPageAction
     @Override
     protected void execute() throws Exception
     {
+    	
         this.xhrResponse = getWebClient().loadWebResponse(this.webRequest);
+        this.result = this.resultFactory.getResult(this.xhrResponse);
+        
     }
 
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = this.resultFactory.getResult(this.xhrResponse);
     }
 
     @Override

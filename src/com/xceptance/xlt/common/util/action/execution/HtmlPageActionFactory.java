@@ -94,7 +94,7 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
 
     }
 
-    private Downloader createDownloader()
+	private Downloader createDownloader()
     {
         final Boolean userAgentUID = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.USERAGENTUID, false);
         final int threadCount = this.propAdmin.getPropertyByKey(NoCodingPropAdmin.DOWNLOADTHREADS, 1);
@@ -138,4 +138,14 @@ public class HtmlPageActionFactory extends URLActionDataExecutionableFactory
         return xhrAction;
 
     }
+    
+
+    public NoCodingPropAdmin getPropAdmin() {
+		return propAdmin;
+	}
+
+
+	public URLActionDataExecutableResultFactory getResultFactory() {
+		return resultFactory;
+	}
 }

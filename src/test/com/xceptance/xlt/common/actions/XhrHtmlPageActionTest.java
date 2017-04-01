@@ -9,60 +9,59 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.xceptance.xlt.common.actions.Downloader;
-import com.xceptance.xlt.common.actions.HtmlPageAction;
+import com.xceptance.xlt.common.actions.XhrHtmlPageAction;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
 import com.xceptance.xlt.engine.XltWebClient;
 
 import test.com.xceptance.xlt.common.util.MockObjects;
 
-public class HtmlPageActionTest
-{
+public class XhrHtmlPageActionTest {
+	
     private Downloader downloader;
 
     private final String name = "test";
 
     private WebRequest request;
 
-    private String urlString;
-
     private URLActionDataExecutableResultFactory factory;
     
-    private static MockObjects mockObjects;
+    private String urlString;
     
+    private static MockObjects mockObjects;
+
     @Before
-    public void setup() throws MalformedURLException
-    {
+	public void setup() throws MalformedURLException 
+	{
     	mockObjects = new MockObjects();
         final XltWebClient client = new XltWebClient();
         client.setTimerName("timeName");
-        factory = new URLActionDataExecutableResultFactory();
         urlString = mockObjects.urlStringDemoHtml;
         downloader = new Downloader(client);
         request = new WebRequest(new URL (urlString));
-    }
+        factory = new URLActionDataExecutableResultFactory();
+	}
 
-    @Test
-    public void testConstructor() throws Throwable
-    {
-        final HtmlPageAction action = new HtmlPageAction(name, request, factory);
+	@Test
+	public void testConstructor()
+	{
+		final XhrHtmlPageAction action = new XhrHtmlPageAction(name, request, factory);
         downloader = new Downloader((XltWebClient) action.getWebClient());
         action.setDownloader(downloader);
         Assert.assertEquals(urlString, action.getUrl().toString());
-    }
-
-    @Test
-    public void testGetHtmlPage() throws Throwable
-    {
-
-        final HtmlPageAction action = new HtmlPageAction(name, request, factory);
+	}
+	
+	@Test
+	public void testGetResult() throws Throwable
+	{
+        final XhrHtmlPageAction action = new XhrHtmlPageAction(name, request, factory);
         downloader = new Downloader((XltWebClient) action.getWebClient());
         action.setDownloader(downloader);
         action.run();
-
-        final HtmlPage page = action.getHtmlPage();
-        final List<?> list = page.getByXPath(mockObjects.xPathString);
-        Assert.assertFalse(list.isEmpty());
-    }
+        
+        final URLActionDataExecutableResult result = action.getResult();
+		final List<?> list = result.getByXPath(mockObjects.xPathString);
+        Assert.assertEquals(mockObjects.xpathStringExpected, list.get(0));
+	}
 }

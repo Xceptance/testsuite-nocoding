@@ -2,6 +2,7 @@ package com.xceptance.xlt.common.util.action.execution;
 
 import java.net.URL;
 
+import com.xceptance.xlt.common.tests.URLTestCase;
 import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 
@@ -23,6 +24,11 @@ public interface URLActionDataExecutionable
      * {@link URLActionDataExecutableResult}.
      */
     public void executeAction();
+    
+    /**
+     * same as above with the urlTestCase as a parameter to handle subsequent xhr within the action  
+     */
+	public void executeAction(URLTestCase urlTestCase);
 
     /**
      * Adds {@link URLActionData} of type STATIC, which will be executes automatically.
@@ -35,4 +41,5 @@ public interface URLActionDataExecutionable
      * @return the request url.
      */
     public URL getUrl();
+
 }

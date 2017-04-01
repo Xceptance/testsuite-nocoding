@@ -42,18 +42,6 @@ public class URLActionDataTest
     }
 
     @Test
-    public void constructorTest()
-    {
-
-        @SuppressWarnings(
-            {
-                "unused"
-            })
-        final URLActionData action = new URLActionData("name", "http://www.xceptance.com", interpreter);
-
-    }
-
-    @Test
     public void rightSetup()
     {
         for (final String type : types)

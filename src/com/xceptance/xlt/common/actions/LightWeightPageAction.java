@@ -1,13 +1,19 @@
 package com.xceptance.xlt.common.actions;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.xceptance.xlt.api.htmlunit.LightWeightPage;
+import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.common.tests.URLTestCase;
 import com.xceptance.xlt.common.util.ParameterUtils;
+import com.xceptance.xlt.common.util.action.data.URLActionData;
 import com.xceptance.xlt.common.util.action.execution.URLActionDataExecutionable;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResult;
 import com.xceptance.xlt.common.util.action.validation.URLActionDataExecutableResultFactory;
+import com.xceptance.xlt.common.util.action.validation.URLActionDataResponseHandler;
 
 /**
  * All it does, is loading a WebResponse for a passed WebRequest. The WebResponse in form of a {@link LightWeightPage}
@@ -43,6 +49,7 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
      */
     protected final URLActionDataExecutableResultFactory resultFactory;
 
+    protected URLTestCase testCase;
     /**
      * @param previousAction
      *            : the action that is is executed before.
@@ -104,12 +111,47 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
 
         // now download explicitly added static content
         downloader.loadRequests();
+        
+        this.result = this.resultFactory.getResult(getLightWeightPage());
+
+        if (testCase != null)
+        {
+	        //get the responseHandler
+	    	URLActionDataResponseHandler responseHandler = testCase.getReponseHandler();
+	    	URLActionData mainActionData = testCase.getPreviousActionData();
+	    	
+	        //handle response of main request
+	        responseHandler.handleURLActionResponse(mainActionData, this.result);
+	         
+	    
+	        //the list of xhrActions belonging to the main action
+	        ArrayList<URLActionData> xhrActionData = testCase.getXhrActionList();
+	        ArrayList<WebRequest> xhrRequestsList = testCase.getRequestList();
+	
+	        //load all xhr request
+	        if (xhrActionData != null && !xhrActionData.isEmpty())
+	        {
+	        	for (int i = 0; i< xhrActionData.size(); i++)
+	        	{
+	        		WebRequest xhrWebRequest = xhrRequestsList.get(i);
+	        		WebResponse xhrResponse = getWebClient().loadWebResponse(xhrWebRequest);
+	        		URLActionDataExecutableResult xhrResult = this.resultFactory.getResult(xhrResponse);
+	        		URLActionData xhrAction = xhrActionData.get(i);
+	
+	        		//handle response of subrequests
+	                responseHandler.handleURLActionResponse(xhrAction, xhrResult);
+	        	}
+	        }
+        }
+        else 
+        {
+        	XltLogger.runTimeLogger.debug("No testcase found.");
+        }
     }
 
     @Override
     protected void postValidate() throws Exception
     {
-        this.result = this.resultFactory.getResult(getLightWeightPage());
     }
 
     @Override
@@ -165,5 +207,19 @@ public class LightWeightPageAction extends ModifiedAbstractLightWeightPageAction
     {
         return this.webRequest.getUrl();
     }
+
+	@Override
+	public void executeAction(URLTestCase urlTestCase) {
+        try
+        {
+        	this.testCase = urlTestCase;
+            this.run();
+        }
+        catch (final Throwable e)
+        {
+            throw new IllegalArgumentException("Failed to execute Action: " + getTimerName() + " - " + e.getMessage(), e);
+        }
+		
+	}
 
 }

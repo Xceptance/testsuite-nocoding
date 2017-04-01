@@ -78,7 +78,7 @@ public class URLActionDataResponseHandler
         handleStore(action, result);
     }
 
-    private void handleStore(final URLActionData action, final URLActionDataExecutableResult result)
+    public void handleStore(final URLActionData action, final URLActionDataExecutableResult result)
     {
         final List<URLActionDataStore> store = action.getStore();
         for (final URLActionDataStore storeItem : store)
@@ -92,7 +92,7 @@ public class URLActionDataResponseHandler
         final List<URLActionDataValidation> validations = action.getValidations();
         for (final URLActionDataValidation validation : validations)
         {
-            validationHandler.validate(validation, result);
+            validationHandler.validate(validation, result, action);
         }
     }
 

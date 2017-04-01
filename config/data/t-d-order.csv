@@ -52,7 +52,7 @@
 Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
 # Just load the homepage
-A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters!",false
+A,Homepage,"${host}/posters/",GET,,200,id('titleIndex'),"Check out our new panorama posters",false
 
 # Select a category
 A,SelectCategory,"${host}/posters/category/Main%20Dishes?categoryId=5",GET,,200,id('titleCategoryName'),"Main Dishes",false
@@ -73,7 +73,7 @@ A,ViewCart,"${host}/posters/cart",GET,,200,id('titleCart'),"Cart",false
 A,Checkout,"${hostsec}/posters/checkout",GET,,200,,,false
 
 # Fill out and submit shipping address form
-A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Select or enter a payment method",false
+A,COShipping,"${hostsec}/posters/shippingAddressCompleted",POST,fullName=${DATA.getFirstName(false)} ${DATA.getLastName(false)}&company=Acme Inc&addressLine=123 Rocky Rd&city=${DATA.getTown(false)}&state=California&zip=${RANDOM.Number(5)}&country=United States&billEqualShipp=Yes&btnAddDelAddr=,200,id('titlePayment'),"Enter a payment method",false
 
 # Fill out and submit payment form
 A,COBilling,"${hostsec}/posters/paymentMethodCompleted",POST,creditCardNumber=4111111111111111&name=Dagobert Duck&expirationDateMonth=01&expirationDateYear=2017&btnAddPayment=,200,id('titleOrderOverview'),"Order Overview",false

@@ -25,9 +25,11 @@ public class URLActionDataExecutableFactoryBuilderTest
     @Test
     public void testCorrectConstructorCreation()
     {
-        @SuppressWarnings("unused")
         URLActionDataExecutionbleFactoryBuilder factoryBuilder;
         factoryBuilder = new URLActionDataExecutionbleFactoryBuilder(this.propAdmin, URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
+        Assert.assertEquals(factoryBuilder.getPropAdmin(), propAdmin);
+        Assert.assertEquals(factoryBuilder.getMode(), URLActionDataExecutionbleFactoryBuilder.MODE_DOM);
+
     }
 
     @Test(expected = IllegalArgumentException.class)

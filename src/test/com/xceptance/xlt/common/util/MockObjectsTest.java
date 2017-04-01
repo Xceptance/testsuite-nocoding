@@ -4,11 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.xceptance.xlt.common.util.MockObjects;
-
 public class MockObjectsTest
 {
-    String urlStringXceptance = "https://www.xceptance.com/en/";
+    String urlString = "http://localhost:8080";
 
     String urlStringGoogle = "https://www.google.de";
 
@@ -24,7 +22,7 @@ public class MockObjectsTest
     public void testConstructor()
     {
         mockObjects = new MockObjects();
-        Assert.assertEquals(urlStringXceptance, mockObjects.getUrlString());
+        Assert.assertEquals(urlString, mockObjects.getUrlString());
 
         mockObjects = new MockObjects(urlStringGoogle);
         Assert.assertEquals(urlStringGoogle, mockObjects.getUrlString());

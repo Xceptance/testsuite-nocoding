@@ -6,10 +6,10 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import test.com.xceptance.xlt.common.util.MockObjects;
 import test.com.xceptance.xlt.common.util.MockWebResponse;
 
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.xceptance.xlt.common.util.MockObjects;
 import com.xceptance.xlt.common.util.action.validation.XPathWithParseableWebResponse;
 
 public class XPathWithParseableWebResponseTest
@@ -21,14 +21,6 @@ public class XPathWithParseableWebResponseTest
     {
         mockObjects = new MockObjects();
         mockObjects.load();
-    }
-
-    @Test
-    public void testConstructor()
-    {
-        final WebResponse response = mockObjects.getResponse();
-        @SuppressWarnings("unused")
-        final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
     }
 
     @Test
@@ -48,8 +40,8 @@ public class XPathWithParseableWebResponseTest
     {
         final WebResponse response = mockObjects.getResponse();
         final XPathWithParseableWebResponse thing = new XPathWithParseableWebResponse(response);
-        final List<String> xPathResults = thing.getByXPath("//*[@id='service-areas']/div[1]/div/div/h1");
-        Assert.assertEquals(xPathResults.get(0), "Committed to Software Quality");
+        final List<String> xPathResults = thing.getByXPath(mockObjects.xPathString);
+        Assert.assertEquals(mockObjects.xpathStringExpected, xPathResults.get(0));
     }
 
 }
