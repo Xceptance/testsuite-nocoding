@@ -1,3 +1,12 @@
+##################################################
+# Simple test cast to test the functions of
+# no coding for yml
+##################################################        
+- Store :
+    - firstName : ${DATA.getFirstName(false)}
+    - secondName : ${DATA.getLastName(false)}
+    - email : ${DATA.getEmail()}
+    - password : ${RANDOM.String(8)}
 
 - Action:
     Name : Open Homepage
@@ -11,7 +20,7 @@
                 XPath: id('titleIndex')
                 Matches: "Check out our *" 
             - Button:
-                XPath: //*[@class='goToLogin]
+                XPath: //*[@class='goToLogin']
     Subrequests: 
         - Static:
             - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
@@ -29,8 +38,7 @@
             - Header:
                 XPath: id('titleCategoryName')
                 Matches: "Dining"   
-            - Button:
-                XPath: id('slidingTopTriggerShow')
+
     Subrequests: 
         - Static:
             - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
@@ -49,7 +57,7 @@
                 Validate :
                     - productName :
                         XPath : /json/products[1]/id
-                        Matches : "43"
+                        Matches : "29"
                     - productExistance :
                         XPath : /json/products[2]
                     
@@ -72,7 +80,7 @@
                  XPath : id('titleProductName')
                  Matches : German Apple Pie      
             - Radio Buttons :
-                 XPath : id('selectFinish')   
+                 XPath : id('selectStyle')   
     Subrequests :
         - Static :
             - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
@@ -92,15 +100,7 @@
                     - Check Price :
                         XPath : /json/newPrice
                         Matches : 35.45$
-        - Xhr :
-            Name : Add Product To Cart
-            Request :
-                Url : ${host}/posters/getCartElementSlider
-            Response :
-                Validate :
-                    - Validate something :
-                        XPath : /json/currency
-                        Matches : $
+                        
         - Static :
             - ${host}/posters/assets/img/loader.gif
                           
@@ -128,7 +128,7 @@
     Response :
         Validate :
             - Validate content title :
-                XPath : id('productName0')
+                XPath : id('product0')
                 Matches : German Apple Pie
     Subrequests :
         - Static :
@@ -139,7 +139,9 @@
     Name : Go To Checkout
     Request :
         Url : ${host}/posters/checkout
-
+    Response:
+        Httpcode: 303
+        
 - Action :
     Name : Enter Shipping address
     Request :
@@ -148,7 +150,7 @@
         Validate :
             - Validate content title :
                 XPath : id('titleDelAddr')
-                Matches : Select or enter a shipping address
+                Matches : Enter a shipping address
     Subrequests :
         - Static :
             - ${host}/posters/assets/css/bootstrap-2.3.1.min.css
@@ -168,7 +170,10 @@
             - zip : ${RANDOM.Number(5)}
             - country : "United States"
             - billEqualShipp : "Yes"
-            - btnAddDelAddr :          
+            - btnAddDelAddr :         
+    Response:
+        Httpcode: 303 
+        
 - Action :
     Name : Payment Complete
     Request :
@@ -180,7 +185,9 @@
             - expirationDateMonth : "01"
             - expirationDateYear : "2017"
             - btnAddPayment :
-
+    Response:
+        Httpcode: 303
+        
 - Action :
     Name : Checkout Overview
     Request :
@@ -190,3 +197,118 @@
             - Validate Title :
                 XPath : id('titleOrderOverview')
                 Matches : Order Overview               
+                
+#- Action :
+#    Name : action1
+#    Request :
+#        Url : ${host}/posters/
+#    Subrequests :
+#        - Xhr :
+#            Name : action2 as xhr subrequest
+#            Request :
+#                Method : POST
+#                Url : ${hostsec}/posters/getProductOfTopCategory
+#                Parameters :
+#                    - categoryId : 2
+#                    - page : 2    
+#            Response :
+#                Validate :
+#                    - Validate Product Sandwich :
+#                        XPath : "/json/products[2]/name"
+#                        Matches : "Peperoni Sandwich"
+#                Store :
+#                    - SandwichName:
+#                        XPath: "/json/products[2]/name"
+#
+#        - Static:
+#          - ${host}/posters/assets/img/products/Food/Grillables/Grillables_7.jpg #action4
+#          - ${host}/posters/assets/img/products/Food/Grillables/Grillables_8.jpg #action5
+#
+
+#- Store :
+#    - firstName : ${DATA.getFirstName(false)}
+#    - secondName : ${DATA.getLastName(false)}
+#    - email : ${DATA.getEmail()}
+#    - password : ${RANDOM.String(8)}        
+#
+#- Action :
+#    Name : Open Website
+#    Request :
+#        Url : ${host}/posters/
+#    Response :
+#        Httpcode : 200
+#        Validate :
+#            - Validate If title exists:
+#                Regex : "<title>Posters\\s-\\sThe\\sUltimate\\sOnline\\sShop</title>"
+#            - Validate Navigation Item Name: 
+#                XPath : "//*[@class='topCategory0']/a"
+#                Text : World of Nature
+#            - Count Topcategory Items :
+#                XPath : "//*[@id='categoryMenu']/ul/li"
+#                Count : 4
+#            - Count Subcategory Items :
+#                XPath : "//*[@id='categoryMenu']//ul[@class='dropdown-menu']/li"
+#                Count : 13
+#            - Validate Title:
+#                XPath : "//*[@id='titleIndex']"
+#                Matches: "Check out our new panorama posters"
+#
+#- Action :
+#    Name : Go to product category
+#    Request :
+#        Url : ${hostsec}/posters/topCategory/Dining?categoryId=2
+#
+#    Subrequests :
+#        - Xhr :
+#            Name : Navigate to second product page.
+#            Request :
+#                Method : POST
+#                Url : ${hostsec}/posters/getProductOfTopCategory
+#                Parameters :
+#                    - categoryId : 2
+#                    - page : 2
+#            Response :
+#                Validate :
+#                    - Validate Product Sandwich :
+#                        XPath : "/json/products[2]/name"
+#                        Matches : "Peperoni Sandwich"
+#                Store :
+#                    - SandwichName:
+#                        XPath: "/json/products[2]/name"
+#                        
+#        - Static :
+#            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_3.jpg
+#            - ${host}/posters/assets/img/products/Food/Grillables/Grillables_6.jpg
+#            - ${host}/posters/assets/img/products/Food/Sweets/Sweets_1.jpg 
+#            - ${host}/posters/${SandwichName}
+#
+#
+#           
+#- Action :
+#    Name : Login
+#    Request :
+#        Method : POST
+#        Url : ${hostsec}/posters/login
+#        Parameters :
+#            - btnSignIn : 
+#            - email : ${email}
+#            - password : ${password}
+#    Response : 
+#        Httpcode : 303
+#        Store :
+#            - loginRedirectLocation :
+#                Header : Location
+#                
+#- Headers :
+#    - header_1 : value
+#    - header_2 : value
+#    - header_3 : value
+#
+#
+#- Parameters :
+#    - p_1 : v_1
+#    - p_2 : v_2    
+#
+#- Xhr : delete
+#- Url : https://www.xceptance.com
+

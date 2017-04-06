@@ -8,7 +8,6 @@
             Request: 
                 Url : http://www.xceptance.com/xhr_test
                 Method : POST
-                Encoded : true
                 Parameters :
                     - parameter_1 : parameter_value_1
                     - parameter_2 : parameter_value_2

@@ -1,0 +1,8 @@
+- Action:
+    Name: t_name
+    Request:
+        Url: http://www.xceptance.com
+    Subrequests:
+        - Xhr:
+            Name: t_name_xhr
+            notValidXhrTag:

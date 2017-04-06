@@ -28,11 +28,11 @@ Since the source is open and licensed under the Apache License V2.0, feel free t
 
 ***
 
-####[Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
+#### [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
 
 ***
 
-###Features
+### Features
 
 * Reads test definitions from files.
   Supported file types :
@@ -51,7 +51,7 @@ Since the source is open and licensed under the Apache License V2.0, feel free t
 * None of the XLT features are disabled.
 * ...
 
-###Getting Started
+### Getting Started
 
 To learn more, try one of the following links.
 
