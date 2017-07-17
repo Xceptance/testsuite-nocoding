@@ -2260,7 +2260,6 @@ Fruchtallee
 Fruehlingstr.
 Fruehlingstrasse
 Frundsbergstr.
-Fr´hafener Str.
 Fröschener Straße
 Fuchstanzstr.
 Fuerstenbergstr.
@@ -4828,7 +4827,7 @@ Neuhofener Str.
 Neukirchener Str.
 Neukl
 Neuluesser-Straße
-Neulußheimer S´tr.
+Neulußheimer Str.
 Neumannstr.
 Neumarkt
 Neumattring
@@ -7438,7 +7437,6 @@ tirschenreuther ring
 trollmannstr.
 turmstr.
 turnhallenweg
-uenner´n diek
 unterdamm
 unterkrone
 vahrenwalder Str.

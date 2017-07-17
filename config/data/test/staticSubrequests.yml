@@ -1,8 +1,0 @@
-- Action :
-    Name : name
-    Request :
-        Url : http://www.xceptance.com
-    Subrequests :
-        - Static :
-            - https://www.xceptance.com/images/xceptance-logo-transparent-202px.png
-            - https://www.xceptance.com/images/xlt-logo-small.png

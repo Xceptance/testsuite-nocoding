@@ -1,7 +1,0 @@
-- Action:
-    Name: t_name
-    Request:
-        Url: http://www.xceptance.com
-    Subrequests:
-        - Static:
-            ArrayListExpected
