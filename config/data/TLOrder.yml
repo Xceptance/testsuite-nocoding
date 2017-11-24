@@ -1,13 +1,14 @@
 #################################################
 #
-# tlogin.yml
+# TLOrder.yml
 #
 # This test case registrates a users for the
-# posters webstore.  
+# posters webstore.
 # Afterwards a login is done.
+# Finally a product is browsed and accessed.
 #
-# Since for the validations only the 'Regex' mode 
-# is used, this can be run within the 'light' mode.
+# Since for the validations 'Regex' and 'XPath'
+# is used, this can only be run within the 'dom' mode.
 #
 ##################################################
 
