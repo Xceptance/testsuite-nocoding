@@ -1,23 +1,22 @@
 ################################################################################################
 #
-# CSV-based URL Action Definition
+# CSV Cheatsheet
 #
-# This is the definition of url actions as GET or POST including parameters and validation.
 # 
 # Format Details and defaults when not set 
 # 
-# Type:			action (A), AJAX action (XA) or static content (S), defaults to A (optional)
-# Name:			the name of the action (Action-<recordNumber>) (optional)
-# URL:			an url (mandatory)
+# Type:         action (A), AJAX action (XA) or static content (S), defaults to A (optional)
+# Name:         the name of the action (defaults to Action-<recordNumber>) (optional)
+# URL:			an URL (mandatory)
 # Method:		which method of GET or POST, defaults to GET
-# Parameters:	which parameters to send, when GET, these can be already part of the url, 
+# Parameters:	which parameters to send, when GET, these can be already part of the URL, 
 #               no default values (optional)
-# ResponseCode:	which http response code is expected, defaults to 200 (optional)
-# XPath:		XPath for validation (none) only used when TURL (optional)
-# RegExp:		regexp for validation (none) only used when TLWURL (optional)
-# Text:			Text for validation against the xpath/regexp result or just searched on the page,
+# ResponseCode:	which HTTP response code is expected, defaults to 200 (optional)
+# XPath:		XPath for validation (none)
+# RegExp:		regexp for validation (none)
+# Text:			Text(Pattern) for validation against the XPath/RegExp result or just searched on the page,
 #               no default text (optional) 
-# Encoded:		whether or not url and parameters are already encoded, defaults to false (optional) 
+# Encoded:		whether or not URL and parameters are already encoded, defaults to false (optional) 
 #
 # Comments and empty lines are permitted. Header lines have to be valid. Additional header lines
 # are not permitted as well as the spelling has to match including upper/lower-casing.
@@ -39,7 +38,7 @@
 # A special feature are the columns xpath1 to xpath10. You can get any data from the page using
 # these. They will end up in variables xpath1 to xpath10 and can be used in any expression later.
 #
-# When running the LW based test, you have to use regexp1 to regexp10 instead. If you specify
+# When running the light weight based test, you should use regexp1 to regexp10 instead. If you specify
 # a capturing group, the group data will end up in regexp1[1] or higher.
 #
 # The interpretation of ${something} starts with the property lookup. Only if no property is
@@ -48,7 +47,7 @@
 # The character $ is NOT supported within the commands right now.
 #
 #################################################################################################
-# The header. This is for TURL, because it uses XPath.
+# The header. This is for Dom Mode, because it uses XPath.
 Type, Name, URL, Method, Parameters, ResponseCode, XPath, Text, Encoded
 
 # Just load the homepage
