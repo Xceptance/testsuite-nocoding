@@ -1,7 +1,7 @@
 package posters.tests.nocoding;
 
-import com.xceptance.xlt.nocoding.api.URLTestCase;
+import com.xceptance.xlt.nocoding.api.AbstractNocodingTestCase;
 
-public class TLSearchCSV extends URLTestCase
+public class TLSearchCSV extends AbstractNocodingTestCase
 {
 }
