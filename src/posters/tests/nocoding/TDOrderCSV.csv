@@ -31,20 +31,18 @@
 # ${RANDOM.Number(min, max)} : returns an integer between min (inclusive) and max (inclusive)   
 # ${foobar} : Looks up the property foobar from the properties. Normal fallback mode. 
 #
-# Additionally you can use DATA which is an instance if the GeneralDataProvider. So things like
+# Additionally, you can use DATA which is an instance of the GeneralDataProvider. So things like
 # ${DATA.getStreet(false)} or ${DATA.getTrulyUniqueEmail("xyzqtar987654.com")} will work.
-# You can basically write a lot into this command, because it is a beanshell. 
+# You can basically write a lot into this command, because it is a beanshell command. 
 #
-# A special feature are the columns xpath1 to xpath10. You can get any data from the page using
-# these. They will end up in variables xpath1 to xpath10 and can be used in any expression later.
+# A special feature are columns, that start with xpath. You can get any data from the page using
+# these. They will end up in variables with the same name as the column and can be used in any expression later on.
 #
-# When running the light weight based test, you should use regexp1 to regexp10 instead. If you specify
-# a capturing group, the group data will end up in regexp1[1] or higher.
+# When running the light weight based test, instead of using xpath, you should consider regexp. regexp works the same way as xpath.
 #
-# The interpretation of ${something} starts with the property lookup. Only if no property is
-# found, the beanshell interpretation will take place.
+# The interpretation of ${something} starts with a lookup in the variable storage. Then, it looks into the properties. If no property is
+# found, the beanshell interpretation will try to make sense of the variable.
 #
-# The character $ is NOT supported within the commands right now.
 #
 #################################################################################################
 # The header. This is for Dom Mode, because it uses XPath.
