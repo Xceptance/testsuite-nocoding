@@ -25,6 +25,20 @@
 
     <build>
         <testSourceDirectory>src</testSourceDirectory>
+        <resources>
+        	<resource>
+        		<directory>src</directory>
+        		<includes>
+			        <include>**/*.csv</include>
+			        <include>**/*.yml</include>
+			        <include>**/*.yaml</include>
+		        </includes>
+		        <excludes>
+		        	<exclude>posters/tests/nocoding/*.java</exclude>
+		        </excludes>
+		        <targetPath>${basedir}/target/test-classes/</targetPath>
+        	</resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -110,9 +124,14 @@
         <dependency>
             <groupId>com.xceptance</groupId>
             <artifactId>xlt</artifactId>
-            <version>4.9.2</version>
+            <version>4.10.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.xceptance</groupId>
+            <artifactId>xlt-nocoding</artifactId>
+            <version>2.0.0</version>
+    </dependency>
     </dependencies>
 
 </project>
