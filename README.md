@@ -29,7 +29,7 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
   * YAML
   * CSV
 * Supports the validation of:
-  * HTTP response headers
+  * HTTP Response Headers
   * Cookies
   * HTTP Response Content 
 * Offers various validation methods in order to validate data.
