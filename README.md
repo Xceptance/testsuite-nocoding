@@ -1,4 +1,4 @@
-#  TestSuite-NoCoding
+#  Testsuite-nocoding
 
 This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtest.com/.
 
@@ -13,9 +13,7 @@ This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtes
  * René Schwietzke, Xceptance Software Technologies GmbH
  * Jörg Werner, Xceptance Software Technologies GmbH
  * Matthias Mitterreiter, Xceptance Software Technologies GmbH
-
-
-***
+ * Christoph Keiner, Xceptance Software Technologies GmbH
 
 ## Introduction
 
@@ -24,12 +22,6 @@ One is often faced with the requirement to just fire a couple of simple URLs, to
 TestSuite-NoCoding  is a test suite for XLT and delivers an easy way to define and fire HTTP requests and offers various tools to validate the responses. Additionally it is possible to filter, select, and store data from the response with the view of inserting it into the next request or its validation. This is a fast and likewise easy way to define test cases, since **no programming** is needed!
 
 The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance/xlt-nocoding) in order to interpret and execute the no-coding test definitions. Since the source of that library is open and licensed under the Apache License V2.0, feel free to extend and customize it.
-
-***
-
-## [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
-
-***
 
 ## Features
 
@@ -40,7 +32,7 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
   * HTTP response headers
   * Cookies
   * HTTP Response Content 
-* Offers various validation modes in order to validate data.
+* Offers various validation methods in order to validate data.
 * Supports two modes to run the test-cases:
   * DOM: the response are parsed into the DOM, which allows to select elements by xpath for validation purpose
   * LIGHT: there exists no DOM, which makes the test case fast to execute.
@@ -49,7 +41,7 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
 * None of the XLT features are disabled.
 * ...
 
-## Getting Started
+## [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
 
 To learn more, try one of the following links.
 
