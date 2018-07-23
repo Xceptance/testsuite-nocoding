@@ -42,7 +42,7 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
   * HTTP Response Content 
 * Offers various validation modes in order to validate data.
 * Supports two modes to run the test-cases:
-  * DOM: the response are parsed into the DOM, which allows to select elements by xpath for validation purpose
+  * DOM: the response are parsed into the DOM, which allows to select elements by XPath for validation purpose
   * LIGHT: there exists no DOM, which makes the test case fast to execute.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
