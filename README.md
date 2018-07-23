@@ -29,12 +29,12 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
   * YAML
   * CSV
 * Supports the validation of:
-  * HTTP response headers
   * Cookies
-  * HTTP Response Content 
+  * HTTP response headers
+  * HTTP response content 
 * Offers various validation methods in order to validate data.
 * Supports two modes to run the test-cases:
-  * DOM: the response are parsed into the DOM, which allows to select elements by xpath for validation purpose
+  * DOM: the responses are parsed into the DOM, which allows to select elements by xpath for validation purpose
   * LIGHT: there exists no DOM, which makes the test case fast to execute.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
