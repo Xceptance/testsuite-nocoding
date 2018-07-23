@@ -1,4 +1,4 @@
-#  TestSuite-NoCoding
+#  Testsuite-nocoding
 
 This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtest.com/.
 
@@ -13,9 +13,7 @@ This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtes
  * René Schwietzke, Xceptance Software Technologies GmbH
  * Jörg Werner, Xceptance Software Technologies GmbH
  * Matthias Mitterreiter, Xceptance Software Technologies GmbH
-
-
-***
+ * Christoph Keiner, Xceptance Software Technologies GmbH
 
 ## Introduction
 
@@ -25,31 +23,25 @@ TestSuite-NoCoding  is a test suite for XLT and delivers an easy way to define a
 
 The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance/xlt-nocoding) in order to interpret and execute the no-coding test definitions. Since the source of that library is open and licensed under the Apache License V2.0, feel free to extend and customize it.
 
-***
-
-## [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
-
-***
-
 ## Features
 
 * Reads test definitions from files. Supported file types:
   * YAML
   * CSV
 * Supports the validation of:
-  * HTTP response headers
   * Cookies
-  * HTTP Response Content 
-* Offers various validation modes in order to validate data.
+  * HTTP response headers
+  * HTTP response content 
+* Offers various validation methods in order to validate data.
 * Supports two modes to run the test-cases:
-  * DOM: the response are parsed into the DOM, which allows to select elements by XPath for validation purpose
+  * DOM: the responses are parsed into the DOM, which allows to select elements by XPath for validation purpose
   * LIGHT: there exists no DOM, which makes the test case fast to execute.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
 * None of the XLT features are disabled.
 * ...
 
-## Getting Started
+## [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
 
 To learn more, try one of the following links.
 
