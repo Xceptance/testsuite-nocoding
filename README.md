@@ -9,11 +9,11 @@ This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtes
 * License URI: http://www.apache.org/licenses/LICENSE-2.0.txt
 * Tags: load testing, performance testing, testing
 * Contributors:
- * Hartmut Arlt, Xceptance Software Technologies GmbH
- * René Schwietzke, Xceptance Software Technologies GmbH
- * Jörg Werner, Xceptance Software Technologies GmbH
- * Matthias Mitterreiter, Xceptance Software Technologies GmbH
- * Christoph Keiner, Xceptance Software Technologies GmbH
+    * Hartmut Arlt, Xceptance Software Technologies GmbH
+    * René Schwietzke, Xceptance Software Technologies GmbH
+    * Jörg Werner, Xceptance Software Technologies GmbH
+    * Matthias Mitterreiter, Xceptance Software Technologies GmbH
+    * Christoph Keiner, Xceptance Software Technologies GmbH
 
 ## Introduction
 
