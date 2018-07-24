@@ -38,7 +38,6 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
   * LIGHT: there exists no DOM, which makes the test case fast to execute.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
-* None of the XLT features are disabled.
 * ...
 
 ## [Getting Started](https://github.com/Xceptance/testsuite-nocoding/wiki)
