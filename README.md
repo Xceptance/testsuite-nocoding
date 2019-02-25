@@ -3,7 +3,7 @@
 This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtest.com/.
 
 * Name: testsuite-nocoding
-* Version: 2.1.1
+* Version: 2.2.1
 * License: Apache V2.0
 * License URI: http://www.apache.org/licenses/LICENSE-2.0.txt
 * Tags: load testing, performance testing, testing
@@ -25,16 +25,17 @@ The test suite relies on the library [xlt-nocoding](https://github.com/Xceptance
 ## Features
 
 * Reads test definitions from files. Supported file types:
-  * YAML
-  * CSV
+    * YAML
+    * CSV
 * Supports the validation of:
-  * Cookies
-  * HTTP response headers
-  * HTTP response content 
+    * Cookies
+    * HTTP response headers
+    * HTTP response content
 * Offers various validation methods in order to validate data.
-* Supports two modes to run the test-cases:
-  * DOM: the responses are parsed into the DOM, which allows to select elements by XPath for validation purpose
-  * LIGHT: there exists no DOM, which makes the test case fast to execute.
+* Supports three modes to run the test-cases:
+    * DOM: the responses are parsed into the DOM, which allows to select elements by XPath for validation purpose
+    * LIGHT: there exists no DOM, which makes the test case fast to execute.
+    * REQUEST: Only plain HTTP requests are sent and HTTP responses received, which makes this the fastest mode.
 * Cookie handling is automatic
 * JavaScript and Static Content can be handled automatically and also be switched off.
 * ...
