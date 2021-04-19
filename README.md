@@ -3,7 +3,7 @@
 This is a test suite for Xceptance LoadTest (XLT) - http://www.xceptance-loadtest.com/.
 
 * Name: testsuite-nocoding
-* Version: 2.2.1
+* Version: 2.3.0
 * License: Apache V2.0
 * License URI: http://www.apache.org/licenses/LICENSE-2.0.txt
 * Tags: load testing, performance testing, testing
