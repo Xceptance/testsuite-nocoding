@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="off">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%d{HH:mm:ss,SSS}] %-5p [%t] - %m%n" />
+    </Console>
+    <RollingFile name="File" fileName="./results/agent.log" filePattern="./results/agent-%i.log">
+      <PatternLayout>
+        <Pattern>[%d{yyyy/MM/dd-HH:mm:ss,SSS}] %-5p [%t] %c - %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="9"/>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger name="com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl" level="off" />
+    <Logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler" level="off" />
+    <Logger name="com.gargoylesoftware.htmlunit.javascript.StrictErrorReporter" level="off" />
+    <Logger name="com.gargoylesoftware.htmlunit.javascript.host.css.CSSRule" level="off" />
+    <Root level="debug">
+      <AppenderRef ref="Console"/>
+    </Root>
+    <Logger name="runtime" level="debug" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="com.xceptance" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="com.gargoylesoftware.htmlunit" level="warn" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="org.apache.http" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Logger name="org.apache.http.wire" level="error" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+  </Loggers>
+</Configuration>
