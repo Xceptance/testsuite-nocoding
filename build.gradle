@@ -36,6 +36,8 @@ sourceSets {
             srcDirs = ['src']
         }
 
+        output.resourcesDir = sourceSets.test.java.destinationDirectory
+
         // Add dependencies of type 'provided' to compile and runtime classpaths
         compileClasspath += configurations.provided
         runtimeClasspath += configurations.provided
