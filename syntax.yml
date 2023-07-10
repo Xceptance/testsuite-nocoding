@@ -58,12 +58,20 @@
             - variable_1 :
                 XPath : path
             - variable_2 :
-                Regexp : path
+                Regex : path
                 Group : 1 # Optional to capture a group from regex
             - variable_3 :
-               Header : header
+                Header : header
             - variable_4 :
+                Header : header
+                Regex : path
+                Group : 1 # Optional to capture a group from regex
+            - variable_5 :
                 Cookie : cookie
+            - variable_6 :
+                Cookie : cookie
+                Regex : path
+                Group : 1 # Optional to capture a group from regex
     Subrequests :
         - Xhr :
             Name : Xhr subrequest

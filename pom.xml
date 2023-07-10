@@ -21,7 +21,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-        <xlt.nocoding.version>3.1.0</xlt.nocoding.version>
     </properties>
 
     <build>
@@ -115,24 +114,17 @@
         </pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>xceptance-releases</id>
-            <url>https://lab.xceptance.de/nexus/content/repositories/releases/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.xceptance</groupId>
             <artifactId>xlt</artifactId>
-            <version>6.2.0</version>
+            <version>7.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.xceptance</groupId>
             <artifactId>xlt-nocoding</artifactId>
-            <version>${xlt.nocoding.version}</version>
+            <version>4.0.0</version>
     	</dependency>
     </dependencies>
 
